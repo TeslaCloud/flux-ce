@@ -34,12 +34,18 @@ ClientSettings.types = types
 --   end
 -- })
 -- ```
--- The values of a setting have to be booleans, numbers or strings.
+-- The values of a setting have to be booleans, numbers or strings. A type without a sanitize
+-- function is reported and not registered.
 -- @param id [String unique type id]
 -- @param data [Map type definition: sanitize(setting, value) and the optional
 --   setup(setting), get_default(setting) and create_control(setting, parent, value, on_change)]
 function ClientSettings:register_type(id, data)
-  if !isstring(id) or !istable(data) or !isfunction(data.sanitize) then return end
+  if !isstring(id) or !istable(data) or !isfunction(data.sanitize) then
+    ErrorNoHalt("Not registering the '"..tostring(id).."' setting type! It needs a string id and a sanitize "..
+      'function!\n')
+
+    return
+  end
 
   data.id = id
 
@@ -101,11 +107,12 @@ end
 --   default (Any, the type decides if left out), category (String phrase,
 --   'settings.categories.general' by default), name (String phrase, the id by default),
 --   description (String phrase, shown as a tooltip), networked (Boolean send the value to
---   the server), visible (Function(setting) return a falsy value to leave the setting out of
---   the menu; clientside), on_change (Function(value, old_value, setting) called on the
---   client when the value changes). By type: min (0), max (100) and decimals (0) for
---   'number'; choices (List of values or of { value, name } tables) for 'choice';
---   max_length (128) for 'string']
+--   the server; the server takes only the settings it has registered itself, so a networked
+--   setting is registered in shared code), visible (Function(setting) return a falsy value to
+--   leave the setting out of the menu; clientside), on_change (Function(value, old_value,
+--   setting) called on the client when the value changes). By type: min (0), max (100) and
+--   decimals (0) for 'number'; choices (List of values or of { value, name } tables) for
+--   'choice'; max_length (128) for 'string']
 -- @return [Map the registered setting, or nil if it could not be registered]
 function ClientSettings:register_setting(id, data)
   if !isstring(id) or !istable(data) then return end
@@ -160,6 +167,7 @@ function ClientSettings:register_setting(id, data)
 
   if CLIENT then
     self:load_value(id)
+    self:rebuild_menu()
   end
 
   return data
@@ -173,6 +181,7 @@ function ClientSettings:remove_setting(id)
 
   if CLIENT then
     self:load_value(id)
+    self:rebuild_menu()
   end
 end
 

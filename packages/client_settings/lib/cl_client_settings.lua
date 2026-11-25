@@ -195,6 +195,16 @@ function ClientSettings:is_visible(id)
   return true
 end
 
+--- Rebuilds the settings menu on the next frame, if it is open. Called when a setting is
+-- registered or removed.
+function ClientSettings:rebuild_menu()
+  local menu = self.menu
+
+  if IsValid(menu) then
+    menu.should_rebuild = true
+  end
+end
+
 --- Groups the settings that are listed in the settings menu by category. The categories
 -- are sorted by their translated name, the settings of a category by the order in which
 -- they have been registered.

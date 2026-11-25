@@ -3,7 +3,24 @@
 -- A client sends all of its networked settings when it joins and the changed ones afterward.
 -- Every value is checked against the definition of its setting before it is stored on the
 -- player, where `Player:get_setting` reads it. A player's messages are taken at most ten times
--- a second, more often than the client sends them.
+-- a second, more often than the client sends them. In development, a setting the server has
+-- not registered as networked is reported once, since that is a networked setting registered
+-- on the client only.
+
+local reported = {}
+
+local function report_unknown(data)
+  for id in pairs(data) do
+    local setting = ClientSettings:find(id)
+
+    if (!setting or !setting.networked) and !reported[id] then
+      reported[id] = true
+
+      ErrorNoHalt("A client has sent the '"..tostring(id).."' setting, which the server has not registered as "..
+        'networked! Register networked settings in shared code.\n')
+    end
+  end
+end
 
 Cable.receive('fl_settings_sync', function(actor, data)
   if !IsValid(actor) or !istable(data) then return end
@@ -13,6 +30,10 @@ Cable.receive('fl_settings_sync', function(actor, data)
   if (actor.fl_next_settings_sync or 0) > cur_time then return end
 
   actor.fl_next_settings_sync = cur_time + 0.1
+
+  if Flux.development then
+    report_unknown(data)
+  end
 
   local values = actor.client_settings or {}
   actor.client_settings = values
