@@ -14,8 +14,11 @@
 --
 -- A hidden player, vanished or observing (`Player:is_hidden`), is not networked to players
 -- without the 'moderate' permission, and neither is anything attached to them, such as their
--- weapons. Hidden players cannot pick up weapons that lie in the world or carry objects in
--- their hands. Observer mode is the `observer` networked variable of the player.
+-- weapons. These players do not see the hidden player on the scoreboard and do not hear them
+-- over voice chat. Hidden players cannot pick up weapons that lie in the world or carry
+-- objects in their hands.
+-- Observer mode is the `observer` networked variable of the player, which only the player
+-- receives; the public `hidden` networked variable tells every client who is hidden.
 -- @module [Observer]
 
 PLUGIN:set_global('Observer')

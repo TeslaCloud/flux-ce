@@ -3,7 +3,6 @@
 -- Every request needs a gamemaster and is taken once a second at most.
 
 local isnumber = isnumber
-local isstring = isstring
 local isvector = isvector
 local math_abs = math.abs
 local math_huge = math.huge
@@ -13,14 +12,6 @@ local math_huge = math.huge
 -- @return [Boolean]
 local function is_finite(number)
   return isnumber(number) and number == number and math_abs(number) != math_huge
-end
-
-local function answer(actor, success, phrase, arguments, reason, reason_arguments)
-  if success then
-    actor:notify(phrase, arguments)
-  elseif isstring(reason) then
-    actor:notify(reason, reason_arguments)
-  end
 end
 
 local function accept_action(actor)
@@ -44,24 +35,13 @@ end)
 Cable.receive('fl_gm_possess', function(actor, id)
   if !isnumber(id) or !accept_action(actor) then return end
 
-  local character = Gamemastery.find_character(id)
-  local success, reason, arguments = Gamemastery.possess(actor, character)
-
-  local name = character and character.name
-
-  answer(actor, success, 'notification.gamemastery.possessed', { name = name }, reason, arguments)
+  Gamemastery.possess_and_notify(actor, Gamemastery.find_character(id))
 end)
 
 Cable.receive('fl_gm_release', function(actor)
   if !accept_action(actor) then return end
 
-  local success, result = Gamemastery.release(actor)
-
-  if success then
-    actor:notify('notification.gamemastery.released', { name = result.name })
-  else
-    actor:notify(result)
-  end
+  Gamemastery.release_and_notify(actor)
 end)
 
 Cable.receive('fl_gm_spawn', function(actor, id, direction)
@@ -70,10 +50,13 @@ Cable.receive('fl_gm_spawn', function(actor, id, direction)
   if direction:LengthSqr() == 0 or !accept_action(actor) then return end
 
   local character = Gamemastery.find_character(id)
-  local name = character and character.name
   local success, reason, arguments = Gamemastery.spawn_in_world(actor, character, direction:GetNormalized())
 
-  answer(actor, success, 'notification.gamemastery.placed', { name = name }, reason, arguments)
+  if success then
+    actor:notify('notification.gamemastery.placed', { name = character.name })
+  else
+    actor:notify(reason, arguments)
+  end
 end)
 
 Cable.receive('fl_gm_delete', function(actor, id)

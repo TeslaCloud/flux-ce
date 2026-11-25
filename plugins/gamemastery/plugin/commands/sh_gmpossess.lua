@@ -29,11 +29,5 @@ function CMD:on_run(actor, ...)
     return
   end
 
-  local success, reason, arguments = Gamemastery.possess(actor, character)
-
-  if success then
-    actor:notify('notification.gamemastery.possessed', { name = character.name })
-  else
-    actor:notify(reason, arguments)
-  end
+  Gamemastery.possess_and_notify(actor, character)
 end

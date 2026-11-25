@@ -208,11 +208,27 @@ function Gamemastery.get_receivers()
   return receivers
 end
 
+--- Makes the names of the pool characters that stand in the world reach the gamemasters
+-- only.
+-- @param receivers [List<Player> the gamemasters, as `Gamemastery.get_receivers` lists them]
+local function update_name_receivers(receivers)
+  for _, entity in pairs(Gamemastery.world_entities) do
+    if IsValid(entity) then
+      entity:set_nv_recipients('gm_character_name', receivers)
+    end
+  end
+end
+
 --- Sends the list of pool characters to a player, or to every gamemaster. A player who has
 -- received the pool before and has lost the permission since receives an empty list, which
--- takes the pool from their client.
+-- takes the pool from their client. The names of the pool characters in the world are given
+-- to the gamemasters only, in the same way.
 -- @param target=nil [Player the player to send it to; every gamemaster when nil]
 function Gamemastery.send_pool(target)
+  local receivers = Gamemastery.get_receivers()
+
+  update_name_receivers(receivers)
+
   if target != nil then
     if !IsValid(target) or target:IsBot() then return end
 
@@ -228,8 +244,6 @@ function Gamemastery.send_pool(target)
 
     return
   end
-
-  local receivers = Gamemastery.get_receivers()
 
   if #receivers == 0 then return end
 
@@ -300,7 +314,7 @@ function Gamemastery.enter_mode(actor)
   actor:set_vanished(true)
   actor:SetMoveType(MOVETYPE_NOCLIP)
   actor:GodEnable()
-  actor:set_nv('gamemastering', true)
+  actor:set_private_nv('gamemastering', true)
 
   Gamemastery.apply_transform(actor)
 end
@@ -311,7 +325,7 @@ end
 function Gamemastery.exit_mode(actor)
   if !Gamemastery.is_in_mode(actor) then return end
 
-  actor:set_nv('gamemastering', false)
+  actor:set_private_nv('gamemastering', false)
   actor:set_vanished(false)
   actor:GodDisable()
 
@@ -383,6 +397,22 @@ function Gamemastery.possess(actor, character, position, angles)
   return true
 end
 
+--- Possesses a pool character for a gamemaster with `Gamemastery.possess` and tells them that
+-- they play it, or why they cannot.
+-- @param actor [Player]
+-- @param character [Character the pool character; nil is refused as an invalid character]
+-- @param position=nil [Vector where the player is put; where they are when nil]
+-- @param angles=nil [Angle where the player looks; where they look when nil]
+function Gamemastery.possess_and_notify(actor, character, position, angles)
+  local success, reason, arguments = Gamemastery.possess(actor, character, position, angles)
+
+  if success then
+    actor:notify('notification.gamemastery.possessed', { name = character.name })
+  else
+    actor:notify(reason, arguments)
+  end
+end
+
 --- Takes the active character away from a player where they stand: the character is saved
 -- and dropped, and the player is spawned again at the same spot. A gamemaster enters
 -- gamemaster mode; anyone else is left without a character as usual and gets the main menu.
@@ -417,6 +447,19 @@ function Gamemastery.release(actor)
   end
 
   return true, Gamemastery.drop_character(actor)
+end
+
+--- Releases the pool character of a gamemaster with `Gamemastery.release` and tells them
+-- which character they have released, or why they cannot.
+-- @param actor [Player]
+function Gamemastery.release_and_notify(actor)
+  local success, result = Gamemastery.release(actor)
+
+  if success then
+    actor:notify('notification.gamemastery.released', { name = result.name })
+  else
+    actor:notify(result)
+  end
 end
 
 --- Places a pool character in the world as an `fl_gm_character` entity, where a trace from
@@ -522,18 +565,7 @@ function Gamemastery.use_entity(actor, entity)
     return
   end
 
-  local success, reason, arguments = Gamemastery.possess(
-    actor,
-    character,
-    entity:GetPos(),
-    Angle(0, entity:GetAngles().y, 0)
-  )
-
-  if success then
-    actor:notify('notification.gamemastery.possessed', { name = character.name })
-  else
-    actor:notify(reason, arguments)
-  end
+  Gamemastery.possess_and_notify(actor, character, entity:GetPos(), Angle(0, entity:GetAngles().y, 0))
 end
 
 --- Deletes a pool character that nobody plays: removes its world entity, destroys its record,

@@ -16,11 +16,5 @@ function CMD:on_run(actor)
     return
   end
 
-  local success, result = Gamemastery.release(actor)
-
-  if success then
-    actor:notify('notification.gamemastery.released', { name = result.name })
-  else
-    actor:notify(result)
-  end
+  Gamemastery.release_and_notify(actor)
 end

@@ -1,8 +1,10 @@
 --- Gamemastery gives gamemasters a way to run the world without a character of their own.
 -- A player with the `gamemastery` permission who has no active character is in gamemaster
 -- mode: alive, in noclip that cannot be left, invulnerable and vanished, with the
--- `gamemastering` networked variable set. They are not killed and hidden like other players
--- without a character, and the main menu does not open for them after the intro.
+-- `gamemastering` networked variable set, which only the player receives, so that
+-- `Gamemastery.is_in_mode` is known on the server and for the local player only. They are
+-- not killed and hidden like other players without a character, and the main menu does not
+-- open for them after the intro.
 --
 -- Gamemasters share a pool of characters that belong to a dedicated user record. Any of them
 -- can possess a pool character, which turns them into it on the spot, release it to go back
@@ -39,7 +41,8 @@ function Gamemastery.has_gamemaster_role(target)
   return IsValid(target) and target:get_role_table().id == Gamemastery.role_id
 end
 
---- Checks whether a player is in gamemaster mode.
+--- Checks whether a player is in gamemaster mode. On the client it only knows about the local
+-- player.
 -- @param target [Player]
 -- @return [Boolean]
 function Gamemastery.is_in_mode(target)

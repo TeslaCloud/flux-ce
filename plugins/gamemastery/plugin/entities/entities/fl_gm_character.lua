@@ -33,8 +33,8 @@ if SERVER then
     self:ResetSequence(self:idle_animation())
   end
 
-  --- Gives the entity a pool character: its model and skin, and its ID and name for the
-  -- clients.
+  --- Gives the entity a pool character: its model and skin, its ID for the clients and its
+  -- name for the gamemasters.
   -- @param character [Character]
   function ENT:set_character(character)
     self.gm_character_id = tonumber(character.id)
@@ -43,7 +43,7 @@ if SERVER then
     self:SetSkin(tonumber(character.skin) or 0)
     self:SetCollisionBounds(mins, maxs)
     self:set_nv('gm_character_id', self.gm_character_id)
-    self:set_nv('gm_character_name', character.name)
+    self:set_nv('gm_character_name', character.name, Gamemastery.get_receivers())
     self:start_idle()
   end
 

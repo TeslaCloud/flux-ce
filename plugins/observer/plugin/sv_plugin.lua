@@ -21,7 +21,7 @@ function Observer:start_observing(actor)
   actor:hide_body()
   actor:GodEnable()
 
-  actor:set_nv('observer', true)
+  actor:set_private_nv('observer', true)
   actor:update_visibility()
 end
 
@@ -50,7 +50,7 @@ function Observer:stop_observing(actor, should_reset)
   end
 
   actor.observer_data = nil
-  actor:set_nv('observer', false)
+  actor:set_private_nv('observer', false)
   actor:hide_vanished_body()
   actor:update_visibility()
 end

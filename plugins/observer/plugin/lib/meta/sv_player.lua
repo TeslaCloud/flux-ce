@@ -28,16 +28,20 @@ function player_meta:update_transmit(receiver)
 end
 
 --- Applies whether the player is hidden to the networking of the player to everyone else and
--- sets their own 'transmission_prevented' net var. Called whenever the player is hidden or
--- shown, and again whenever something new is attached to a hidden player.
+-- sets their own 'transmission_prevented' net var and the public 'hidden' net var, by which
+-- clients keep the player off the scoreboard. Called whenever the player is hidden or shown,
+-- and again whenever something new is attached to a hidden player.
 function player_meta:update_visibility()
+  local hidden = self:is_hidden()
+
   self:AddEFlags(EFL_FORCE_CHECK_TRANSMIT)
 
   for _, client in player.Iterator() do
     self:update_transmit(client)
   end
 
-  self:set_nv('transmission_prevented', self:is_hidden(), self)
+  self:set_nv('transmission_prevented', hidden, self)
+  self:set_nv('hidden', hidden)
 end
 
 --- Applies which of the hidden players this player may see to the networking of all of them.
@@ -64,11 +68,15 @@ function player_meta:hide_body()
 end
 
 --- Makes the player visible and solid again with the color they had before
--- `Player:hide_body`. The weapon is only drawn again when the player carries nothing, since
--- the engine drops the carried object as soon as the weapon is drawn and draws the weapon by
--- itself once the object is let go of.
+-- `Player:hide_body`. The weapon is only drawn again when the player carries nothing in the
+-- engine's hold (see `Player:get_holding_entity` of the Pickup Objects plugin), since the
+-- engine drops the carried object as soon as the weapon is drawn and draws the weapon by
+-- itself once the object is let go of. A dragged ragdoll is not in that hold and does not
+-- keep the weapon hidden.
 function player_meta:show_body()
-  if !IsValid(self.holding_object) then
+  local held = PickupObjects and self:get_holding_entity()
+
+  if !IsValid(held) or !held:IsPlayerHolding() then
     self:DrawWorldModel(true)
   end
 

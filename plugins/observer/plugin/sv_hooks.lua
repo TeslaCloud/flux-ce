@@ -18,12 +18,14 @@ function Observer:PlayerCanEnterNoclip(actor)
   return false
 end
 
---- Takes the player out of observer mode in place of the default noclip. See
--- Observer#stop_observing.
+--- Takes the player out of observer mode, if they are in it, in place of the default noclip.
+-- See Observer#stop_observing.
 -- @param actor [Player]
 -- @return [Boolean always false, which blocks the default noclip]
 function Observer:PlayerCanExitNoclip(actor)
-  self:stop_observing(actor)
+  if actor.observer_data or actor:get_nv('observer') then
+    self:stop_observing(actor)
+  end
 
   return false
 end
@@ -97,10 +99,16 @@ function Observer:PlayerUserGroupChanged(target, _group, _old_group)
   target:update_hidden_players()
 end
 
---- Makes a vanished player invisible again after a respawn, which has made them visible.
+--- Takes a player who respawns in observer mode out of it where they spawn, since the spawn
+-- has made them walk, visible, solid and mortal, and makes a vanished player invisible again
+-- after a respawn, which has made them visible.
 -- @param actor [Player]
 function Observer:PostPlayerSpawn(actor)
-  actor:hide_vanished_body()
+  if actor.observer_data or actor:get_nv('observer') then
+    self:stop_observing(actor, false)
+  else
+    actor:hide_vanished_body()
+  end
 end
 
 do
@@ -192,6 +200,18 @@ end
 -- @return [Boolean false for a hidden player]
 function Observer:PlayerCanPickupObject(actor, _entity, _drag)
   if actor:is_hidden() then
+    return false
+  end
+end
+
+--- Keeps hidden players from being heard over voice chat by anyone who cannot see them, that
+-- is everyone without the 'moderate' permission. Nothing is returned otherwise, so that the
+-- other handlers decide.
+-- @param listener [Player]
+-- @param talker [Player]
+-- @return [Boolean false for a hidden talker and a listener who cannot see them]
+function Observer:PlayerCanHearPlayersVoice(listener, talker)
+  if talker:is_hidden() and !listener:can('moderate') then
     return false
   end
 end
