@@ -24,16 +24,25 @@ en:
       data_save_interval:
         name: Server data save interval
         desc: Amount of time between server data saves.
+      empty_restart_interval:
+        name: Empty server map reload
+        desc: How often, in seconds, the map is reloaded while nobody is on the server. 0 turns it off.
   error:
     cant_now: You cannot do this right now!
     command:
+      console_target_self: "The console cannot target itself!"
+      failed: This command has failed to run!
       higher_immunity: "{target} has higher immunity than you!"
       invalid_choice: "'{value}' is not a valid choice here, use one of: {choices}"
       no_access: You do not have access to this command!
+      no_console: This command cannot be run from the console!
+      not_a_number: "'{value}' is not a number!"
       not_valid: "'{command}' is not a valid command!"
       player_ambiguous: "Several players are named '{player}', use the SteamID of the one you mean!"
       player_invalid: "'{player}' is not a valid player!"
+      player_suggestion: "'{player}' is not a valid player, did you mean {suggestion}? Names with spaces go in double quotes."
       syntax: "Incorrect syntax, use /{command} {syntax}"
+      too_long: This command is too long!
       unknown_subcommand: "'{subcommand}' is not a subcommand of /{command}, use one of: {subcommands}"
       you_must_enter_command: You must enter a command!
     config:
@@ -59,6 +68,7 @@ en:
     name: English
   notification:
     console: Console
+    player_disconnected: "{player} has disconnected from the server."
   operator:
     less: Less
     greater: Greater

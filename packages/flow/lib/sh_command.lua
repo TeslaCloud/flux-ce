@@ -15,8 +15,9 @@
 --
 -- On the server `Flux.Command:interpret` does the work: it splits the text into arguments,
 -- finds the command by its ID or alias and the subcommand by its word, checks the permission
--- of the player, the amount of arguments and the words from lists, turns the player argument
--- into a list of targets (player names or the selectors described under
+-- of the player, the amount of arguments and the words from lists, parses the arguments of the
+-- types that have a parser (`Flux.Command:add_parser`), turns the player argument into a list
+-- of targets (player names or the selectors described under
 -- `Flux.Command:str_to_player`), checks their immunity, logs the command and calls its
 -- `on_run`. Plugins can step in through the `PlayerCanRunCommand`, `CommandCheckImmunity`,
 -- `PlayerRunCommand` and `GetTargetSelector` hooks. On the client `Flux.Command:send` asks
@@ -31,12 +32,41 @@ local isfunction        = isfunction
 
 local command_log_color = Color('orange')
 local max_commands_per_second = 10
+local max_command_length = 8192
 local stored            = Flux.Command.stored     or {}
 local aliases           = Flux.Command.aliases    or {}
 local completers        = Flux.Command.completers or {}
+local parsers           = Flux.Command.parsers    or {}
 Flux.Command.stored     = stored
 Flux.Command.aliases    = aliases
 Flux.Command.completers = completers
+Flux.Command.parsers    = parsers
+
+--- Fields a command file may set on a command besides the defaults and methods of `Command`.
+local known_fields = {
+  name = true,
+  description = true,
+  syntax = true,
+  category = true,
+  arguments = true,
+  arg_types = true,
+  immunity = true,
+  can_equal = true,
+  aliases = true,
+  alias = true,
+  no_console = true,
+  permission = true,
+  permission_id = true,
+  player_arg = true,
+  on_run = true,
+  id = true,
+  parent = true,
+  subcommands = true,
+  subcommand_list = true,
+  raw_args = true,
+  actor = true,
+  IsValid = true
+}
 
 --- Counts the characters of a UTF-8 string, counting every byte that does not continue a
 -- character.
@@ -48,7 +78,18 @@ local function char_count(str)
   return count
 end
 
-local function command_throttled(actor)
+--- Counts a command that a player runs and checks whether they have run more than ten
+-- commands within the current second. The chat, the `flc` console command and the network
+-- message that clients send commands with all check it before they run a command. The
+-- server console is never throttled.
+-- ```
+-- if Flux.Command:is_throttled(actor) then return end
+-- ```
+-- @param actor [Player the player who runs a command]
+-- @return [Boolean true if the command should be dropped]
+function Flux.Command:is_throttled(actor)
+  if !IsValid(actor) then return false end
+
   local cur_time = CurTime()
 
   if (actor.fl_command_window or 0) <= cur_time then
@@ -61,11 +102,29 @@ local function command_throttled(actor)
   return actor.fl_command_count > max_commands_per_second
 end
 
+--- Warns about the fields of a command that neither `Command` nor a command file is known to
+-- use, which are usually mistyped names of fields such as `arg_types` or `permission`.
+-- @param cmd [Command]
+local function warn_unknown_fields(cmd)
+  for field in pairs(cmd) do
+    if Command[field] == nil and !known_fields[field] then
+      ErrorNoHalt(
+        "[Flux:Command] The '"..cmd:get_full_id().."' command sets the unknown field '"..tostring(field).."'.\n"
+      )
+    end
+  end
+end
+
 --- Fills in the defaults for the missing fields of a command and of its subcommands: name,
 -- syntax, immunity, arguments, description, aliases from a single `alias`, and `player_arg`
--- from the first 'player' entry of `arg_types`.
+-- from the first 'player' entry of `arg_types`. In development it also warns about fields
+-- that no command uses.
 -- @param cmd [Command]
 local function prepare(cmd)
+  if Flux.development then
+    warn_unknown_fields(cmd)
+  end
+
   cmd.name        = cmd.name        or 'Unknown'
   cmd.syntax      = cmd.syntax      or '[-]'
   cmd.immunity    = cmd.immunity    or false
@@ -124,7 +183,8 @@ end
 -- the command and its subcommands, and runs the 'CommandCreated' hook. Commands defined in
 -- the 'commands' folder of a plugin are registered automatically, see Command#on_run for an
 -- example. When `player_arg` is not set, the position of the first 'player' entry of
--- `arg_types` is used.
+-- `arg_types` is used. An alias that another command already uses as its ID or alias is
+-- reported with a warning.
 -- @param id [String unique command ID, also the main name it is called by; it is stored
 --   converted with `string.to_id`]
 -- @param data [Command/Map command object or a table with the same fields: name, description,
@@ -155,7 +215,17 @@ function Flux.Command:create(id, data)
   aliases[id] = id
 
   for _, alias in ipairs(data.aliases or {}) do
-    aliases[alias:utf8lower()] = id
+    local lower = alias:utf8lower()
+    local taken_by = aliases[lower]
+
+    if taken_by and taken_by != id then
+      ErrorNoHalt(
+        "[Flux:Command] The alias '"..lower.."' of the '"..id.."' command is already used by the '"
+          ..taken_by.."' command.\n"
+      )
+    end
+
+    aliases[lower] = id
   end
 
   --- Called on the server and the client after a command has been registered with
@@ -356,6 +426,56 @@ end
 function Flux.Command:get_completer(type_id)
   return completers[type_id]
 end
+
+--- Registers the parser of an argument type: the function that turns the text typed for an
+-- argument of that type into the value `on_run` receives, or rejects it. The server parses
+-- every argument that has been given before the command runs; when one is rejected, the
+-- player is told the error and the command does not run. An optional argument that has not
+-- been given stays nil. Flux registers 'number' itself.
+-- ```
+-- Flux.Command:add_parser('number', function(value)
+--   local number = tonumber(value)
+--
+--   if !number then
+--     return nil, 'error.command.not_a_number'
+--   end
+--
+--   return number
+-- end)
+-- ```
+-- @param type_id [String ID of the argument type]
+-- @param callback [Function(value, actor) that gets the typed text and the player who runs
+--   the command (an invalid entity for the server console) and returns the parsed value, or
+--   nil and a language phrase that tells what is wrong; the phrase gets the typed text as
+--   {value}]
+-- @see [Flux.Command#add_completer]
+function Flux.Command:add_parser(type_id, callback)
+  parsers[type_id] = callback
+end
+
+--- Returns the parser of an argument type.
+-- @param type_id [String ID of the argument type]
+-- @return [Function the parser, or nil if the type has none]
+-- @see [Flux.Command#add_parser]
+function Flux.Command:get_parser(type_id)
+  return parsers[type_id]
+end
+
+--- Parses an argument of the 'number' type: any text that `tonumber` reads as a finite
+-- number.
+-- @param value [String the typed text]
+-- @return [Number the number, or nil and the error phrase]
+local function parse_number(value)
+  local number = tonumber(value)
+
+  if !number or number != number or math.abs(number) == math.huge then
+    return nil, 'error.command.not_a_number'
+  end
+
+  return number
+end
+
+Flux.Command:add_parser('number', parse_number)
 
 --- Narrows suggestions down to the ones that contain the typed text, ignoring the case, and
 -- writes them into a completion result: the ones that start with it first, then the others,
@@ -814,13 +934,7 @@ if SERVER then
       return
     end
 
-    local translated = {}
-
-    for key, value in pairs(args or {}) do
-      translated[key] = isstring(value) and t(value) or value
-    end
-
-    ErrorNoHalt('[Flux:Command] '..t(phrase, translated)..'\n')
+    ErrorNoHalt('[Flux:Command] '..t(phrase, Flux.Lang:translate_arguments(args))..'\n')
   end
 
   local function syntax_error(actor, cmd)
@@ -831,11 +945,7 @@ if SERVER then
   end
 
   local function access_error(actor)
-    if IsValid(actor) then
-      actor:notify('error.command.no_access')
-    else
-      ErrorNoHalt('[Flux:Command] This command cannot be run from the console!\n')
-    end
+    command_error(actor, IsValid(actor) ? 'error.command.no_access' : 'error.command.no_console')
   end
 
   --- Replaces the arguments that have a list of words in `arg_types` with the word from the
@@ -876,8 +986,58 @@ if SERVER then
     return true
   end
 
+  --- Replaces the arguments whose type has a parser (see `Flux.Command:add_parser`) with the
+  -- parsed values, and tells the player if one is rejected.
+  -- @param actor [Player the player, an invalid entity for the server console]
+  -- @param cmd [Command the command or subcommand]
+  -- @param args [List<String> the arguments, changed in place]
+  -- @return [Boolean true if every such argument has been parsed]
+  local function parse_arguments(actor, cmd, args)
+    for i = 1, #args do
+      local arg_type = cmd:get_arg_type(i)
+      local parser = isstring(arg_type) and parsers[arg_type]
+
+      if parser then
+        local success, value, error_phrase = pcall(parser, args[i], actor)
+
+        if !success then
+          ErrorNoHalt("[Flux:Command] The '"..arg_type.."' parser has failed: "..tostring(value)..'\n')
+
+          value, error_phrase = nil, nil
+        end
+
+        if value == nil then
+          command_error(actor, error_phrase or 'error.invalid_value', { value = args[i] })
+
+          return false
+        end
+
+        args[i] = value
+      end
+    end
+
+    return true
+  end
+
+  --- Finds the name of the only player whose character name or Steam name contains a text,
+  -- ignoring the case: the character name if it contains the text, else the Steam name.
+  -- @param text [String]
+  -- @return [String the name, or nil if no player or several players have the text in their
+  --   names]
+  local function suggest_player(text)
+    local found = player.find(text)
+
+    if !isentity(found) then return end
+
+    local char_name = found:name(true)
+
+    return char_name:utf8lower():find(text:utf8lower(), 1, true) and char_name or found:steam_name()
+  end
+
   --- Turns the player argument of a command into the list of its targets and checks their
-  -- immunity, telling the player if there is a problem.
+  -- immunity, telling the player if there is a problem. When the argument names nobody
+  -- exactly but is part of the name of a single player, the player is asked whether they
+  -- meant that one.
   -- @param actor [Player the player, an invalid entity for the server console]
   -- @param cmd [Command the command or subcommand]
   -- @param target_arg [String the player argument]
@@ -897,10 +1057,17 @@ if SERVER then
     end
 
     if #targets == 0 then
+      local suggestion = kind == nil and suggest_player(target_arg)
+
       if kind == 'ambiguous' then
         command_error(actor, 'error.command.player_ambiguous', { player = target_arg })
       elseif kind == '^' and !IsValid(actor) then
-        ErrorNoHalt('[Flux:Command] You cannot target yourself as console.\n')
+        command_error(actor, 'error.command.console_target_self')
+      elseif suggestion then
+        command_error(actor, 'error.command.player_suggestion', {
+          player = target_arg,
+          suggestion = Flux.Command:quote(suggestion)
+        })
       else
         command_error(actor, 'error.command.player_invalid', { player = target_arg })
       end
@@ -935,12 +1102,13 @@ if SERVER then
 
   --- Parses a command string and runs the command on behalf of the specified player.
   -- Finds the command by its ID or alias and then its subcommand by the next word, both
-  -- matched exactly in any case. Checks that the player has access to the command or
-  -- subcommand, that enough arguments were given and that the arguments with a list of words
-  -- in `arg_types` are one of them, resolves the targets and their immunity, logs the command
-  -- and runs it. A trailing 'text' argument is passed on exactly as it was typed, see
-  -- `Command:get_text_index`. The player is notified of any failure (it is printed to the
-  -- console for the server console). Serverside only.
+  -- matched exactly in any case. Checks that the text is at most 8192 bytes long, that the
+  -- player has access to the command or subcommand, that enough arguments were given and
+  -- that the arguments with a list of words in `arg_types` are one of them, parses the
+  -- arguments whose type has a parser (see `Flux.Command:add_parser`), resolves the targets
+  -- and their immunity, logs the command and runs it. A trailing 'text' argument is passed on
+  -- exactly as it was typed, see `Command:get_text_index`. The player is notified of any
+  -- failure (it is printed to the console for the server console). Serverside only.
   -- @param actor [Player the player who runs the command, an invalid entity for server console]
   -- @param text [String command ID followed by its subcommand word, if any, and its arguments]
   -- @param from_console=nil [Boolean whether it was run as a console command, passed to the
@@ -948,15 +1116,17 @@ if SERVER then
   function Flux.Command:interpret(actor, text, from_console)
     if !isstring(text) then return end
 
+    if #text > max_command_length then
+      command_error(actor, 'error.command.too_long')
+
+      return
+    end
+
     local actor_valid = IsValid(actor)
     local tokens = self:tokenize(text)
 
     if !tokens[1] then
-      if !actor_valid then
-        ErrorNoHalt('[Flux:Command] You must enter a command!\n')
-      else
-        actor:notify('error.command.you_must_enter_command')
-      end
+      command_error(actor, 'error.command.you_must_enter_command')
 
       return
     end
@@ -1048,6 +1218,7 @@ if SERVER then
     end
 
     if !check_choices(actor, cmd_table, args) then return end
+    if !parse_arguments(actor, cmd_table, args) then return end
 
     local targets = {}
 
@@ -1104,30 +1275,38 @@ if SERVER then
   end
 
   --- Calls the on_run callback of a command in protected mode. Assumes that the command
-  -- is valid and that all of the permission checks have already been done. Serverside only.
+  -- is valid and that all of the permission checks have already been done. A player whose
+  -- command fails with an error is told so. Serverside only.
   -- @param actor [Player the player who runs the command, an invalid entity for server console]
   -- @param cmd_table [Command the command or subcommand]
   -- @param arguments [List arguments to pass to on_run after the player]
   -- @param raw_args=nil [String raw text of the arguments, available to the callback
-  --   as self.raw_args]
+  --   as self.raw_args; the player is available as self.actor, an invalid entity for the
+  --   server console]
   function Flux.Command:run(actor, cmd_table, arguments, raw_args)
     if cmd_table.on_run then
-      local old_raw_args = cmd_table.raw_args
+      local old_raw_args, old_actor = cmd_table.raw_args, cmd_table.actor
       cmd_table.raw_args = raw_args
+      cmd_table.actor = actor ?? NULL
 
       local success, error_message = pcall(cmd_table.on_run, cmd_table, actor, unpack(arguments))
 
       cmd_table.raw_args = old_raw_args
+      cmd_table.actor = old_actor
 
       if !success then
         ErrorNoHalt(tostring(cmd_table)..' command has failed to run!\n')
         error_with_traceback(error_message)
+
+        if IsValid(actor) then
+          actor:notify('error.command.failed')
+        end
       end
     end
   end
 
   Cable.receive('fl_command_run', function(actor, command)
-    if command_throttled(actor) then return end
+    if Flux.Command:is_throttled(actor) then return end
 
     Flux.Command:interpret(actor, command, true)
   end)
@@ -1151,7 +1330,7 @@ end
 -- @param args_text [String arguments as a single string, the Flux command to run]
 function Flux.Command.con_command(actor, _cmd, _args, args_text)
   if SERVER then
-    if IsValid(actor) and command_throttled(actor) then return end
+    if Flux.Command:is_throttled(actor) then return end
 
     Flux.Command:interpret(actor, args_text, true)
   else

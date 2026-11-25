@@ -24,16 +24,25 @@ ru:
       data_save_interval:
         name: Интервал сохранения данных сервера
         desc: Временной интервал между сохранениями данных сервера.
+      empty_restart_interval:
+        name: Перезагрузка карты на пустом сервере
+        desc: Как часто, в секундах, перезагружается карта, пока на сервере никого нет. 0 отключает её.
   error:
     cant_now: Вы не можете сделать это сейчас!
     command:
+      console_target_self: "Консоль не может выбрать целью саму себя!"
+      failed: Не удалось выполнить эту команду!
       higher_immunity: "{target} имеет более высокий иммунитет, чем вы!"
       invalid_choice: "'{value}' здесь не подходит, используйте одно из: {choices}"
       no_access: У вас нет доступа к этой команде!
+      no_console: Эту команду нельзя выполнить из консоли!
+      not_a_number: "'{value}' не является числом!"
       not_valid: "'{command}' не является командой!"
       player_ambiguous: "Имя '{player}' носят несколько игроков, укажите SteamID нужного!"
       player_invalid: "'{player}' не является игроком!"
+      player_suggestion: "'{player}' не является игроком, может быть, вы имели в виду {suggestion}? Имена с пробелами пишутся в двойных кавычках."
       syntax: "Неверный синтаксис, используйте /{command} {syntax}"
+      too_long: Эта команда слишком длинная!
       unknown_subcommand: "'{subcommand}' не является подкомандой /{command}, используйте одну из: {subcommands}"
       you_must_enter_command: Вы должны ввести команду!
     config:
@@ -59,6 +68,7 @@ ru:
     name: Русский
   notification:
     console: Консоль
+    player_disconnected: "{player} отключился от сервера."
   operator:
     less: Меньше
     greater: Больше

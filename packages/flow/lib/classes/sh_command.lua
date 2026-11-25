@@ -20,7 +20,9 @@
 -- `arg_types` lists one entry per argument position: the ID of an argument type with a
 -- completer (see `Flux.Command:add_completer`), such as 'player', or a list of the exact
 -- words the argument may be, such as `{ 'on', 'off' }`. The server only accepts one of those
--- words, in any case, and passes it on as it is written in the list. The last entry applies
+-- words, in any case, and passes it on as it is written in the list. An argument of a type
+-- with a parser reaches `on_run` parsed: 'number' accepts finite numbers only and passes a
+-- Number (see `Flux.Command:add_parser`). The last entry applies
 -- to the arguments after it as well if it is 'text', free text that nothing is suggested for
 -- and that `on_run` receives as one string, exactly as it was typed.
 --
@@ -328,8 +330,11 @@ end
 -- if it was run from the server console) followed by the arguments as strings; the
 -- `on_run` of a subcommand gets the arguments after the subcommand word. If the command has
 -- immunity or player_arg set, or a 'player' entry in arg_types, the target argument is a
--- List<Player> instead, and an argument with a list of words in arg_types is the word as it
--- is written in that list. `self.raw_args` holds the text of the arguments as it was typed.
+-- List<Player> instead, an argument with a list of words in arg_types is the word as it
+-- is written in that list, and an argument of a type with a parser is the parsed value: a
+-- Number for 'number' (see `Flux.Command:add_parser`). An optional argument that has not
+-- been given is nil. `self.raw_args` holds the text of the arguments as it was typed, and
+-- `self.actor` the player, while `on_run` runs.
 -- The command below is the only one of its plugin, so it names the role it is allowed to in
 -- `permission` instead of being allowed in a role file.
 -- ```
@@ -390,7 +395,9 @@ function Command:notify_admin(permission, message, arguments)
   self:notify(permission, message, arguments, admin_color)
 end
 
---- Sends a light blue notification meant for the players with the 'staff' permission.
+--- Sends a light blue notification meant for the players with the 'staff' permission. While
+-- the command runs for the server console, the message is also printed to the console,
+-- translated.
 -- ```
 -- self:notify_staff('command.changelevel.message', {
 --   player = get_player_name(actor),
@@ -403,6 +410,12 @@ end
 -- @see [Command#notify]
 function Command:notify_staff(message, arguments)
   self:notify('staff', message, arguments, staff_color)
+
+  local actor = self.actor
+
+  if SERVER and actor != nil and !IsValid(actor) then
+    MsgN(t(message, Flux.Lang:translate_arguments(arguments)))
+  end
 end
 
 --- Returns the description of the command. Can be overridden to build it dynamically.

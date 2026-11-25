@@ -18,14 +18,15 @@ Cable.check_networked_string('fl_sound_start')
 Cable.check_networked_string('fl_sound_stop')
 
 --- Sends a notification to a player. If the player is not valid (e.g. the server console)
--- the message is written to the server log instead.
+-- the message is written to the server log instead, with its arguments translated (see
+-- `Flux.Lang:translate_arguments`).
 -- @param target [Player]
 -- @param message [String text or language phrase]
 -- @param arguments=nil [Map values to substitute into the phrase]
 -- @param color=nil [Color]
 function Flux.Player:notify(target, message, arguments, color)
   if !IsValid(target) then
-    ServerLog(t(message, arguments))
+    ServerLog(t(message, Flux.Lang:translate_arguments(arguments)))
     return
   end
 

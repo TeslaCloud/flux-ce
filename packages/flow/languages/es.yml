@@ -24,16 +24,25 @@ es:
       data_save_interval:
         name: Intervalo de guardado del servidor
         desc: Tiempo entre cada guardado de los datos del servidor.
+      empty_restart_interval:
+        name: Recarga del mapa con el servidor vacío
+        desc: Cada cuántos segundos se recarga el mapa mientras no hay nadie en el servidor. 0 lo desactiva.
   error:
     cant_now: ¡No puedes hacer esto ahora mismo!
     command:
+      console_target_self: "¡La consola no puede elegirse a sí misma como objetivo!"
+      failed: ¡No se ha podido ejecutar este comando!
       higher_immunity: "¡{target} tiene más inmunidad que tú!"
       invalid_choice: "'{value}' no es una opción válida aquí, usa una de estas: {choices}"
       no_access: ¡No tienes acceso a este comando!
+      no_console: ¡Este comando no se puede ejecutar desde la consola!
+      not_a_number: "¡'{value}' no es un número!"
       not_valid: "¡'{command}' no es un comando válido!"
       player_ambiguous: "Hay varios jugadores llamados '{player}', ¡usa el SteamID del que buscas!"
       player_invalid: "¡'{player}' no es un jugador válido!"
+      player_suggestion: "'{player}' no es un jugador válido, ¿te refieres a {suggestion}? Los nombres con espacios van entre comillas dobles."
       syntax: "Sintaxis incorrecta, usa /{command} {syntax}"
+      too_long: ¡Este comando es demasiado largo!
       unknown_subcommand: "'{subcommand}' no es un subcomando de /{command}, usa uno de estos: {subcommands}"
       you_must_enter_command: ¡Debes introducir un comando!
     config:
@@ -59,6 +68,7 @@ es:
     name: Español
   notification:
     console: Consola
+    player_disconnected: "{player} se ha desconectado del servidor."
   operator:
     less: Menor
     greater: Mayor

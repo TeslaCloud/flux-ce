@@ -24,16 +24,25 @@ fr:
       data_save_interval:
         name: "Intervalle de sauvegarde du serveur"
         desc: "Le temps entre deux sauvegardes des données du serveur."
+      empty_restart_interval:
+        name: "Rechargement de la carte du serveur vide"
+        desc: "Toutes les combien de secondes la carte est rechargée tant que personne n'est sur le serveur. 0 le désactive."
   error:
     cant_now: "Vous ne pouvez pas faire cela pour le moment !"
     command:
+      console_target_self: "La console ne peut pas se cibler elle-même !"
+      failed: "Cette commande a échoué !"
       higher_immunity: "{target} a une immunité supérieure à la vôtre !"
       invalid_choice: "« {value} » n'est pas un choix valide ici, utilisez l'un de ceux-ci : {choices}"
       no_access: "Vous n'avez pas accès à cette commande !"
+      no_console: "Cette commande ne peut pas être lancée depuis la console !"
+      not_a_number: "« {value} » n'est pas un nombre !"
       not_valid: "« {command} » n'est pas une commande valide !"
       player_ambiguous: "Plusieurs joueurs s'appellent « {player} », utilisez le SteamID de celui que vous voulez !"
       player_invalid: "« {player} » n'est pas un joueur valide !"
+      player_suggestion: "« {player} » n'est pas un joueur valide, vouliez-vous dire {suggestion} ? Les noms avec des espaces se mettent entre guillemets droits."
       syntax: "Syntaxe incorrecte, utilisez /{command} {syntax}"
+      too_long: "Cette commande est trop longue !"
       unknown_subcommand: "« {subcommand} » n'est pas une sous-commande de /{command}, utilisez l'une de celles-ci : {subcommands}"
       you_must_enter_command: "Vous devez saisir une commande !"
     config:
@@ -59,6 +68,7 @@ fr:
     name: "Français"
   notification:
     console: "Console"
+    player_disconnected: "{player} s'est déconnecté du serveur."
   operator:
     less: "Inférieur"
     greater: "Supérieur"
