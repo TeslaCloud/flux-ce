@@ -149,8 +149,8 @@ function ActiveRecord.Adapters.Abstract:format_datetime(unix_time)
 end
 
 --- Waits until a condition is met, running what the asynchronous queries have to do once
--- they are done in the meantime. Adapters whose synchronous queries wait for the
--- asynchronous ones started before them, as those of SQLite and MySQL do, do not need to
+-- they are done in the meantime. Adapters that connect at once and whose synchronous queries
+-- wait for the asynchronous ones started before them, as that of SQLite does, do not need to
 -- wait, and the abstract adapter only checks the condition.
 -- @param condition [Function returns true once there is nothing more to wait for]
 -- @param _timeout=10 [Number seconds after which to give up]

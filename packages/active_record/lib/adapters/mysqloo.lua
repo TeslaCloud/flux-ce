@@ -125,13 +125,56 @@ function ActiveRecord.Adapters.Mysqloo:connect(config, on_connected, on_failed)
   end
 end
 
---- Closes the MySQL connection, if there is one.
+--- Waits until a condition is met, delivering the callbacks of MySQLOO in the meantime. MySQLOO
+-- connects and runs the queries in a thread of its own and calls their callbacks only from its
+-- Think hook, which does not run while the server waits, and from the wait functions of its
+-- objects. While the connection is being made, the condition is checked until the timeout,
+-- since the wait function of the connection would wait for as long as the system takes to give
+-- up on the host. Once it is made or has failed, the wait function of the connection delivers
+-- its callback and those of the queries that are done, and that of the newest asynchronous
+-- query waits for it and for every query started before it. Gives up at once when there is no
+-- connection or no query left to wait for, and after the timeout.
+-- @param condition [Function returns true once there is nothing more to wait for]
+-- @param timeout=10 [Number seconds after which to give up]
+-- @return [Boolean whether the condition is met]
+function ActiveRecord.Adapters.Mysqloo:wait_until(condition, timeout)
+  local deadline = SysTime() + (timeout or 10)
+
+  while condition() != true do
+    local connection = self.connection
+
+    if !connection or SysTime() > deadline then
+      return false
+    end
+
+    if connection:status() == mysqloo.DATABASE_CONNECTING then continue end
+
+    connection:wait()
+
+    if condition() == true then break end
+
+    local query_obj = self._last_query
+
+    if !query_obj or !query_obj:isRunning() then
+      return false
+    end
+
+    query_obj:wait()
+  end
+
+  return true
+end
+
+--- Closes the MySQL connection, if there is one, and stops pinging it.
 function ActiveRecord.Adapters.Mysqloo:disconnect()
   if self.connection then
     self.connection:disconnect(true)
   end
 
+  timer.Remove('Mysqloo#keep_alive')
+
   self.connection = nil
+  self._last_query = nil
 end
 
 --- Escapes a string using the MySQL connection. Requires an established connection.
@@ -222,6 +265,8 @@ function ActiveRecord.Adapters.Mysqloo:raw_query(query, callback, query_type, bi
     end
   else
     query_obj:start()
+
+    self._last_query = query_obj
   end
 end
 
