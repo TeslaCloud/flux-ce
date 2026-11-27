@@ -11,6 +11,7 @@ DeriveGamemode('sandbox')
 local push_model_matrix                 = cam.PushModelMatrix
 local pop_model_matrix                  = cam.PopModelMatrix
 local surface_set_draw_color            = surface.SetDrawColor
+local draw_rounded_box                  = draw.RoundedBox
 local render_clear_stencil              = render.ClearStencil
 local render_set_stencil_enable         = render.SetStencilEnable
 local render_set_stencil_write_mask     = render.SetStencilWriteMask
@@ -357,6 +358,25 @@ do
   end
 end
 
+--- Clears the stencil buffer and sets it up so that what is drawn next marks the area to cut out
+-- without being shown. Switching the compare function to `STENCIL_NOTEQUAL` afterwards shows
+-- only what is drawn outside of that area.
+local function start_cutout()
+  render_clear_stencil()
+  render_set_stencil_enable(true)
+  render_set_stencil_write_mask(255)
+  render_set_stencil_test_mask(255)
+  render_set_stencil_reference(29)
+  render_set_stencil_fail_operation(STENCIL_REPLACE)
+  render_set_stencil_compare(STENCIL_EQUAL)
+end
+
+--- Turns the stencil test off and clears the stencil buffer that `start_cutout` has set up.
+local function end_cutout()
+  render_set_stencil_enable(false)
+  render_clear_stencil()
+end
+
 --- Draws with a cutout: whatever draw_func draws is only visible outside of the area that
 -- stencil_func draws. Does nothing unless both arguments are functions.
 -- ```
@@ -372,22 +392,15 @@ end
 function draw.stenciled(draw_func, stencil_func)
   if !isfunction(draw_func) or !isfunction(stencil_func) then return end
 
-  render_clear_stencil()
-  render_set_stencil_enable(true)
-    render_set_stencil_write_mask(255)
-    render_set_stencil_test_mask(255)
-    render_set_stencil_reference(29)
-    render_set_stencil_fail_operation(STENCIL_REPLACE)
-
-    render_set_stencil_compare(STENCIL_EQUAL)
-    stencil_func()
-    render_set_stencil_compare(STENCIL_NOTEQUAL)
-    draw_func()
-  render_set_stencil_enable(false)
-  render_clear_stencil()
+  start_cutout()
+  stencil_func()
+  render_set_stencil_compare(STENCIL_NOTEQUAL)
+  draw_func()
+  end_cutout()
 end
 
---- Draws the outline of a rounded box, leaving its inside untouched.
+--- Draws the outline of a rounded box, leaving its inside untouched. Uses the stencil buffer,
+-- as `draw.stenciled` does, and allocates nothing, so paint functions can call it every frame.
 -- @param rounding [Number corner radius of the outer edge]
 -- @param x [Number]
 -- @param y [Number]
@@ -396,15 +409,12 @@ end
 -- @param thickness [Number width of the outline in pixels]
 -- @param color [Color]
 -- @param rounding2=rounding [Number corner radius of the inner edge]
--- @see [draw.stenciled]
 function draw.box_outlined(rounding, x, y, w, h, thickness, color, rounding2)
-  rounding2 = rounding2 or rounding
-
-  draw.stenciled(function()
-    draw.RoundedBox(rounding, x, y, w, h, color)
-  end, function()
-    draw.RoundedBox(rounding2, x + thickness, y + thickness, w - thickness * 2, h - thickness * 2, color)
-  end)
+  start_cutout()
+  draw_rounded_box(rounding2 or rounding, x + thickness, y + thickness, w - thickness * 2, h - thickness * 2, color)
+  render_set_stencil_compare(STENCIL_NOTEQUAL)
+  draw_rounded_box(rounding, x, y, w, h, color)
+  end_cutout()
 end
 
 --- Draws a rectangle textured with a material. Does nothing if no material is given.
