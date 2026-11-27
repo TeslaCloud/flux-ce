@@ -22,16 +22,6 @@ local simple_text_outlined = draw.SimpleTextOutlined
 local outline_color = Color(0, 0, 0, 120)
 local max_rows = 8
 
-local function cut_chars(text, count)
-  if count <= 0 then return '' end
-
-  local byte = utf8.offset(text, count + 1)
-
-  if !byte then return text end
-
-  return text:sub(1, byte - 1)
-end
-
 local function char_len(text)
   return utf8.len(text) or #text
 end
@@ -361,8 +351,8 @@ function PANEL:update_completion()
   self.completion_cycle = nil
 
   local is_command, prefix_len = Flux.Command:is_command(value)
-  local prefix = is_command and cut_chars(value, prefix_len) or ''
-  local before = cut_chars(value, caret)
+  local prefix = is_command and value:utf8sub(1, prefix_len) or ''
+  local before = value:utf8sub(1, caret)
 
   if !is_command or #before < #prefix then
     self:reset_completion()
