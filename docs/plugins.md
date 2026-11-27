@@ -310,6 +310,22 @@ ITEM.health_delay = 1
 
 `ITEM:base_off` takes over a base from [`plugins/items/plugin/items/bases/`](../plugins/items/plugin/items/bases): `usable` (define `ITEM:use(actor)`), `consumable`, `medical`, `weapon`, `wearable` and others. The fields and callbacks an item can have are listed at the top of [`plugins/items/plugin/lib/classes/sh_item.lua`](../plugins/items/plugin/lib/classes/sh_item.lua). Compare `schema/items/sh_medical_bandage.lua` of HL2RP.
 
+An `equipable` item takes effect while it is equipped. Clothing that sets `ITEM.equip_inv` to an equipment inventory, such as `'equipment_torso'`, is equipped by being put into that inventory. Every other equipable item, a weapon, a radio, a flashlight, is equipped by being put on the hotbar, the row of numbered slots at the bottom of the screen: it stays in the main inventory or the pockets and is shown on the hotbar as well, and it is unequipped when it is taken off or leaves the player. Any item with a use action can be pinned to the hotbar too. One slot of the hotbar is in the hands; primary attack with an item in the hands that is not a weapon runs its client-side `on_hotbar_use` callback. A pinned item is used by it; an equipped item does nothing unless it defines the callback, and a use action that it has stays in its menu. The radio is switched on and off with it, and HL2RP's flashlight switches the light:
+
+```lua
+ITEM:base_off 'equipable'
+
+if CLIENT then
+  function ITEM:on_hotbar_use(_client)
+    RunConsoleCommand('impulse', '100')
+  end
+end
+```
+
+The hotbar can be changed in the inventory tab of the tab menu, in the context menu and, for the keys, in the container view. An item of the main inventory or the pockets is put on a slot by dragging it there, or by pressing the number of the slot while the cursor is over the item; an entry is moved to another slot the same way. Dragging an entry back onto the inventory, or right-clicking it, takes it off; dragging it onto the world, or onto the bare background of the inventory tab, drops its item, and dragging it onto any other panel leaves it where it is. Pressing Q (`Hotbar.drop_key`) while the cursor is over an item or an entry drops one of it into the world; a pinned entry stays on the bar.
+
+The library behind the hotbar is described at the top of [`plugins/items/plugin/lib/sh_hotbar.lua`](../plugins/items/plugin/lib/sh_hotbar.lua), its keys and drops at the top of [`plugins/items/plugin/lib/cl_hotbar_input.lua`](../plugins/items/plugin/lib/cl_hotbar_input.lua).
+
 ## Species
 
 With the Characters plugin loaded, every file in a `species/` folder is a species, named after the file. A species is what a character is: it owns the models, whether characters have a gender, a name and a description of their own, their random names and how many characters of it a player may have. The first stage of character creation offers one option per species, and is left out when there is only one. Flux ships one species, `human`, in [`plugins/characters/plugin/species/sh_human.lua`](../plugins/characters/plugin/species/sh_human.lua). A file whose ID is registered already reopens that species instead of replacing it, so `species/sh_human.lua` of a schema amends the human of Flux:

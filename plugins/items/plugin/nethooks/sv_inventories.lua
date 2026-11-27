@@ -1,7 +1,7 @@
---- Server-side receivers of the Items plugin for inventories: the move, drop and close
--- requests of the inventory panels, handled once they have been checked. A player's move
--- and drop requests, along with the menu actions of items, are taken at most once every
--- tenth of a second.
+--- Server-side receivers of the Items plugin for inventories: the move, drop and close requests
+-- of the inventory panels, whose drop request the keys and drags of the hotbar send as well,
+-- handled once they have been checked. A player's move and drop requests, along with the menu
+-- actions of items, are taken at most once every tenth of a second.
 
 local action_delay = 0.1
 
@@ -17,14 +17,6 @@ local function take_action_turn(actor)
   actor.fl_next_item_action = cur_time + action_delay
 
   return true
-end
-
-local function can_handle_items(actor)
-  if !actor:Alive() then
-    return false
-  end
-
-  return !isfunction(actor.is_ragdolled) or !actor:is_ragdolled()
 end
 
 --- Checks the item list of a move or drop request. The list has to name distinct items
@@ -72,7 +64,7 @@ Cable.receive('fl_item_move', function(actor, instance_ids, inventory_id, x, y, 
   if !inventory:has_receiver(actor) or !inventory:can_be_viewed_by(actor) then return end
   if !isnumber(x) or !isnumber(y) or x != x or y != y then return end
 
-  if !can_handle_items(actor) then
+  if !actor:can_handle_items() then
     old_inventory:sync()
     inventory:sync()
 
@@ -142,21 +134,22 @@ Cable.receive('fl_item_drop', function(actor, instance_ids)
 
   if !inventory then return end
 
-  if !can_handle_items(actor) then
+  if !actor:can_handle_items() then
     inventory:sync()
 
     return
   end
 
-  --- Called on the server when a player drops items by dragging them out of an
-  -- inventory panel. The hook is what performs the drop: the Items plugin handles it
-  -- by taking the items out of their inventory and spawning them in front of the player.
-  -- Requests that name items that do not exist, the same item twice, items from more
-  -- than one inventory, or an inventory that is not open for the player or that they are
-  -- no longer entitled to are dropped before the hook is run, and so are the requests of
-  -- a player who is dead or lies on the ground as a ragdoll. The Items plugin runs the
-  -- same hook with a single instance id instead of a list when a player uses the drop
-  -- option of an item's menu, so a handler has to accept both.
+  --- Called on the server when a player drops items by dragging them out of an inventory
+  -- panel, or drops a single item by dragging an entry of the hotbar onto the world or by
+  -- pressing the drop key over an item. The hook is what performs the drop: the Items plugin
+  -- handles it by taking the items out of their inventory and spawning them in front of the
+  -- player. Requests that name items that do not exist, the same item twice, items from more
+  -- than one inventory, or an inventory that is not open for the player or that they are no
+  -- longer entitled to are dropped before the hook is run, and so are the requests of a
+  -- player who is dead or lies on the ground as a ragdoll. The Items plugin runs the same
+  -- hook with a single instance id instead of a list when a player uses the drop option of an
+  -- item's menu, so a handler has to accept both.
   -- @param actor [Player The player dropping the items]
   -- @param instance_ids [List<Number> Instance ids of the items, all from one inventory]
   hook.Run('PlayerDropItem', actor, stack)

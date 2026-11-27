@@ -1,11 +1,12 @@
 --- ItemWeapon is the base class for items that give the player a weapon while equipped.
 -- A derived item sets `weapon_class`, the class of the weapon (`'weapon_pistol'` by
 -- default), and usually `equip_slot`, which is `'item.slot.primary'` by default.
--- Equipping the item gives the weapon to the player and selects it; unequipping strips
--- it. The rounds in both clips of the weapon are stored in the `ammo` data of the item
--- when it is unequipped and when the character is saved, and loaded back when it is
--- equipped. The unload button of the menu moves the loaded rounds to the ammo reserve
--- of the player.
+-- A weapon is an item of the hotbar: putting it on the hotbar equips it, which gives the
+-- weapon to the player and selects it; taking it off unequips it, which strips the weapon and
+-- puts the hands up if the weapon was in them. The rounds in both clips of the weapon are
+-- stored in the `ammo` data of the item when it is unequipped and when the character is
+-- saved, and loaded back when it is equipped. The unload button of the menu moves the loaded
+-- rounds to the ammo reserve of the player.
 -- @module [ItemWeapon]
 
 if !ItemEquipable then
@@ -54,6 +55,20 @@ function ItemWeapon:post_equipped(owner)
   end
 end
 
+--- Strips the weapon of the item from the player and, if it was the weapon in their hands,
+-- makes the hands weapon of the hotbar active.
+-- @param owner [Player]
+-- @param weapon [Weapon the weapon of the item that the player has]
+function ItemWeapon:strip_weapon(owner, weapon)
+  local held = owner:GetActiveWeapon() == weapon
+
+  owner:StripWeapon(self.weapon_class)
+
+  if held then
+    owner:SelectWeapon(Hotbar.hands_weapon)
+  end
+end
+
 --- Called when the item gets unequipped. Strips the weapon from the player
 -- and stores the contents of its clips in the item's data.
 -- @param owner [Player]
@@ -63,7 +78,7 @@ function ItemWeapon:post_unequipped(owner)
   if IsValid(weapon) then
     local ammo = { weapon:Clip1(), weapon:Clip2() }
 
-    owner:StripWeapon(self.weapon_class)
+    self:strip_weapon(owner, weapon)
     self:set_data('ammo', ammo)
   else
     Flux.dev_print('Invalid weapon class: '..self.weapon_class)

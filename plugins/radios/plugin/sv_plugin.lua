@@ -1,20 +1,16 @@
 --- Server side of the Radios plugin: finds the radios a player can use, sends what a player
 -- says over the radio to the players who should receive it, and retunes radios.
 
---- Returns the enabled radios a player has in their hotbar. A player who has no character
--- loaded has no inventories and therefore no radios.
+--- Returns the enabled radios a player has equipped on their hotbar, in the order of their
+-- slots. A player who has no character loaded has no inventories and therefore no radios.
 -- @param owner [Player player to check]
 -- @return [List<Item> enabled radios, empty if there are none]
 function Radios.get_radios(owner)
   local radios = {}
 
-  if !IsValid(owner) or !owner:IsPlayer() then return radios end
+  if !Hotbar.has_item_slots(owner) then return radios end
 
-  local hotbar = owner:get_inventories().hotbar
-
-  if !hotbar then return radios end
-
-  local items = hotbar:get_items()
+  local items = Hotbar.get_equipped(owner)
 
   for i = 1, #items do
     local item_obj = items[i]
@@ -27,14 +23,14 @@ function Radios.get_radios(owner)
   return radios
 end
 
---- Returns the first enabled radio in a player's hotbar.
+--- Returns the first enabled radio equipped on a player's hotbar.
 -- @param owner [Player player to check]
 -- @return [Item enabled radio, nil if there is none]
 function Radios.get_active_radio(owner)
   return Radios.get_radios(owner)[1]
 end
 
---- Checks whether a player has an enabled radio tuned to a frequency in their hotbar.
+--- Checks whether a player has an enabled radio tuned to a frequency equipped on their hotbar.
 -- @param owner [Player player to check]
 -- @param frequency [Number frequency to look for]
 -- @return [Boolean]
@@ -58,8 +54,8 @@ end
 --   if the plugin has given one]
 function Radios.can_radio(actor, text, item_obj)
   --- Asks whether a player may speak on the radio. Called on the server when a player
-  -- sends a chat message with a radio prefix and has an enabled radio in their hotbar,
-  -- before anything is sent.
+  -- sends a chat message with a radio prefix and has an enabled radio equipped on their
+  -- hotbar, before anything is sent.
   -- @param actor [Player the player about to speak]
   -- @param text [String the message, without the radio prefix]
   -- @param item_obj [Item the radio the player speaks into; `item_obj:get_frequency()`
@@ -75,8 +71,8 @@ function Radios.can_radio(actor, text, item_obj)
   return true
 end
 
---- Makes a player say a text over the radio in their hotbar. The player is notified if
--- they have no enabled radio there, if they may not speak in character (see
+--- Makes a player say a text over the radio equipped on their hotbar. The player is notified
+-- if they have no enabled radio there, if they may not speak in character (see
 -- `RPCommands:can_say_ic`), or if the PlayerCanRadio hook forbids them to speak and says why.
 -- Nothing happens if there is nothing in the text but spaces.
 -- @param actor [Player player who speaks]
@@ -113,11 +109,11 @@ function Radios.say_radio(actor, text)
   return Radios.speak_radio(actor, text, item_obj:get_frequency(), item_obj)
 end
 
---- Sends a radio message on a frequency. It is received anywhere by the speaker and by
--- the players with an enabled radio tuned to the frequency in their hotbar, and overheard
--- by the players near the speaker. The AdjustRadioInfo hook can change who receives
--- it, and the PlayerUsedRadio hook is run once it has been sent. The PlayerCanRadio hook
--- is not asked here, see `Radios.say_radio` for that.
+--- Sends a radio message on a frequency. It is received anywhere by the speaker and by the
+-- players with an enabled radio tuned to the frequency equipped on their hotbar, and
+-- overheard by the players near the speaker. The AdjustRadioInfo hook can change who
+-- receives it, and the PlayerUsedRadio hook is run once it has been sent. The
+-- PlayerCanRadio hook is not asked here, see `Radios.say_radio` for that.
 -- @param speaker [Player player talking]
 -- @param text [String message]
 -- @param frequency [Number frequency to talk on]
@@ -156,7 +152,7 @@ function Radios.speak_radio(speaker, text, frequency, item_obj)
   --   said), frequency (Number, changing it does not change the listeners), item (Item the
   --   radio spoken into, or nil), listeners (List<Player> who receives the message over the
   --   radio wherever they are: at first the speaker and everyone with an enabled radio on
-  --   the frequency in their hotbar; add or remove players to change that), eavesdrop
+  --   the frequency equipped on their hotbar; add or remove players to change that), eavesdrop
   --   (Boolean whether the players near the speaker overhear the message, true at first)
   --   and radius (Number how near they have to be, in units, before other plugins adjust it
   --   for each of them; 0 or less means that nobody overhears). A player who has been

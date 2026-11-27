@@ -35,16 +35,18 @@ en:
       inventory_height:
         name: Main inventory height
         desc: Height of the main player inventory in slots.
-      hotbar_width:
-        name: Hotbar inventory width
-        desc: Width of the player hotbar inventory in slots.
-      hotbar_height:
-        name: Hotbar inventory height
-        desc: Height of the player hotbar inventory in slots.
+      hotbar_slots:
+        name: Hotbar slots
+        desc: "How many of the slots 1 to 7 of the hotbar players have for their items. The items on the slots past a lowered value are taken off the hotbar."
       pockets_height:
         name: Pockets height
         desc: Height of the player pockets inventory in slots.
   error:
+    hotbar:
+      full: There is no free slot on the hotbar.
+      equip_slot_taken: "You cannot equip this while {item} is equipped."
+      cant_place: This item cannot be put on the hotbar.
+      cant_unequip: This item cannot be unequipped right now.
     item:
       other_character: You cannot touch an item that another character of yours has dropped.
       no_weapon_for_ammo: You are not carrying a weapon that uses this ammunition.
@@ -93,7 +95,14 @@ en:
       load: Load
       destroy: Destroy
       open: Open
+      pin: Pin to hotbar
+      unpin: Unpin from hotbar
   ui:
+    hotbar:
+      title: Hotbar
+      hands: Hands
+      physgun: Physics Gun
+      toolgun: Tool Gun
     item:
       destroy_title: Destroy Item
       destroy_message: "Are you sure that you want to destroy {item}? This cannot be undone."
@@ -110,7 +119,6 @@ en:
       copy: Copy item code
     inventory:
       main_inventory: Inventory
-      hotbar: Hotbar
       equipment:
         title: Equipment
         helmet: Helmet

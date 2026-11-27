@@ -94,8 +94,10 @@ function Factions.can_transfer(target, faction_table)
 end
 
 --- Gives a player the starter kit of a faction (see `Faction:get_kit`): every item of the kit
--- goes into their default inventory, and an equipable item is then moved into the inventory
--- it is equipped in, which equips it, when that is allowed; otherwise it stays where it is.
+-- goes into their default inventory, and an equipable item is then equipped when that is
+-- allowed: an item of the hotbar on the first free slot of the hotbar (see
+-- `Hotbar.place_free`), any other one by moving it into the inventory it is equipped in.
+-- Otherwise it stays where it is.
 -- With a rank, the items that grant the faction get that rank in their data. The player has
 -- to have the inventories of a loaded character. The membership of the player is refreshed on
 -- the next tick, as for any item they receive. Server only.
@@ -127,7 +129,9 @@ function Factions.give_kit(target, faction_table, rank)
     if item_obj and target:add_item(item_obj) then
       local equip_inv = item_obj.equip_inv
 
-      if isfunction(item_obj.is_equipped) and isstring(equip_inv) and target:get_inventory(equip_inv) then
+      if isfunction(item_obj.is_hotbar_item) and item_obj:is_hotbar_item() then
+        Hotbar.place_free(target, item_obj)
+      elseif isfunction(item_obj.is_equipped) and isstring(equip_inv) and target:get_inventory(equip_inv) then
         target:transfer_item(item_obj.instance_id, equip_inv)
       end
     else

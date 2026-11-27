@@ -3,8 +3,9 @@
 -- item, does what the take, use and drop actions of items are supposed to do, and calls the
 -- `on_drop`, `on_destroy`, `on_loadout`, `on_save`, `on_created` and `on_transfer`
 -- callbacks of items. It also creates the default inventories of players, loads and unloads
--- the items of characters, enforces the rules of moving items between inventories, closes
--- the inventories that players are no longer entitled to. Config keys turn on destroying
+-- the items of characters, enforces the rules of moving items between inventories, takes the
+-- equipped items that leave the storage of their player off the hotbar, closes the
+-- inventories that players are no longer entitled to. Config keys turn on destroying
 -- items on request of their owners, keeping players away from items another of their
 -- characters has dropped, and dropping the weapons of players who die.
 
@@ -118,7 +119,7 @@ end
 -- @param ... [Vararg extra arguments of the action]
 -- @return [Boolean false to prevent the action, nil otherwise]
 function Items:PlayerCanUseItem(actor, item_obj, _action, ...)
-  if !actor:Alive() or (isfunction(actor.is_ragdolled) and actor:is_ragdolled()) then
+  if !actor:can_handle_items() then
     return false
   end
 
@@ -488,16 +489,13 @@ local function add_inventory(inventories, inv_type, title, width, height, multis
 end
 
 --- Creates the default set of the player's inventories:
--- main inventory, hotbar, pockets and the equipment slots.
+-- main inventory, pockets and the equipment slots.
 -- @param _owner [Player]
 -- @param inventories [Map table to put the new inventories into, keyed by inventory type]
 function Items:AdjustPlayerInventories(_owner, inventories)
   local main_inventory = add_inventory(inventories, 'main_inventory', 'ui.inventory.main_inventory',
     Config.get('items_inventory_width'), Config.get('items_inventory_height'), true)
   main_inventory.default = true
-
-  add_inventory(inventories, 'hotbar', 'ui.inventory.hotbar',
-    Config.get('items_hotbar_width'), Config.get('items_hotbar_height'), false)
 
   for _, slot in ipairs(equipment_slots) do
     local inv_type, title, icon, height = unpack(slot)
@@ -653,13 +651,47 @@ function Items:PlayerDropItem(actor, instance_ids)
   inventory:sync()
 end
 
---- Calls the on_transfer callback of the item before it changes its inventory.
+--- Calls the on_transfer callback of the item before it changes its inventory, and takes an
+-- equipped item that is about to leave the storage of its player off their hotbar, which
+-- unequips it.
 -- @param item_obj [Item]
 -- @param new_inventory [Inventory where the item goes, or nil if it is dropped or used up]
 -- @param old_inventory [Inventory where the item was, or nil if it is picked up]
 function Items:PreTransferItem(item_obj, new_inventory, old_inventory)
   if item_obj.on_transfer then
     item_obj:on_transfer(new_inventory, old_inventory)
+  end
+
+  local owner = old_inventory and old_inventory.owner
+
+  if Hotbar.is_storage(old_inventory, owner) and !Hotbar.is_storage(new_inventory, owner) then
+    Hotbar.release_item(owner, item_obj)
+  end
+end
+
+--- Takes an equipped item that has been taken out of the storage of its player off their
+-- hotbar, which unequips it.
+-- @param item_obj [Item]
+-- @param inventory [Inventory the inventory the item was in]
+function Items:ItemTaken(item_obj, inventory)
+  local owner = inventory.owner
+
+  if Hotbar.is_storage(inventory, owner) then
+    Hotbar.release_item(owner, item_obj)
+  end
+end
+
+--- Takes the entries that lie past the item slots off the hotbars of the players when the
+-- `items_hotbar_slots` config is lowered.
+-- @param key [String key of the config that has changed]
+-- @param old_value [Any]
+-- @param new_value [Any]
+function Items:ConfigChanged(key, old_value, new_value)
+  if key != 'items_hotbar_slots' or !isnumber(old_value) or !isnumber(new_value) then return end
+  if new_value >= old_value then return end
+
+  for _, target in player.Iterator() do
+    Hotbar.trim(target)
   end
 end
 

@@ -35,16 +35,18 @@ es:
       inventory_height:
         name: Alto del inventario principal
         desc: Alto del inventario principal del jugador en casillas.
-      hotbar_width:
-        name: Ancho de la barra rápida
-        desc: Ancho del inventario de la barra rápida del jugador en casillas.
-      hotbar_height:
-        name: Alto de la barra rápida
-        desc: Alto del inventario de la barra rápida del jugador en casillas.
+      hotbar_slots:
+        name: Casillas de la barra rápida
+        desc: "Cuántas de las casillas 1 a 7 de la barra rápida tienen los jugadores para sus objetos. Los objetos de las casillas que quedan fuera al reducir el valor se quitan de la barra rápida."
       pockets_height:
         name: Alto de los bolsillos
         desc: Alto del inventario de bolsillos del jugador en casillas.
   error:
+    hotbar:
+      full: No hay ninguna casilla libre en la barra rápida.
+      equip_slot_taken: "No puedes equipar esto mientras tengas equipado {item}."
+      cant_place: Este objeto no se puede poner en la barra rápida.
+      cant_unequip: Este objeto no se puede desequipar ahora.
     item:
       other_character: No puedes tocar un objeto que ha soltado otro de tus personajes.
       no_weapon_for_ammo: No llevas ningún arma que use esta munición.
@@ -93,7 +95,14 @@ es:
       load: Cargar
       destroy: Destruir
       open: Abrir
+      pin: Fijar en la barra rápida
+      unpin: Quitar de la barra rápida
   ui:
+    hotbar:
+      title: Barra rápida
+      hands: Manos
+      physgun: Pistola de física
+      toolgun: Pistola de herramientas
     item:
       destroy_title: Destruir objeto
       destroy_message: "¿Seguro que quieres destruir {item}? Esto no se puede deshacer."
@@ -110,7 +119,6 @@ es:
       copy: Copiar código del objeto
     inventory:
       main_inventory: Inventario
-      hotbar: Barra rápida
       equipment:
         title: Equipo
         helmet: Casco

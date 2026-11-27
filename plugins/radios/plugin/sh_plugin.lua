@@ -1,14 +1,16 @@
 --- Radios lets characters talk to each other over any distance.
--- A radio is an item with a frequency. A character who keeps an enabled radio in their
--- hotbar speaks on its frequency by starting a chat message with one of
--- `Radios.prefixes`, which make up the `radio` chat prefix of the chatbox, and
--- everyone with an enabled radio tuned to that frequency in their own hotbar receives the
+-- A radio is an item with a frequency that is equipped on the hotbar. A character who has an
+-- enabled radio equipped speaks on its frequency by starting a chat message with one of
+-- `Radios.prefixes`, which make up the `radio` chat prefix of the chatbox, and everyone
+-- with an enabled radio tuned to that frequency equipped on their own hotbar receives the
 -- message wherever they are. The players standing near the speaker overhear it, like
 -- anything else that is said out loud. Radio messages are written in the color of the
 -- `radios_chat_color` config.
 --
 -- The frequency of a radio is changed through its item menu: the server asks the player
--- for the new frequency with a prompt and checks the answer before the radio is retuned.
+-- for the new frequency with a prompt and checks the answer before the radio is retuned. A
+-- radio is turned on and off through its item menu, or with primary attack while it is in
+-- the hands on the hotbar.
 --
 -- Three server-side hooks surround a transmission: `PlayerCanRadio` can forbid a player to
 -- speak on the radio, `AdjustRadioInfo` decides who receives the message and

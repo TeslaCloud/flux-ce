@@ -174,7 +174,8 @@ function Factions:ItemTaken(_item_obj, inventory)
 end
 
 --- Resolves the memberships of the players whose inventories an item has left and entered,
--- which is how equipping and unequipping an item changes a membership.
+-- which is how equipping and unequipping an item of an equipment inventory changes a
+-- membership.
 -- @param _item_obj [Item]
 -- @param new_inventory [Inventory nil when the item has left for the world or been removed]
 -- @param old_inventory [Inventory nil when the item has been picked up]
@@ -186,6 +187,22 @@ function Factions:ItemTransferred(_item_obj, new_inventory, old_inventory)
   if old_inventory then
     self.queue_refresh(old_inventory.owner)
   end
+end
+
+--- Resolves the membership of a player who has equipped an item, which is how putting an item
+-- on the hotbar changes a membership.
+-- @param owner [Player]
+-- @param _item_obj [Item]
+function Factions:ItemEquipped(owner, _item_obj)
+  self.queue_refresh(owner)
+end
+
+--- Resolves the membership of a player who has unequipped an item, which is how taking an
+-- item off the hotbar changes a membership.
+-- @param owner [Player]
+-- @param _item_obj [Item]
+function Factions:ItemUnequipped(owner, _item_obj)
+  self.queue_refresh(owner)
 end
 
 --- Takes the faction of a character away from the player who drops it: clears the networked

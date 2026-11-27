@@ -2,7 +2,9 @@
 -- It displays the item or the stack of items in the slot as a model or an icon, can be
 -- dragged onto other slots and opens the menu of the item when it is clicked. An item
 -- can draw on its slot with its `paint_slot` and `paint_over_slot` callbacks and adjust
--- the model view with `adjust_model_panel`.
+-- the model view with `adjust_model_panel`. While the cursor is over a slot of the storage of
+-- the local player, the number keys put its item on the hotbar and the drop key drops one of
+-- it (see `lib/cl_hotbar_input.lua`). The slots of the hotbar (`fl_hotbar_slot`) build upon it.
 
 local IsValid = IsValid
 local isnumber = isnumber
@@ -43,7 +45,6 @@ local PANEL = {}
 PANEL.item_data = nil
 PANEL.item_count = 0
 PANEL.instance_ids = {}
-PANEL.slot_number = nil
 PANEL.icon = nil
 PANEL.rotated = false
 
@@ -116,16 +117,8 @@ function PANEL:Paint(w, h)
 
   draw_rounded_box(radius, 0, 0, w, h, draw_color)
 
-  if !is_dragging and item_obj and item_obj.background_color then
-    local background_color = item_obj.background_color
-    local faded_color = faded_backgrounds[background_color]
-
-    if !faded_color then
-      faded_color = background_color:alpha(100)
-      faded_backgrounds[background_color] = faded_color
-    end
-
-    draw_rounded_box(radius, 0, 0, w, h, faded_color)
+  if !is_dragging then
+    self:paint_item_background(w, h, radius)
   end
 
   local icon = self.icon
@@ -157,7 +150,33 @@ function PANEL:Paint(w, h)
   end
 end
 
-local function draw_badge(text, x, y, color, align_right)
+--- Draws the background color of the item of the slot, if it has one, faded over the slot.
+-- @param w [Number]
+-- @param h [Number]
+-- @param radius [Number corner radius]
+function PANEL:paint_item_background(w, h, radius)
+  local item_obj = self.item_data
+  local background_color = item_obj and item_obj.background_color
+
+  if !background_color then return end
+
+  local faded_color = faded_backgrounds[background_color]
+
+  if !faded_color then
+    faded_color = background_color:alpha(100)
+    faded_backgrounds[background_color] = faded_color
+  end
+
+  draw_rounded_box(radius, 0, 0, w, h, faded_color)
+end
+
+--- Draws a small rounded label with a text on the slot.
+-- @param text [String/Number]
+-- @param x [Number left edge of the label, or its right edge when align_right is set]
+-- @param y [Number top edge of the label]
+-- @param color [Color color of the text]
+-- @param align_right=false [Boolean]
+function PANEL:draw_badge(text, x, y, color, align_right)
   local font = Theme.get_font('text_smallest')
   local text_w, text_h = util.text_size(text, font)
   local padding = math_scale(4)
@@ -171,23 +190,22 @@ local function draw_badge(text, x, y, color, align_right)
   draw_simple_text(text, font, x + padding, y + padding * 0.5, color)
 end
 
---- Draws the amount of items in the stack and the number of the slot.
+--- Returns the height of the labels that `PANEL:draw_badge` draws.
+-- @return [Number]
+function PANEL:get_badge_height()
+  return util.font_size(Theme.get_font('text_smallest')) + math_scale(4)
+end
+
+--- Draws the amount of items in the stack.
 -- Calls the paint_over_slot callback of the item afterward.
 -- @param w [Number]
 -- @param h [Number]
 function PANEL:PaintOver(w, h)
   local item_count = self.item_count
   local margin = math_scale(3)
-  local badge_h = util.font_size(Theme.get_font('text_smallest')) + math_scale(4)
 
   if item_count >= 2 then
-    draw_badge(item_count, w - margin, h - badge_h - margin, get_color('text'), true)
-  end
-
-  local slot_number = self.slot_number
-
-  if !self:IsDragging() and isnumber(slot_number) then
-    draw_badge(slot_number, margin, margin, get_color('text_muted'))
+    self:draw_badge(item_count, w - margin, h - self:get_badge_height() - margin, get_color('text'), true)
   end
 
   Theme.hook('PaintOverItemSlot', self, w, h)
@@ -197,6 +215,32 @@ function PANEL:PaintOver(w, h)
   if item_obj and item_obj.paint_over_slot then
     item_obj:paint_over_slot(w, h)
   end
+end
+
+--- Tells the Hotbar library that the cursor is over the slot, for the keys that act on the
+-- hovered item (see `Hotbar.poll_hover_keys`).
+function PANEL:OnCursorEntered()
+  Hotbar.hover(self)
+end
+
+--- Tells the Hotbar library that the cursor has left the slot.
+function PANEL:OnCursorExited()
+  Hotbar.unhover(self)
+end
+
+--- Returns what the keys of the hotbar act on while the cursor is over the slot: its item, if
+-- the inventory of the slot is part of the storage of the local player (see
+-- `Hotbar.get_hover_target`).
+-- @return [Item the item of the slot, Nil, Item the instance of the stack that the drop key
+--   drops; nothing for an empty slot or a slot of another inventory]
+function PANEL:get_hover_target()
+  local item_obj = self.item_data
+
+  if !item_obj or !Hotbar.is_storage(Inventories.find(self.inventory_id), PLAYER) then return end
+
+  local instance_ids = self.instance_ids
+
+  return item_obj, nil, Item.find_instance_by_id(instance_ids[#instance_ids])
 end
 
 --- Remembers the slot as the one that the item is being dragged from.
@@ -314,10 +358,16 @@ function PANEL:rebuild()
     self:undraggable()
 
     return
-  else
-    self:Droppable('fl_item')
   end
 
+  self:Droppable('fl_item')
+  self:create_icon()
+  self:SetToolTip(t(self.item_data:get_name())..'\n'..t(self.item_data:get_description()))
+end
+
+--- Creates the icon or the model of the item of the slot, in place of the one it had: the
+-- icon material of the item, or its model as seen through its icon data.
+function PANEL:create_icon()
   local icon = self.item_data:get_icon_material()
 
   if icon then
@@ -382,8 +432,6 @@ function PANEL:rebuild()
       self.item_data:adjust_model_panel(self.model_panel, self)
     end
   end
-
-  self:SetToolTip(t(self.item_data:get_name())..'\n'..t(self.item_data:get_description()))
 end
 
 --- Returns the size of the item in a number of slots, considering its rotation.

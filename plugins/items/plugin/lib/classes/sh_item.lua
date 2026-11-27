@@ -45,7 +45,11 @@
 --
 -- - `is_action_visible(action)`: return false to hide the `'use'`, `'take'`, `'drop'` or
 --   `'destroy'` option of the menu.
--- - `paint_slot(w, h)` and `paint_over_slot(w, h)`: draw on the inventory slot of the item.
+-- - `paint_slot(w, h)` and `paint_over_slot(w, h)`: draw on the inventory slot of the item,
+--   and on its slot of the hotbar.
+-- - `on_hotbar_use(client)`: the local player clicks primary attack while the item is in
+--   their hands on the hotbar. A pinned item is used; an equipped item does nothing unless
+--   it defines the callback. See `ItemBase:on_hotbar_use`.
 -- - `on_entity_draw(entity)`: the entity of the item is about to be drawn; return false
 --   to keep its model from being drawn.
 --
@@ -406,8 +410,8 @@ if SERVER then
   -- 'on_take', 'on_drop' and 'on_destroy' also calls the item's method of the same name with
   -- the player and the extra arguments. Runs the 'PlayerUsedItem' hook when done.
   -- ```
-  -- -- Makes the player pick up the item into their hotbar.
-  -- item_obj:do_menu_action('on_take', actor, { inv_type = 'hotbar' })
+  -- -- Makes the player pick up the item into their pockets.
+  -- item_obj:do_menu_action('on_take', actor, { inv_type = 'pockets' })
   -- ```
   -- @param act [String 'on_use', 'on_take', 'on_drop', 'on_destroy' or the callback of a
   --   custom button]
@@ -459,7 +463,8 @@ if SERVER then
       -- handles it by taking the item out of its inventory and spawning it in front of
       -- the player. The Items plugin also runs this hook itself, with a list of
       -- instance ids instead of a single one, when items are dragged out of an inventory
-      -- panel.
+      -- panel, when an entry of the hotbar is dragged onto the world and when the drop key is
+      -- pressed over an item.
       -- @param actor [Player The player dropping the item]
       -- @param instance_id [Number Instance id of the item]
       -- @return [Any Any value other than nil ends the action right there: the action
@@ -545,6 +550,25 @@ else
   -- @return [String language phrase]
   function ItemBase:get_cancel_text()
     return self.cancel_text or 'item.option.cancel'
+  end
+
+  --- Called on the client when the local player clicks primary attack while the item is in
+  -- their hands: its slot of the hotbar is selected and holds no weapon, so the hands weapon
+  -- is active and the click does not reach it. This is the hotbar action of the item. The
+  -- base class uses the item, which is what a pinned item does: only items that have a use
+  -- action and are not equipable can be pinned. An equipped item of the hotbar has no hotbar
+  -- action unless its class defines one (see `ItemEquipable:on_hotbar_use`). The server checks
+  -- the menu actions that the callback requests as it checks those of the item menu.
+  -- Client-side only.
+  -- ```
+  -- -- A lamp that is switched on and off with a click while it is held.
+  -- function ITEM:on_hotbar_use(_client)
+  --   self:do_menu_action('on_toggle')
+  -- end
+  -- ```
+  -- @param _client [Player the local player]
+  function ItemBase:on_hotbar_use(_client)
+    self:do_menu_action('on_use')
   end
 
   --- Returns the model that is shown in inventory slots instead of the item's own model.

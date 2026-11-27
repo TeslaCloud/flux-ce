@@ -1,7 +1,8 @@
 --- Client-side receivers of the Items plugin for inventories: the inventories and the
 -- requests to open or close them that the server sends, and its requests to rebuild the
 -- player model preview. Closing an inventory that the server has removed forgets the copy
--- of it as well.
+-- of it as well, and clearing the inventories of the local player refreshes the hotbar, which
+-- then has no item slots.
 
 local IsValid = IsValid
 
@@ -45,6 +46,8 @@ Cable.receive('fl_inventories_clear', function()
   end
 
   PLAYER.inventories = nil
+
+  Hotbar.refresh()
 end)
 
 Cable.receive('fl_rebuild_player_panel', function()

@@ -11,7 +11,7 @@ es:
     radio:
       unavailable: Ya no puedes usar esa radio.
   notification:
-    no_active_radio: No tienes una radio activa. Pon una radio encendida en la barra rápida.
+    no_active_radio: No tienes una radio activa. Equipa una radio encendida poniéndola en la barra rápida.
     radio:
       frequency_set: "La radio está sintonizada ahora en {frequency}."
   item:

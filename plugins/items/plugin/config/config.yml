@@ -51,22 +51,14 @@ configs:
     min_value: 1
     max_value: 64
     default_value: 6
-  items_hotbar_height:
-    name: config.items.hotbar_height.name
-    description: config.items.hotbar_height.desc
+  items_hotbar_slots:
+    name: config.items.hotbar_slots.name
+    description: config.items.hotbar_slots.desc
     category: items
     type: number
     min_value: 1
-    max_value: 64
-    default_value: 1
-  items_hotbar_width:
-    name: config.items.hotbar_width.name
-    description: config.items.hotbar_width.desc
-    category: items
-    type: number
-    min_value: 1
-    max_value: 64
-    default_value: 8
+    max_value: 7
+    default_value: 7
   items_pockets_height:
     name: config.items.pockets_height.name
     description: config.items.pockets_height.desc

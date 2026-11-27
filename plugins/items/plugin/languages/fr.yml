@@ -35,16 +35,18 @@ fr:
       inventory_height:
         name: "Hauteur de l'inventaire principal"
         desc: "Hauteur de l'inventaire principal du joueur, en emplacements."
-      hotbar_width:
-        name: "Largeur de la barre d'accès rapide"
-        desc: "Largeur de la barre d'accès rapide du joueur, en emplacements."
-      hotbar_height:
-        name: "Hauteur de la barre d'accès rapide"
-        desc: "Hauteur de la barre d'accès rapide du joueur, en emplacements."
+      hotbar_slots:
+        name: "Emplacements de la barre d'accès rapide"
+        desc: "Combien des emplacements 1 à 7 de la barre d'accès rapide les joueurs ont pour leurs objets. Les objets des emplacements au-delà d'une valeur abaissée sont retirés de la barre."
       pockets_height:
         name: "Hauteur des poches"
         desc: "Hauteur de l'inventaire des poches du joueur, en emplacements."
   error:
+    hotbar:
+      full: "Il n'y a aucun emplacement libre dans la barre d'accès rapide."
+      equip_slot_taken: "Vous ne pouvez pas équiper cet objet tant que {item} est équipé."
+      cant_place: "Cet objet ne peut pas être placé dans la barre d'accès rapide."
+      cant_unequip: "Cet objet ne peut pas être déséquipé pour le moment."
     item:
       other_character: "Vous ne pouvez pas toucher un objet qu'un autre de vos personnages a lâché."
       no_weapon_for_ammo: "Vous ne portez aucune arme qui utilise ces munitions."
@@ -93,7 +95,14 @@ fr:
       load: "Charger"
       destroy: "Détruire"
       open: "Ouvrir"
+      pin: "Épingler à la barre d'accès rapide"
+      unpin: "Retirer de la barre d'accès rapide"
   ui:
+    hotbar:
+      title: "Barre d'accès rapide"
+      hands: "Mains"
+      physgun: "Pistolet physique"
+      toolgun: "Pistolet à outils"
     item:
       destroy_title: "Détruire l'objet"
       destroy_message: "Voulez-vous vraiment détruire {item} ? Cette action est irréversible."
@@ -110,7 +119,6 @@ fr:
       copy: "Copier le code de l'objet"
     inventory:
       main_inventory: "Inventaire"
-      hotbar: "Barre d'accès rapide"
       equipment:
         title: "Équipement"
         helmet: "Casque"

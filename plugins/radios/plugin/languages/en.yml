@@ -11,7 +11,7 @@ en:
     radio:
       unavailable: You can no longer use that radio.
   notification:
-    no_active_radio: You don't have an active radio. Put the turned on radio to the hotbar inventory.
+    no_active_radio: You don't have an active radio. Equip a radio that is turned on by putting it on your hotbar.
     radio:
       frequency_set: "The radio is now tuned to {frequency}."
   item:

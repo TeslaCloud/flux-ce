@@ -1,10 +1,12 @@
 --- The `fl_inventory_container` panel is a fullscreen view that shows another inventory
--- next to the main inventory, the pockets and the hotbar of the local player, so that
--- items can be dragged between them. A player without a character, such as a gamemaster in
+-- next to the main inventory and the pockets of the local player, so that items can be
+-- dragged between them. A player without a character, such as a gamemaster in
 -- gamemaster mode, has no inventories of their own and sees the other inventory alone.
 -- The server opens it for a single inventory, such as that of a container, or for all
 -- inventories of another player. When it is removed it tells the server that the
--- inventories have been closed.
+-- inventories have been closed. It shows no hotbar, but while the cursor is over an item of
+-- the main inventory or the pockets of the local player, the number keys put it on the hotbar
+-- and the drop key drops one of it into the world (see `lib/cl_hotbar_input.lua`).
 
 local math_scale = math.scale
 local math_scale_x = math.scale_x
@@ -14,7 +16,7 @@ local PANEL = {}
 PANEL.title = 'ui.inventory.container'
 
 --- Creates the fullscreen panel with the close button
--- and the local player's main inventory, pockets and hotbar, if they have them.
+-- and the local player's main inventory and pockets, if they have them.
 function PANEL:Init()
   local scrw, scrh = ScrW(), ScrH()
 
@@ -46,8 +48,7 @@ function PANEL:Init()
 end
 
 --- Creates the panels of the local player's main inventory and pockets, at the center of
--- the screen, and of their hotbar at the bottom. Those the player does not have are left
--- out.
+-- the screen. Those the player does not have are left out.
 -- @param own [Map the local player's inventories by type]
 function PANEL:create_own_inventories(own)
   local scrw, scrh = ScrW(), ScrH()
@@ -83,17 +84,6 @@ function PANEL:create_own_inventories(own)
     self.pockets:SetPos(x, y + main_h + title_h + math_scale(16))
     self.pockets:rebuild()
   end
-
-  if own.hotbar then
-    self.hotbar = own.hotbar:create_panel(self)
-    self.hotbar:set_slot_size(math_scale(80))
-    self.hotbar:set_slot_padding(math_scale(8))
-    self.hotbar:draw_inventory_slots(true)
-    self.hotbar:set_title('ui.inventory.hotbar')
-    self.hotbar:SizeToContents()
-    self.hotbar:SetPos(scrw * 0.5 - self.hotbar:GetWide() * 0.5, scrh - self.hotbar:GetTall() - math_scale(16))
-    self.hotbar:rebuild()
-  end
 end
 
 --- Draws the blurred and tinted background of the panel.
@@ -108,12 +98,8 @@ function PANEL:Paint(w, h)
   Theme.hook('PaintInventoryContainerBackground', self, w, h)
 end
 
---- Removes the hotbar and tells the server that the opened inventories have been closed.
+--- Tells the server that the opened inventories have been closed.
 function PANEL:OnRemove()
-  if IsValid(self.hotbar) then
-    self.hotbar:safe_remove()
-  end
-
   Flux.blur_update_fps = 8
 
   Cable.send('fl_inventory_close', self:get_inventory_ids())
@@ -177,7 +163,7 @@ function PANEL:open_player_inventories(owner, inventory_ids)
 
   local container = self.container
 
-  self:lay_out_player_storage(container.main_inventory, container.pockets, container.hotbar)
+  self:lay_out_player_storage(container.main_inventory, container.pockets)
   self:lay_out_player_equipment(container.main_inventory or container.pockets)
 
   for _, inventory_panel in pairs(container) do
@@ -185,13 +171,12 @@ function PANEL:open_player_inventories(owner, inventory_ids)
   end
 end
 
---- Sizes and positions the panels of the main inventory, the pockets and the hotbar of
--- another player: next to those of the local player, or at the center of the screen if
--- the local player has none. Any of them may be nil.
+--- Sizes and positions the panels of the main inventory and the pockets of another player:
+-- next to those of the local player, or at the center of the screen if the local player has
+-- none. Either of them may be nil.
 -- @param main_inventory [Panel]
 -- @param pockets [Panel]
--- @param hotbar [Panel]
-function PANEL:lay_out_player_storage(main_inventory, pockets, hotbar)
+function PANEL:lay_out_player_storage(main_inventory, pockets)
   local scrw, scrh = ScrW(), ScrH()
   local main_w, main_h, pockets_h = 0, 0, 0
 
@@ -209,16 +194,8 @@ function PANEL:lay_out_player_storage(main_inventory, pockets, hotbar)
     pockets_h = pockets:GetTall()
   end
 
-  if hotbar then
-    hotbar:set_slot_size(math_scale(80))
-    hotbar:set_slot_padding(math_scale(8))
-    hotbar:draw_inventory_slots(true)
-    hotbar:set_title('ui.inventory.hotbar')
-    hotbar:SizeToContents()
-  end
-
   local title_h = select(2, util.text_size(t'ui.inventory.pockets', Theme.get_font('text_normal_large')))
-  local own_main, own_pockets, own_hotbar = self.main_inventory, self.pockets, self.hotbar
+  local own_main, own_pockets = self.main_inventory, self.pockets
   local x, y
 
   if IsValid(own_main) then
@@ -234,15 +211,6 @@ function PANEL:lay_out_player_storage(main_inventory, pockets, hotbar)
 
   if pockets then
     pockets:SetPos(x, IsValid(own_pockets) and own_pockets.y or y + main_h + title_h + math_scale(16))
-  end
-
-  if !hotbar then return end
-
-  if IsValid(own_hotbar) then
-    own_hotbar:SetPos(scrw * 0.5 - own_hotbar:GetWide() - math_scale_x(6), own_hotbar.y)
-    hotbar:SetPos(scrw * 0.5 + math_scale_x(6), own_hotbar.y)
-  else
-    hotbar:SetPos(scrw * 0.5 - hotbar:GetWide() * 0.5, scrh - hotbar:GetTall() - math_scale(16))
   end
 end
 

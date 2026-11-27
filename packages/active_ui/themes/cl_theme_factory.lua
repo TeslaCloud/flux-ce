@@ -65,6 +65,7 @@ function THEME:on_loaded()
   self:set_option('corner_radius',                math.scale(6))
   self:set_option('corner_radius_small',          math.scale(4))
   self:set_option('panel_padding',                math.scale(12))
+  self:set_option('inventory_card_margin',        math.scale(6))
   self:set_option('frame_header_size',            math.scale(36))
   self:set_option('frame_line_weight',            math.scale(2))
   self:set_option('menu_sidebar_width',           300)
@@ -789,12 +790,13 @@ function THEME:PaintItemSlot(_panel, w, h)
   textured_rect(self:get_material('gradient_up'), 0, 0, w, h, color_slot_gradient)
 end
 
---- Draws the card around an inventory panel.
--- @param _panel [Panel the inventory panel]
+--- Draws the card around an inventory panel or the hotbar, reaching the `inventory_card_margin`
+-- option past the bounds of the panel on every side.
+-- @param _panel [Panel the inventory panel or the hotbar]
 -- @param w [Number panel width]
 -- @param h [Number panel height]
 function THEME:PaintInventoryBackground(_panel, w, h)
-  local padding = math.scale(6)
+  local padding = self:get_option('inventory_card_margin', 0)
 
   DisableClipping(true)
     self:PaintCard(

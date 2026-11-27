@@ -1,16 +1,16 @@
---- Server side of the memberships of factions. Nothing stores which faction a character is
--- in: `Factions.resolve_membership` works it out from what the player carries and wears, and
--- from the default faction of their species, and `Factions.refresh_membership` applies the
--- result whenever it may have changed. The plugin refreshes the membership when a character is
+--- Server side of the memberships of factions. Nothing stores which faction a character is in:
+-- `Factions.resolve_membership` works it out from what the player carries and wears, and from
+-- the default faction of their species, and `Factions.refresh_membership` applies the result
+-- whenever it may have changed. The plugin refreshes the membership when a character is
 -- applied, when its items have been loaded, and on the next tick after anything that adds,
--- takes or moves an item of the player (see `Factions.queue_refresh`). A refresh that changes
--- the faction calls the on_player_leave callback of the old faction and the on_player_join
--- callback of the new one, then runs PlayerFactionChanged. The plugin forgets the membership
--- of a player before a character is applied, when the active character is dropped and when
--- the player disconnects: that calls the on_player_leave callback of their faction and runs
--- no hook, so every applied character that is in a faction gets on_player_join and
--- `PlayerFactionChanged(target, faction, nil)` from its first resolution, and on_player_leave
--- when it stops being active.
+-- takes, moves, equips or unequips an item of the player (see `Factions.queue_refresh`). A
+-- refresh that changes the faction calls the on_player_leave callback of the old faction and
+-- the on_player_join callback of the new one, then runs PlayerFactionChanged. The plugin
+-- forgets the membership of a player before a character is applied, when the active character
+-- is dropped and when the player disconnects: that calls the on_player_leave callback of their
+-- faction and runs no hook, so every applied character that is in a faction gets on_player_join
+-- and `PlayerFactionChanged(target, faction, nil)` from its first resolution, and
+-- on_player_leave when it stops being active.
 --
 -- Until the items of a character have been loaded, its membership is provisional: it is the
 -- membership resolved last for that character, which is kept in its generic character data
@@ -333,8 +333,9 @@ end
 
 --- Refreshes the membership of a player on the next tick, once however often it is queued
 -- before then. The plugin queues a refresh whenever an item is added to, taken from or moved
--- between the inventories of a player, since the hooks of the Items plugin run at different
--- moments of a move. Server only.
+-- between the inventories of a player, and whenever an item of a player is equipped or
+-- unequipped, since the hooks of the Items plugin run at different moments of a move. Server
+-- only.
 -- @param target [Player nothing happens for anything else]
 -- @see [Factions.refresh_membership]
 function Factions.queue_refresh(target)

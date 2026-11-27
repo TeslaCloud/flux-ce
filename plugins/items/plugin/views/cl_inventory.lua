@@ -3,7 +3,9 @@
 -- It is created with `Inventory:create_panel` and is rebuilt every time the inventory is
 -- synchronized. Dropping an item onto a slot asks the server to move it there; dropping it
 -- onto the parent of the panel asks the server to drop it into the world. Pressing R
--- rotates the item that is being dragged.
+-- rotates the item that is being dragged. An entry of the hotbar dropped onto the panel is
+-- taken off the hotbar if the inventory is part of the storage of the local player and stays
+-- otherwise (see `lib/cl_hotbar_input.lua`).
 
 local IsValid = IsValid
 
@@ -11,13 +13,14 @@ local PANEL = {}
 PANEL.title = nil
 PANEL.slot_size = math.scale(64)
 PANEL.slot_padding = math.scale(3)
-PANEL.draw_inventory_slots = false
 
---- Creates the scrollable grid of slots and makes it accept dragged items.
--- Items dropped onto the parent panel get dropped into the world.
+--- Creates the scrollable grid of slots and makes it accept dragged items and entries of the
+-- hotbar. Items dropped onto the parent panel get dropped into the world.
 function PANEL:Init()
   self:RequestFocus()
   self.slot_panels = {}
+
+  self:Receiver('fl_hotbar', Hotbar.receive_entry_on_inventory)
 
   self.horizontal_scroll = vgui.Create('DHorizontalScroller', self)
   self.horizontal_scroll.OnMouseWheeled = function(pnl, dlta)
@@ -201,10 +204,6 @@ function PANEL:start_dragging(dropped)
         if panel:is_disabled() then
           slot.disabled = true
         end
-
-        if panel.draw_inventory_slots == true then
-          slot.slot_number = k + (i - 1) * panel:get_inventory_width()
-        end
       elseif panel:is_multislot() then
         local slot = panel.slot_panels[i][k]
         slot:reset()
@@ -298,7 +297,6 @@ function PANEL:rebuild()
   local inventory_id = self:get_inventory_id()
   local multislot = inventory:is_multislot()
   local disabled = inventory:is_disabled()
-  local draw_slot_numbers = self.draw_inventory_slots == true
   local icon = self:get_icon()
 
   for i = 1, height do
@@ -316,10 +314,6 @@ function PANEL:rebuild()
       slot.slot_y = i
       slot.inventory_id = inventory_id
       slot.multislot = multislot
-
-      if draw_slot_numbers then
-        slot.slot_number = k + (i - 1) * width
-      end
 
       if icon then
         slot.icon = icon
@@ -468,14 +462,6 @@ end
 -- @return [Boolean]
 function PANEL:is_disabled()
   return self:get_inventory():is_disabled()
-end
-
---- Sets whether the slots display their numbers.
--- The value is stored on the panel under the name of this method,
--- so the method cannot be called on the same panel again.
--- @param bool [Boolean]
-function PANEL:draw_inventory_slots(bool)
-  self.draw_inventory_slots = bool
 end
 
 --- Returns the icon that is drawn in the slots of the inventory.

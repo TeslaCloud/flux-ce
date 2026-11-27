@@ -1,13 +1,21 @@
 --- The `fl_inventory_menu` panel is the inventory tab of the tab menu.
 -- It shows the main inventory and the pockets of the local player, the equipment slots
 -- around a preview of their model, a field for editing the description of the character,
--- and the hotbar at the bottom of the screen. Dropping an equipable item onto the model
--- equips it.
+-- and the hotbar at the bottom of the screen, onto which items of the main inventory and the
+-- pockets are dragged or put with the number keys. Dropping an equipable item onto the model
+-- equips it. An item or an entry of the hotbar dropped onto the bare background of the tab has
+-- its item dropped into the world (see `lib/cl_hotbar_input.lua`).
 
 local math_scale = math.scale
 local math_scale_x = math.scale_x
 
 local PANEL = {}
+
+--- Makes the bare background of the tab drop the item of an entry of the hotbar into the
+-- world. The inventory panels make it drop their items.
+function PANEL:Init()
+  self:Receiver('fl_hotbar', Hotbar.receive_entry_in_world)
+end
 
 --- Draws the background of the inventory tab using the theme.
 -- @param w [Number]
@@ -189,17 +197,8 @@ function PANEL:rebuild()
 
   self:create_storage(h)
 
-  local hotbar = PLAYER:get_inventory('hotbar')
-
-  if hotbar then
-    self.hotbar = hotbar:create_panel(self:GetParent())
-    self.hotbar:set_slot_size(math_scale(80))
-    self.hotbar:set_slot_padding(math_scale(8))
-    self.hotbar:draw_inventory_slots(true)
-    self.hotbar:SizeToContents()
-    self.hotbar:SetPos(ScrW() * 0.5 - self.hotbar:GetWide() * 0.5, ScrH() - self.hotbar:GetTall() - math_scale(16))
-    self.hotbar:rebuild()
-  end
+  self.hotbar = Hotbar.create_panel(self:GetParent())
+  self.hotbar:set_title('ui.hotbar.title')
 end
 
 --- Adds the panel of one of the local player's equipment inventories to a column of the

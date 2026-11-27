@@ -21,21 +21,20 @@
 --
 -- Inventories are where players and other objects keep their items.
 -- An `Inventory` is a grid of slots, `width` by `height`, with a numeric id and a type such
--- as `'main_inventory'` or `'hotbar'`. Every slot holds a stack of item instance ids. In
+-- as `'main_inventory'` or `'pockets'`. Every slot holds a stack of item instance ids. In
 -- a multislot inventory an item covers as many slots as its `width` and `height` say and
 -- can be rotated; in any other inventory every item takes a single slot. An inventory
 -- can also grow with its contents (`infinite_width`, `infinite_height`) and be disabled.
 -- `Inventories.find` looks an inventory up by its id.
 --
 -- When a character becomes active, the `AdjustPlayerInventories` hook builds the
--- inventories of the player. This plugin creates the main inventory, the hotbar, the
--- pockets and the equipment slots there, sized by the `inventory_`, `hotbar_` and
--- `pockets_` config keys, and other plugins can add their own. The items of the character
--- are then loaded from the database into them, and they are written back and unloaded
--- once the character is no longer in use, so a character keeps its items from map to map.
--- Further inventories can be created with `Inventory.new` for anything else that holds
--- items, such as the bags based on `ItemContainer`, and shown to a player with
--- `Player:open_inventory`.
+-- inventories of the player. This plugin creates the main inventory, the pockets and the
+-- equipment slots there, sized by the `items_inventory_` and `items_pockets_` config keys,
+-- and other plugins can add their own. The items of the character are then loaded from the
+-- database into them, and they are written back and unloaded once the character is no
+-- longer in use, so a character keeps its items from map to map. Further inventories can be
+-- created with `Inventory.new` for anything else that holds items, such as the bags based
+-- on `ItemContainer`, and shown to a player with `Player:open_inventory`.
 --
 -- Inventories are managed by the server. Each one has a list of receivers: the players
 -- who are sent its contents whenever `Inventory:sync` is called, and the only ones whose
@@ -69,9 +68,20 @@
 --   actor:SetHealth(math.min(actor:Health() + 10, actor:GetMaxHealth()))
 -- end
 -- ```
--- The plugin also lets the slot binds select the items of the hotbar, and adds the
--- GiveItem command, the 'item' argument type that completes item IDs for commands, an
--- items tab to the spawn menu, and the `has_item` and `has_item_data` conditions.
+-- The hotbar is the row of numbered slots at the bottom of the screen (see `Hotbar`). It is
+-- not an inventory: it points at items of the main inventory and the pockets. Putting a
+-- weapon, a radio or another equipable item without an equipment inventory on it equips the
+-- item, and any item that can be used can be pinned to it. Slot 8 holds the hands, and slots
+-- 9 and 0 the physgun and the tool gun of the players who may use them. One slot is
+-- selected, and what is in it is in the hands of the player: the mouse wheel and the number
+-- keys select a slot, primary attack runs the hotbar action of a held item that is not a
+-- weapon (see `ItemBase:on_hotbar_use`), and with the walk key held the number keys and the
+-- wheel drive the weapon selector instead. The `items_hotbar_slots` config sets how many of
+-- the slots 1 to 7 the players have.
+--
+-- The plugin also adds the GiveItem command, the 'item' argument type that completes item IDs
+-- for commands, an items tab to the spawn menu, and the `has_item` and `has_item_data`
+-- conditions.
 -- @module [Items]
 
 PLUGIN:set_global('Items')
@@ -90,9 +100,7 @@ end
 
 Flux.Command:add_completer('item', complete_item)
 
-require_relative 'cl_plugin'
 require_relative 'cl_hooks'
-require_relative 'sh_hooks'
 require_relative 'sv_hooks'
 
 --- Registers the 'spawn_items' and 'give_items' permissions of the items tab of the spawn menu.

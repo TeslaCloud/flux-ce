@@ -1,13 +1,13 @@
 --- Player extensions of the Items plugin: everything a player can do with their
 -- inventories and the items in them.
--- A player has one inventory per type (`'main_inventory'`, `'hotbar'`, `'pockets'` and
--- so on), built by the `AdjustPlayerInventories` hook when their character becomes
--- active. The inventories belong to the character, and the items of the character are
--- loaded from the database into them right afterward. The functions that look items up
--- work on both the server and the client; those that take an optional `inv_type` go
--- through all inventories of the player when it is omitted and answer as for an empty
--- inventory when the player has no inventory of that type. The server-side functions that
--- give, take and move the items of a player are in `sv_player.lua`.
+-- A player has one inventory per type (`'main_inventory'`, `'pockets'`, the equipment
+-- inventories and so on), built by the `AdjustPlayerInventories` hook when their character
+-- becomes active. The inventories belong to the character, and the items of the character
+-- are loaded from the database into them right afterward. The functions that look items up
+-- work on both the server and the client; those that take an optional `inv_type` go through
+-- all inventories of the player when it is omitted and answer as for an empty inventory
+-- when the player has no inventory of that type. The server-side functions that give, take
+-- and move the items of a player are in `sv_player.lua`.
 -- @module [Player]
 
 local pairs = pairs
@@ -218,7 +218,7 @@ function player_meta:has_item_by_id(instance_id, inv_type)
 end
 
 --- Checks whether the player has an item with a certain id equipped, looking at every item
--- with that id in all of their inventories.
+-- with that id in all of their inventories: on their hotbar or in an equipment inventory.
 -- @param id [String]
 -- @return [Boolean, Item the first equipped item]
 function player_meta:has_item_equipped(id)
@@ -235,9 +235,9 @@ function player_meta:has_item_equipped(id)
   return false
 end
 
---- Get the item object by the weapon class.
+--- Get the equipped item that gives the player a weapon class.
 -- @param weapon_class [String]
--- @return [Item]
+-- @return [Item, nil if no equipped item of the player gives the weapon]
 function player_meta:get_item_from_weapon(weapon_class)
   local items = self:get_items()
 

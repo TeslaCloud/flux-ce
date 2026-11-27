@@ -1,6 +1,7 @@
---- ItemRadio is the base class for radios: items that let the character who keeps one in
--- their hotbar speak and listen on a frequency.
--- A radio can be turned on and off and retuned through its item menu. A derived item may
+--- ItemRadio is the base class for radios: items that let the character who has one equipped
+-- on their hotbar speak and listen on a frequency.
+-- A radio can be turned on and off and retuned through its item menu, and turned on and off
+-- with primary attack while it is in the hands on the hotbar. A derived item may
 -- set `frequency`, the frequency its instances are tuned to until a player changes it
 -- (100.1 by default).
 -- @module [ItemRadio]
@@ -41,6 +42,15 @@ end
 -- @param _actor [Player player toggling the radio]
 function ItemRadio:on_toggle(_actor)
   self:set_data('enabled', !self:is_enabled())
+end
+
+if CLIENT then
+  --- Turns the radio on or off when the local player clicks primary attack while it is in
+  -- their hands on the hotbar. Client-side only.
+  -- @param _client [Player the local player]
+  function ItemRadio:on_hotbar_use(_client)
+    self:do_menu_action('on_toggle')
+  end
 end
 
 --- Returns the frequency the radio is tuned to.

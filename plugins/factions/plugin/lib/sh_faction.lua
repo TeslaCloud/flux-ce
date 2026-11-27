@@ -236,9 +236,11 @@ end
 --- Checks whether an item grants its faction to the player who has it in one of their own
 -- inventories. An item whose definition has a grants_faction(owner) method decides itself;
 -- otherwise an equipable item grants it while it is equipped and any other item while it is
--- carried. Whether the item names a registered faction is not looked at here. The plugin
--- resolves memberships again whenever an item of a player is added, taken or moved; an item
--- whose answer changes while it stays where it is calls `Factions.queue_refresh` for its owner.
+-- carried; an equipable item of the hotbar is equipped while it is on the hotbar (see
+-- `Hotbar`). Whether the item names a registered faction is not looked at here. The plugin
+-- resolves memberships again whenever an item of a player is added, taken, moved, equipped or
+-- unequipped; an item whose answer changes while it stays where it is calls
+-- `Factions.queue_refresh` for its owner.
 -- ```
 -- -- items/sh_police_badge.lua: grants the faction only while the badge is shown.
 -- ITEM.faction = 'police'

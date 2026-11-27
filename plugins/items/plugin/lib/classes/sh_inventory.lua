@@ -608,11 +608,10 @@ if CLIENT then
   -- It will update automatically every time
   -- the inventory synchronizes itself.
   -- ```
-  -- local hotbar = PLAYER:get_inventory('hotbar'):create_panel()
-  -- hotbar:set_slot_size(math.scale(80))
-  -- hotbar:set_slot_padding(math.scale(8))
-  -- hotbar:SizeToContents()
-  -- hotbar:rebuild()
+  -- local pockets = PLAYER:get_inventory('pockets'):create_panel()
+  -- pockets:set_slot_size(math.scale(48))
+  -- pockets:SizeToContents()
+  -- pockets:rebuild()
   -- ```
   -- @param parent=nil [Panel]
   -- @return [Panel]

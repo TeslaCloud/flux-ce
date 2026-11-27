@@ -16,7 +16,7 @@ function player_meta:create_inventories()
   -- active character is set. Handlers create their inventories with `Inventory.new`
   -- and put them into `inventories` under the type of each one, or remove the entries
   -- that other handlers have put there, and return nothing; the Items plugin adds the
-  -- main inventory, the hotbar, the pockets and the equipment slots this way. The
+  -- main inventory, the pockets and the equipment slots this way. The
   -- inventories created while the hook runs that are not in the table afterward are
   -- unregistered again. Every inventory in the table gets the player as its owner and
   -- receiver and the character as the holder of its items, the inventories are
@@ -69,7 +69,8 @@ end
 -- Loads the items of the player's active character from the database into the
 -- inventories of the player, which may take a moment. Until the items are there,
 -- `loading_items` is true on the player. Once they are, the inventories are
--- synchronized and the 'CharacterItemsLoaded' hook is run. Items that turn up after
+-- synchronized, the entries of the hotbar that may not stay are dropped (see
+-- `Hotbar.drop_invalid`) and the 'CharacterItemsLoaded' hook is run. Items that turn up after
 -- the player has switched to another character are dropped without being used.
 function player_meta:load_inventories()
   local character = self:get_character()
@@ -88,6 +89,7 @@ function player_meta:load_inventories()
     self.loading_items = nil
     self.unplaced_items = Inventories.place_items(items, self)
     self:sync_inventories()
+    Hotbar.drop_invalid(self)
     self:report_unplaced_items()
     self:give_default_items()
 
@@ -199,6 +201,13 @@ function player_meta:delete_inventories()
   end
 
   Inventories.remove(inventories)
+end
+
+--- Checks whether the player may handle items right now: they are alive and not lying on
+-- the ground as a ragdoll.
+-- @return [Boolean]
+function player_meta:can_handle_items()
+  return self:Alive() and (!isfunction(self.is_ragdolled) or !self:is_ragdolled())
 end
 
 --- Synchronize all the inventories that the player has.
@@ -395,8 +404,8 @@ end
 -- Takes the item only from the specified inventory.
 -- Does nothing and returns nothing if the item is in that inventory already.
 -- ```
--- -- Puts the item on the player's hotbar.
--- local success, error_text = target:transfer_item(item_obj.instance_id, 'hotbar')
+-- -- Puts the item into the player's pockets.
+-- local success, error_text = target:transfer_item(item_obj.instance_id, 'pockets')
 --
 -- if success == false then
 --   target:notify(error_text)

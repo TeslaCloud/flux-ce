@@ -2,11 +2,11 @@
 -- grenades.
 -- A derived item sets `weapon_class`, the class of the weapon (`'weapon_frag'` by
 -- default), and `thrown_ammo_class`, the ammo type that the weapon throws (`'Grenade'`
--- by default). Equipping the item gives the weapon with a single piece of that ammo and
--- makes it the active weapon. Unequipping strips the weapon and, if the ammo is gone,
--- takes the item away from the player. Unlike the other weapons it has no unload button.
--- The Items plugin takes equipped throwable items away when the `PlayerThrewGrenade` hook
--- is run.
+-- by default). Like any weapon it is an item of the hotbar. Equipping the item gives the
+-- weapon with a single piece of that ammo and makes it the active weapon. Unequipping strips
+-- the weapon and, if the ammo is gone, takes the item away from the player. Unlike the
+-- other weapons it has no unload button. The Items plugin takes equipped throwable items away
+-- when the `PlayerThrewGrenade` hook is run.
 -- @module [ItemThrowable]
 
 if !ItemWeapon then
@@ -45,7 +45,7 @@ function ItemThrowable:post_unequipped(owner)
   local weapon = owner:GetWeapon(self.weapon_class)
 
   if IsValid(weapon) then
-    owner:StripWeapon(self.weapon_class)
+    self:strip_weapon(owner, weapon)
   else
     Flux.dev_print('Invalid weapon class: '..self.weapon_class)
   end

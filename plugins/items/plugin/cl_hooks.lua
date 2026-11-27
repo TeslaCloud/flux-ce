@@ -1,10 +1,13 @@
 --- Client hooks of the Items plugin: shows the progress of picking an item up by holding
--- the use key, builds the menu of an item with its use, take, drop, destroy and custom
--- options, shows the hotbar while the context menu is open, adds the inventory tab to the
--- tab menu, and adds the items tab to the spawn menu along with the `fl_icon_editor`
--- console command.
+-- the use key, builds the menu of an item with its use, take, drop, destroy, pin and custom
+-- options, drives the hotbar (the number keys, the mouse wheel and primary attack, the
+-- selection that follows the active weapon, the keys that act on a hovered item and the bar
+-- shown while the context menu is open), adds the inventory tab to the tab menu, and adds the
+-- items tab to the spawn menu along with the `fl_icon_editor` console command.
 
 local IsValid = IsValid
+local IN_WALK = IN_WALK
+local IN_ATTACK = IN_ATTACK
 local ScrW = ScrW
 local ScrH = ScrH
 local math_scale = math.scale
@@ -13,6 +16,15 @@ local label_background_color = Color(10, 12, 17, 200)
 
 local aborted_hold_start
 local held_entities = {}
+
+--- The slots of the number key binds.
+local slot_binds = {
+  slot1 = 1, slot2 = 2, slot3 = 3, slot4 = 4, slot5 = 5,
+  slot6 = 6, slot7 = 7, slot8 = 8, slot9 = 9, slot0 = 0
+}
+
+--- The steps of the mouse wheel binds.
+local cycle_binds = { invprev = -1, invnext = 1 }
 
 --- Fills the circular progress indicator while the local player holds the use key on an item.
 function Items:HUDPaint()
@@ -45,12 +57,16 @@ function Items:PreDrawHalos()
   end
 end
 
---- Aborts taking an item once it gets too far from the center of the local player's screen.
--- The server is asked once per hold.
+--- Makes the selection of the hotbar follow the active weapon, reads the keys that act on a
+-- hovered item (see `Hotbar.poll_hover_keys`), and aborts taking an item once it gets too far
+-- from the center of the local player's screen. The server is asked once per hold.
 function Items:Think()
   local client = PLAYER
 
   if !IsValid(client) then return end
+
+  Hotbar.follow_active_weapon()
+  Hotbar.poll_hover_keys()
 
   local hold_start = client:get_nv('hold_start')
 
@@ -128,6 +144,15 @@ function Items:PlayerUseItemMenu(instance_id, is_entity)
       end
     end
 
+    if !is_entity and Hotbar.can_pin(item_obj) and Hotbar.is_in_storage(PLAYER, item_obj) then
+      local pinned = Hotbar.find_slot(PLAYER, item_obj.id) != nil
+      local pin_button = item_menu:add_option(t(pinned ? 'item.option.unpin' : 'item.option.pin'), function()
+        Cable.send('fl_hotbar_pin', item_obj.instance_id)
+      end)
+
+      pin_button:SetIcon(pinned ? 'icon16/tag_blue_delete.png' : 'icon16/tag_blue_add.png')
+    end
+
     if is_entity then
       if !item_obj.is_action_visible or item_obj:is_action_visible('take') != false then
         local take_button = item_menu:add_option(t(item_obj:get_take_text()), function()
@@ -175,31 +200,127 @@ function Items:PlayerUseItemMenu(instance_id, is_entity)
   end
 end
 
---- Shows the hotbar and makes it interactive while the context menu is open, if the player
--- has one; a player without a character, such as a gamemaster in gamemaster mode, has none.
+--- Shows the hotbar and makes it interactive while the context menu is open, if the local
+-- player is alive.
 function Items:OnContextMenuOpen()
-  if !PLAYER:get_inventories().hotbar then return end
+  if !IsValid(PLAYER) or !PLAYER:Alive() then return end
 
-  if IsValid(PLAYER.hotbar) then
-    PLAYER.hotbar:safe_remove()
-  end
-
-  timer.Destroy('fl_hotbar_popup')
-
-  local hotbar = self:create_hotbar()
-
-  PLAYER.hotbar = hotbar
-  hotbar:SetAlpha(255)
-  hotbar:MakePopup()
-  hotbar:MoveToFront()
-  hotbar:SetMouseInputEnabled(true)
-  hotbar:rebuild()
+  Hotbar.open_interactive()
 end
 
 --- Removes the hotbar when the context menu closes.
 function Items:OnContextMenuClose()
-  if IsValid(PLAYER.hotbar) then
-    PLAYER.hotbar:safe_remove()
+  Hotbar.close_popup()
+end
+
+--- Turns the number keys and the mouse wheel into the selection of the hotbar, and primary
+-- attack into nothing while the hands hold an item of the hotbar, see `Hotbar.filter_attack`.
+-- Leaves every bind alone while the walk key is held, when the binds drive the weapon
+-- selector, and while the local player is dead. The mouse wheel is also left alone in a
+-- vehicle and while primary attack is held, which the physgun uses. While the cursor is over
+-- an item, the presses of the binds of the number keys and the drop key are taken and do
+-- nothing, since those keys act on the item, and so are the releases of the binds whose
+-- presses have been taken (see `Hotbar.take_hover_bind`).
+-- @param client [Player]
+-- @param bind [String]
+-- @param pressed [Boolean]
+-- @return [Boolean true when the hotbar has taken the bind, nil otherwise]
+function Items:PlayerBindPress(client, bind, pressed)
+  if Hotbar.take_hover_bind(bind, pressed) then return true end
+  if !pressed or client:KeyDown(IN_WALK) or !client:Alive() then return end
+
+  local slot = slot_binds[bind]
+
+  if slot then
+    --- Called on the client when the local player presses one of the slot binds, `slot1` to
+    -- `slot9` and `slot0`, without the walk key held. The Items plugin handles it by
+    -- selecting that slot of the hotbar, if the player is shown it. It is run with
+    -- `Plugin.call`, so gamemode functions do not receive it.
+    -- @param client [Player The local player]
+    -- @param slot [Number Number of the slot taken from the bind]
+    -- @realm [client]
+    Plugin.call('PlayerSelectSlot', client, slot)
+
+    return true
+  end
+
+  local step = cycle_binds[bind]
+
+  if step and !client:InVehicle() and !client:KeyDown(IN_ATTACK) then
+    Hotbar.cycle(step)
+
+    return true
+  end
+end
+
+--- Selects the slot of the hotbar that a number key stands for.
+-- @param _client [Player]
+-- @param slot [Number]
+function Items:PlayerSelectSlot(_client, slot)
+  Hotbar.select_key(slot)
+end
+
+--- Keeps the weapon selector away from the number keys and the mouse wheel unless the walk key
+-- is held: without it they belong to the hotbar. While the cursor is over an item, the binds
+-- of the keys that act on it are kept away from it with the walk key held as well.
+-- @param client [Player]
+-- @param bind [String]
+-- @param _pressed [Boolean]
+-- @return [Boolean false for those binds, nil otherwise]
+function Items:ShouldOpenWeaponSelect(client, bind, _pressed)
+  if !client:KeyDown(IN_WALK) and (slot_binds[bind] or cycle_binds[bind]) or Hotbar.is_hover_bind(bind) then
+    return false
+  end
+end
+
+--- Keeps primary attack from reaching the hands weapon while the local player holds an item of
+-- the hotbar, and runs the hotbar action of that item.
+-- @param user_cmd [CUserCmd]
+function Items:CreateMove(user_cmd)
+  Hotbar.filter_attack(user_cmd)
+end
+
+--- Checks once a second whether the slots of the hotbar that the local player is shown have
+-- changed, as their permissions may have.
+function Items:OneSecond()
+  if Hotbar.update_layout() then
+    Hotbar.refresh()
+  end
+end
+
+--- Refreshes the hotbar when the `items_hotbar_slots` config arrives.
+-- @param key [String]
+-- @param _old_value [Any]
+-- @param _new_value [Any]
+function Items:ConfigReceived(key, _old_value, _new_value)
+  if key == 'items_hotbar_slots' then
+    Hotbar.refresh()
+  end
+end
+
+--- Refreshes the hotbar when its entries arrive.
+-- @param _character [Map the networked data of the character]
+-- @param key [String key of the character data]
+-- @param _value [Any]
+function Items:CharacterDataChanged(_character, key, _value)
+  if key == Hotbar.data_key then
+    Hotbar.refresh()
+  end
+end
+
+--- Refreshes the hotbar when the characters of the local player arrive.
+-- @param _characters [List<Map>]
+function Items:CharactersReceived(_characters)
+  Hotbar.refresh()
+end
+
+--- Refreshes the hotbar when an inventory of the storage of the local player arrives (see
+-- `Hotbar.is_storage`), since its items and the amounts of the pinned ones may have changed.
+-- The other inventories of the player cannot change what the bar shows.
+-- @param inventory [Inventory]
+function Items:InventorySynced(inventory)
+  if Hotbar.is_storage(inventory, PLAYER) then
+    Hotbar.refresh()
   end
 end
 
