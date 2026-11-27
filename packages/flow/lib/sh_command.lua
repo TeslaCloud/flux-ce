@@ -775,9 +775,12 @@ function Flux.Command:apply_completion(text, result, index)
 end
 
 --- Lists the players for an argument of the 'player' type, as their names have to be typed:
--- the character name of every player, sorted by name, and also the Steam name of a player
--- whose Steam name contains the typed text while their character name does not. Once the
--- typed text starts with 'STEAM_', it lists their SteamIDs instead.
+-- the character name of every player and their public name when they have another one
+-- (`Player:get_public_name`, such as the display name of their character), sorted by name,
+-- and also the Steam name of a player whose Steam name contains the typed text while neither
+-- of those does. Once the typed text starts with 'STEAM_', it lists their SteamIDs instead.
+-- A name that only the client knows a player by is never offered, since the server could not
+-- resolve it.
 -- @param _actor [Player the player who is typing]
 -- @param partial [String the text typed for the argument so far]
 -- @return [List<String>]
@@ -795,12 +798,19 @@ local function complete_player(_actor, partial)
 
   for _, client in player.Iterator() do
     local char_name = client:name(true)
+    local public_name = client:get_public_name()
     local steam_name = client:steam_name()
 
     values[#values + 1] = char_name
 
-    if lower != '' and steam_name != char_name and !char_name:utf8lower():find(lower, 1, true) and
-       steam_name:utf8lower():find(lower, 1, true) then
+    if public_name and public_name != char_name then
+      values[#values + 1] = public_name
+    end
+
+    if lower != '' and steam_name != char_name and steam_name != public_name
+    and !char_name:utf8lower():find(lower, 1, true)
+    and !(public_name and public_name:utf8lower():find(lower, 1, true))
+    and steam_name:utf8lower():find(lower, 1, true) then
       values[#values + 1] = steam_name
     end
   end
@@ -811,6 +821,22 @@ local function complete_player(_actor, partial)
 end
 
 Flux.Command:add_completer('player', complete_player)
+
+--- Returns the players that a typed player argument names, for a completer that suggests the
+-- values of a later argument from its targets: the actor for '^', else the players with
+-- exactly this SteamID, character name, public name or Steam name (see `player.find_exact`),
+-- as the server finds them. The other target selectors are not resolved.
+-- ```
+-- for _, target in ipairs(Flux.Command:find_argument_players(actor, args[1])) do
+--   values[#values + 1] = target:get_species_id()
+-- end
+-- ```
+-- @param actor [Player the player who is typing, nil for the server console]
+-- @param text [String the typed player argument]
+-- @return [List<Player> the players, empty when the argument names nobody]
+function Flux.Command:find_argument_players(actor, text)
+  return (text == '^' and IsValid(actor)) ? { actor } : player.find_exact(text)
+end
 
 if SERVER then
   local macros = {
@@ -844,7 +870,7 @@ if SERVER then
       local name = str:utf8sub(2, utf8.len(str) - 1)
 
       for _, client in player.Iterator() do
-        if client:name() == name then
+        if client:name(true) == name or client:get_public_name() == name then
           return { client }, '['
         end
       end
@@ -882,12 +908,13 @@ if SERVER then
   }
 
   --- Finds the players targeted by a command argument: the player with exactly this
-  -- SteamID, character name or Steam name (see `player.find_exact`), or one of the following
-  -- target selectors: '@group' (everyone in a user group), '(name)' (everyone with this text
-  -- in their name), '[name]' (the player with exactly this name, in this case), '^'
-  -- (yourself), '*' (everyone) and '!radius' (everyone within this distance from you).
-  -- Plugins can add more by returning a parser function from the 'GetTargetSelector' hook. A
-  -- name that several players have targets nobody. Serverside only.
+  -- SteamID, character name, public name or Steam name (see `player.find_exact`), or one of
+  -- the following target selectors: '@group' (everyone in a user group), '(name)' (everyone
+  -- with this text in their name), '[name]' (the player with exactly this character name or
+  -- public name, in this case), '^' (yourself), '*' (everyone) and '!radius' (everyone within
+  -- this distance from you). Plugins can add more by returning a parser function from the
+  -- 'GetTargetSelector' hook. A name that several players have targets nobody. Serverside
+  -- only.
   -- @param actor [Player the player who is running the command]
   -- @param str [String player name, SteamID or target selector]
   -- @return [List<Player> the targets, or false if nobody was found; String the selector
@@ -1019,16 +1046,23 @@ if SERVER then
     return true
   end
 
-  --- Returns the name of a player whose character name or Steam name contains a text,
-  -- ignoring the case: the character name if it contains the text, else the Steam name.
+  --- Returns the name of a player whose character name, public name
+  -- (`Player:get_public_name`) or Steam name contains a text, ignoring the case: the first of
+  -- them, in this order, that contains the text.
   -- @param client [Player]
   -- @param lower [String the text in lower case]
-  -- @return [String the name, nil if neither contains the text]
+  -- @return [String the name, nil if none of them contains the text]
   local function matching_name(client, lower)
     local char_name = client:name(true)
 
     if char_name:utf8lower():find(lower, 1, true) then
       return char_name
+    end
+
+    local public_name = client:get_public_name()
+
+    if public_name and public_name:utf8lower():find(lower, 1, true) then
+      return public_name
     end
 
     local steam_name = client:steam_name()

@@ -14,8 +14,9 @@ end
 
 --- Finds a player based on their name or SteamID.
 -- A SteamID has to match exactly, in any case and with either universe digit ('STEAM_0:' or
--- 'STEAM_1:'). A name is searched for as plain text in both the name and the Steam name of
--- every player; Steam names are always matched case-insensitively.
+-- 'STEAM_1:'). A name is searched for as plain text in the character name, the public name
+-- (`Player:get_public_name`, such as the display name of their character) and the Steam name
+-- of every player; public names and Steam names are always matched case-insensitively.
 -- @param name [String/Player part of a name, or a SteamID; a valid player is returned as-is]
 -- @param case_sensitive=false [Boolean match player names case-sensitively]
 -- @param return_first=false [Boolean return the first match instead of all of them]
@@ -45,7 +46,11 @@ function player.find(name, case_sensitive, return_first)
     else
       lower_name = lower_name or name:utf8lower()
 
+      local public_name = client:get_public_name()
+
       if !case_sensitive and char_name:utf8lower():find(lower_name, 1, true) then
+        hits[#hits + 1] = client
+      elseif public_name and public_name:utf8lower():find(lower_name, 1, true) then
         hits[#hits + 1] = client
       elseif client:steam_name():utf8lower():find(lower_name, 1, true) then
         hits[#hits + 1] = client
@@ -67,10 +72,11 @@ end
 --- Finds the players a name stands for when it has to match exactly, as for the player
 -- arguments of commands. A SteamID ('STEAM_0:1:12345', in any case and with either universe
 -- digit) or SteamID64 finds the player who has it. Any other name is compared, ignoring the
--- case, with the character name of every player (their name without the 'GetPlayerName' hook)
--- and, if no character name is equal to it, with their Steam names. Several players can share
--- a name; all of them are returned then.
--- @param name [String SteamID, SteamID64, character name or Steam name]
+-- case, with the character name of every player (their name without the 'GetPlayerName' hook);
+-- if no character name is equal to it, with their public names (`Player:get_public_name`,
+-- such as the display name of their character); and if none of those is equal to it either,
+-- with their Steam names. Several players can share a name; all of them are returned then.
+-- @param name [String SteamID, SteamID64, character name, public name or Steam name]
 -- @return [List<Player> the players, empty if nobody has this name]
 function player.find_exact(name)
   local found = {}
@@ -93,11 +99,15 @@ function player.find_exact(name)
     return found
   end
 
-  local by_steam_name = {}
+  local by_public_name, by_steam_name = {}, {}
 
   for _, client in player.Iterator() do
+    local public_name = client:get_public_name()
+
     if client:name(true):utf8lower() == lower then
       found[#found + 1] = client
+    elseif public_name and public_name:utf8lower() == lower then
+      by_public_name[#by_public_name + 1] = client
     elseif client:steam_name():utf8lower() == lower then
       by_steam_name[#by_steam_name + 1] = client
     end
@@ -105,6 +115,8 @@ function player.find_exact(name)
 
   if #found > 0 then
     return found
+  elseif #by_public_name > 0 then
+    return by_public_name
   end
 
   return by_steam_name

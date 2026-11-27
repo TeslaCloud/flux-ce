@@ -36,8 +36,8 @@ end
 
 --- Completes arguments of the 'player' type, wrapping the completer that was registered for
 -- that type when `Observer:PluginsLoaded` ran. A player without the 'moderate' permission is
--- not offered the character names, Steam names and SteamIDs of hidden players, unless a player
--- they can see has the same one. The server console and players with 'moderate' get every
+-- not offered the character names, public names, Steam names and SteamIDs of hidden players,
+-- unless a player they can see has the same one. The server console and players with 'moderate' get every
 -- suggestion.
 -- @param actor [Player the player who is typing, nil for the server console]
 -- @param partial [String the text typed for the argument so far]
@@ -57,9 +57,15 @@ function Observer.complete_player(actor, partial, args, cmd)
   for _, client in player.Iterator() do
     local names = (client != actor and client:get_nv('hidden')) ? hidden : shown
 
+    local public_name = client:get_public_name()
+
     names[client:name(true)] = true
     names[client:steam_name()] = true
     names[client:SteamID()] = true
+
+    if public_name then
+      names[public_name] = true
+    end
   end
 
   local allowed = {}

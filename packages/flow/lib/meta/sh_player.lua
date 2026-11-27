@@ -1,13 +1,14 @@
 --- Extensions of the `Player` metatable that the gamemode package adds to every player.
--- Names go through the `GetPlayerName` hook so that plugins can replace them,
--- `Player:SetModel` announces model changes with the `PlayerModelChanged` hook, and the
--- permission checks (`Player:can`, `Player:is_root`) are answered by hooks that Bolt
--- implements. The rest covers the initialization state, the data table of a player,
--- client-side notifications and sounds, freezing, the reach and line of sight checks
--- (`Player:is_in_reach`, `Player:can_see`), and actions: every player has one current
--- action, registered with `Flux.register_action`, which the gamemode runs on each
--- `PlayerThink`; `Flux.TimedAction` builds actions that take time on top of it.
--- The server-only half adds saving and restoring of the player's database record.
+-- Names go through the `GetPlayerName` hook so that plugins can replace them, public names
+-- (`Player:get_public_name`) through `GetPlayerPublicName`, `Player:SetModel` announces
+-- model changes with the `PlayerModelChanged` hook, and the permission checks (`Player:can`,
+-- `Player:is_root`) are answered by hooks that Bolt implements. The rest covers the
+-- initialization state, the data table of a player, client-side notifications and sounds,
+-- freezing, the reach and line of sight checks (`Player:is_in_reach`, `Player:can_see`), and
+-- actions: every player has one current action, registered with `Flux.register_action`,
+-- which the gamemode runs on each `PlayerThink`; `Flux.TimedAction` builds actions that take
+-- time on top of it. The server-only half adds saving and restoring of the player's database
+-- record.
 
 local player_meta = FindMetaTable('Player')
 local IsValid = IsValid
@@ -65,6 +66,23 @@ player_meta.name = player_meta.Name
 -- @return [String]
 function player_meta:steam_name()
   return self:fl_name()
+end
+
+--- Returns the name other than the character name under which everyone sees the player and
+-- by which commands accept them, such as the display name of their character. Unlike
+-- `Player:name`, which a client may answer with what only its own player knows, it is the
+-- same on both realms whoever looks, so the player arguments of commands, their completer,
+-- `player.find` and `player.find_exact` match it.
+-- @return [String the public name, nil when the player has none]
+function player_meta:get_public_name()
+  --- Asks for a name other than the character name under which everyone sees a player and by
+  -- which commands accept them. A handler has to be shared and return the same value on both
+  -- realms, whoever looks; the first non-nil value wins. Called by `Player:get_public_name`
+  -- whenever the player arguments of commands, their completer, `player.find` or
+  -- `player.find_exact` look at a player.
+  -- @param target [Player the player whose public name is requested]
+  -- @return [String the public name, nil when the player has none]
+  return hook.Run('GetPlayerPublicName', self)
 end
 
 --- Sets the model of the player. Overrides the engine function to run the 'PlayerModelChanged'
