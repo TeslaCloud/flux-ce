@@ -39,6 +39,15 @@ Cable.receive('fl_character_data', function(character_id, key, value)
   if character then
     character.custom_data = character.custom_data or {}
     character.custom_data[key] = value
+
+    --- Called on the client when the value of a key of the generic data of one of the
+    -- characters of the local player has arrived from the server and has been stored, which
+    -- happens whenever the server sets a key registered with `Characters.network_data`.
+    -- @param character [Map the networked data of the character]
+    -- @param key [String key of the character data]
+    -- @param value [Any the value that has been stored, nil when the key has been removed]
+    -- @realm [client]
+    hook.Run('CharacterDataChanged', character, key, value)
   end
 end)
 
