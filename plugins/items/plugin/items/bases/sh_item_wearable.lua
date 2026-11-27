@@ -7,7 +7,9 @@
 -- values they are set to. `valid_models`, a list of model paths, or `valid_model_group`,
 -- a pattern that the path of the player's model has to contain, restrict who can wear the
 -- item. The model and the bodygroups the player had before are kept in the data of the
--- item and given back when it is unequipped.
+-- item and given back when it is unequipped. `equip_model_classes` maps 'male', 'female' and
+-- 'universal' to the animation classes of the models that `model_group` dresses wearers in
+-- (see `ItemWearable:assign_model_classes`).
 
 if !ItemEquipable then
   require_relative 'sh_item_equipable'
@@ -31,6 +33,21 @@ if CLIENT then
   end
 end
 
+--- Returns a model path with the letters at the end of its last folder replaced by a model
+-- group, wherever they appear in the path.
+-- @param model_path [String]
+-- @param model_group [String]
+-- @return [String path to the model in lower case, Number amount of replacements made; nil if
+--   the last folder of the path does not end in a letter]
+local function model_in_group(model_path, model_group)
+  local lowered = model_path:lower()
+  local matched = lowered:GetPathFromFilename():match('(%a+)/$')
+
+  if matched then
+    return lowered:gsub(matched, model_group)
+  end
+end
+
 --- Builds the model for the player to wear by replacing the last folder
 -- in the path of their current model with the item's model_group.
 -- @param owner [Player]
@@ -38,13 +55,7 @@ end
 --   nil if the item has no model_group or the model is not inside of a suitable folder]
 function ItemWearable:get_model_by_group(owner)
   if self.model_group then
-    local player_model = owner:GetModel():lower()
-    local path = player_model:GetPathFromFilename()
-    local matched = path:match('(%a+)/$')
-
-    if matched then
-      return player_model:gsub(matched, self.model_group)
-    end
+    return model_in_group(owner:GetModel(), self.model_group)
   end
 end
 
@@ -75,18 +86,18 @@ function ItemWearable:get_valid_model_group()
   return self.valid_model_group
 end
 
---- Called by ItemEquipable:can_transfer before the item is equipped.
--- Checks whether the model of the player is able to wear the item.
--- @param owner [Player the player who is about to wear the item]
+--- Checks whether a model is able to wear the item: it has to be one of valid_models, or
+-- contain valid_model_group, when the item sets them.
+-- @param model_path [String path to the model]
 -- @return [Boolean]
-function ItemWearable:can_equip(owner)
+function ItemWearable:fits_model(model_path)
   local valid_models = self:get_valid_models()
   local valid_model_group = self:get_valid_model_group()
-  local player_model = owner:GetModel():lower()
+  local lowered = model_path:lower()
 
   if valid_models then
     for _, model in pairs(valid_models) do
-      if model:lower() == player_model then
+      if model:lower() == lowered then
         return true
       end
     end
@@ -95,14 +106,52 @@ function ItemWearable:can_equip(owner)
   end
 
   if valid_model_group then
-    if player_model:find(valid_model_group) then
-      return true
-    end
-
-    return false
+    return lowered:find(valid_model_group) != nil
   end
 
   return true
+end
+
+--- Called by ItemEquipable:can_transfer before the item is equipped.
+-- Checks whether the model of the player is able to wear the item.
+-- @param owner [Player the player who is about to wear the item]
+-- @return [Boolean]
+function ItemWearable:can_equip(owner)
+  return self:fits_model(owner:GetModel())
+end
+
+--- Assigns the animation classes of equip_model_classes to the models that the model_group of
+-- the item dresses its wearers in (see `Flux.Anim:set_model_class`): every model of every
+-- registered species that is able to wear the item (see `ItemWearable:fits_model`) gets the
+-- class of the key of the species' model list it is in ('male', 'female' or 'universal'),
+-- falling back to the 'universal' class, for its counterpart in the model group. The Items
+-- plugin calls it for every item on both realms once all plugins, and with them all species,
+-- have been loaded.
+-- ```
+-- ITEM.model_group = 'police'
+-- ITEM.equip_model_classes = { male = 'metrocop', female = 'female' }
+-- ```
+function ItemWearable:assign_model_classes()
+  local model_classes = self.equip_model_classes
+  local model_group = self.model_group
+
+  if !istable(model_classes) or !isstring(model_group) then return end
+
+  for _, species in ipairs(Species.get_list()) do
+    for gender, models in pairs(species:get_models()) do
+      local model_class = model_classes[gender] or model_classes.universal
+
+      if isstring(model_class) and istable(models) then
+        for _, model_path in ipairs(models) do
+          local group_model = self:fits_model(model_path) and model_in_group(model_path, model_group)
+
+          if group_model then
+            Flux.Anim:set_model_class(group_model, model_class)
+          end
+        end
+      end
+    end
+  end
 end
 
 --- Called when the item gets equipped. Applies the model and the bodygroups of the item

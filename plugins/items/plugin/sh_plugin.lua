@@ -111,6 +111,17 @@ function Items:OnPluginLoaded()
   Item.include_items(self:get_folder()..'/items/')
 end
 
+--- Assigns the animation classes of the models that wearable items dress their wearers in,
+-- once every plugin, and with them every item and species, has been loaded.
+-- @see [ItemWearable#assign_model_classes]
+function Items:PluginsLoaded()
+  for _, item_table in pairs(Item.all()) do
+    if isfunction(item_table.assign_model_classes) then
+      item_table:assign_model_classes()
+    end
+  end
+end
+
 --- Includes the items of a plugin when its 'items' folder is being included.
 -- @param extra [String name of the folder being included]
 -- @param folder [String path to the plugin's folder]
