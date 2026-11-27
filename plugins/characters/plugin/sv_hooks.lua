@@ -1,8 +1,9 @@
 --- Server side of the Characters plugin: keeps players without a character or with a banned
--- one out of the world, loads the characters of players who join together with their user
--- record, sends the character list to them, applies a character to its player when it is
--- loaded, saves characters together with the health, armor and ammo of their players,
--- validates character creation data and remembers which names are taken.
+-- one out of the world, gives bots a species, loads the characters of players who join
+-- together with their user record, sends the character list to them, applies a character to
+-- its player when it is loaded, saves characters together with the health, armor and ammo of
+-- their players, fills in and validates character creation data against the species of the
+-- character and remembers which names are taken.
 
 --- Reads the names of all characters from the database, so that `Characters.is_name_taken`
 -- also knows the characters of players who are not connected.
@@ -21,6 +22,19 @@ end
 -- @param preloads [Map relations of the user record, changed in place]
 function Characters:AdjustPlayerRecordPreloads(preloads)
   preloads.characters = Characters.preloads()
+end
+
+--- Gives a bot that joins a random registered species, which stands in for the species of the
+-- character that bots do not have.
+-- @param actor [Player]
+function Characters:PlayerInitialSpawn(actor)
+  if !actor:IsBot() then return end
+
+  local species = table.Random(Species.get_list())
+
+  if species then
+    actor:set_nv('species', species.species_id)
+  end
 end
 
 --- Hides, locks and silently kills players who spawn without an active character or with a
@@ -134,8 +148,9 @@ function Characters:PostLoadCharacter(owner, character)
   hook.run_client(owner, 'PostLoadCharacter', character.id)
 end
 
---- Runs the PreLoadCharacter hook, spawns the player and applies the character's model, skin,
--- health, armor and ammo, then runs the PostLoadCharacter hook.
+--- Runs the PreLoadCharacter hook, refreshes the display name of the character (see
+-- `Characters.refresh_display_name`), spawns the player and applies the character's model,
+-- skin, health, armor and ammo, then runs the PostLoadCharacter hook.
 -- @param owner [Player]
 -- @param character [Character]
 function Characters:ActiveCharacterSet(owner, character)
@@ -145,6 +160,8 @@ function Characters:ActiveCharacterSet(owner, character)
   -- @param owner [Player]
   -- @param character [Character]
   hook.Run('PreLoadCharacter', owner, character)
+
+  Characters.refresh_display_name(owner)
 
   owner:Spawn()
   owner:SetModel(character.model or Characters.default_model)
@@ -185,9 +202,68 @@ function Characters:SaveData()
   end
 end
 
+--- Fills in what the species of a character that is being created does not let its player
+-- choose: a species without names of its own names the character with
+-- `Characters.random_name`, or leaves it without a name when none is offered, and a species
+-- without descriptions of its own gives it its phys_desc, translated to the language of the
+-- player. The Characters plugin counts a replaced name or description as generated.
+-- @param actor [Player]
+-- @param data [Map character creation data, changed in place]
+-- @param _option [Map the creation option the player has chosen]
+function Characters:PreCreateCharacter(actor, data, _option)
+  local species = Species.find_by_id(data.species)
+
+  if !species then return end
+
+  if !species.has_name then
+    local gender = species.has_gender and Characters.creation_gender(data.gender) or CHAR_GENDER_NONE
+
+    data.name = Characters.random_name(actor, species.species_id, gender) or ''
+  end
+
+  if !species.has_description then
+    data.description = t(species:get_phys_desc() or '', nil, Flux.Lang:get_player_lang(actor))
+  end
+end
+
+--- Checks the creation data of a character against its species: the species has to be
+-- registered (CHAR_ERR_SPECIES), the player must not have as many characters of it as it
+-- allows unless `Characters.can_bypass_creation_limits` lets them past the limit
+-- (CHAR_ERR_SPECIES_LIMIT), the gender has to fit it, male or female for a species with
+-- genders and none for any other (CHAR_ERR_GENDER), and the model has to be one of its models
+-- for that gender (CHAR_ERR_MODEL).
+-- @param actor [Player]
+-- @param data [Map character creation data]
+-- @return [Number CHAR_ERR_* code when the data is rejected, otherwise nil]
+local function check_species(actor, data)
+  local species = Species.find_by_id(isstring(data.species) and data.species or Characters.default_species)
+
+  if !species then
+    return CHAR_ERR_SPECIES
+  end
+
+  if Characters.species_limit_reached(actor, species.species_id)
+  and !Characters.can_bypass_creation_limits(actor, data) then
+    return CHAR_ERR_SPECIES_LIMIT
+  end
+
+  local genderless = data.gender == CHAR_GENDER_NONE
+
+  if genderless == tobool(species.has_gender) then
+    return CHAR_ERR_GENDER
+  end
+
+  local gender_name = genderless ? 'universal' : Characters.gender_names[data.gender]
+
+  if !table.HasValue(species:get_gender_models(gender_name), data.model) then
+    return CHAR_ERR_MODEL
+  end
+end
+
 --- Validates character creation data: the presence of the player's database record, the
--- character limit, the length of the name, the length of the description unless it was
--- generated, gender, model and skin and, unless the name was generated, that no other
+-- character limit, the length of the name (a generated name only has to be no longer than
+-- the limit), the length of the description unless it was generated, gender, model and skin,
+-- the species and, unless the name was generated, that no other
 -- character has the name. Text that is not valid UTF-8 is rejected.
 -- @param actor [Player]
 -- @param data [Map character creation data]
@@ -202,8 +278,9 @@ function Characters:PlayerCreateCharacter(actor, data)
   end
 
   local name_length = isstring(data.name) and utf8.len(data.name)
+  local min_name_length = data.name_generated ? 1 : Config.get('characters_min_name_len')
 
-  if !isnumber(name_length) or name_length < Config.get('characters_min_name_len') or
+  if !isnumber(name_length) or name_length < min_name_length or
     name_length > Config.get('characters_max_name_len') then
     return CHAR_ERR_NAME
   end
@@ -231,6 +308,12 @@ function Characters:PlayerCreateCharacter(actor, data)
 
   if skin != nil and (!isnumber(skin) or skin < 0 or skin > 255 or skin != math.floor(skin)) then
     return CHAR_ERR_MODEL
+  end
+
+  local species_error = check_species(actor, data)
+
+  if species_error then
+    return species_error
   end
 
   if !data.name_generated and Characters.is_name_taken(data.name) then

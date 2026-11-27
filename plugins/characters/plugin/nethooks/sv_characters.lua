@@ -1,6 +1,8 @@
 --- Server-side network handlers of the Characters plugin, behind the character menus:
--- creating, loading and deleting characters and changing the physical description. A request
--- of a player to load or delete a character is checked first with `Characters.can_use` and
+-- creating, loading and deleting characters and changing the physical description. A creation
+-- request names one of the options of `Characters.get_creation_options`, which the server
+-- builds again to take the species and the option data from its own copy. A request of a
+-- player to load or delete a character is checked first with `Characters.can_use` and
 -- `Characters.can_delete`, and a refused request is answered with a reason that the menu
 -- shows.
 
@@ -49,6 +51,20 @@ MVC.handler('fl_create_character', function(actor, data)
     data.description = Characters.normalize_desc(data.description)
   end
 
+  local option = isstring(data.option) and Characters.find_creation_option(actor, data.option, data)
+
+  if !option then
+    respond_to { success = false, status = CHAR_ERR_SPECIES }
+
+    return
+  end
+
+  data.species = option.species
+
+  for key, value in pairs(option.data) do
+    data[key] = value
+  end
+
   local requested_name = data.name
   local requested_description = data.description
 
@@ -59,8 +75,13 @@ MVC.handler('fl_create_character', function(actor, data)
   -- counts as generated and may be of any length.
   -- @param actor [Player the player who sent the request]
   -- @param data [Map data collected by the creation menu: name, description, gender ('male',
-  --   'female' or 'universal'), model, skin and the fields that other stages add]
-  hook.Run('PreCreateCharacter', actor, data)
+  --   'female' or 'universal'), model, skin, option (the ID of the chosen creation option),
+  --   species and the fields of the data of the option, both copied from the server's own
+  --   option, and the fields that other stages add]
+  -- @param option [Map the creation option the player has chosen, as the server has built
+  --   it with `Characters.get_creation_options`; a field of the creation data that only an
+  --   option should set is taken from its data rather than trusted]
+  hook.Run('PreCreateCharacter', actor, data, option)
 
   data.name_generated = data.name != requested_name
   data.description_generated = data.description != requested_description

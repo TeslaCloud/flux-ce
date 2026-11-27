@@ -35,7 +35,6 @@ roleplay:
   extends: base
   plugins:
     - characters
-    - factions
     - auto_walk
     - raise_gun
 
@@ -43,6 +42,7 @@ roleplay_full:
   extends: roleplay
   plugins:
     - items
+    - factions
     - containers
     - currencies
     - vendors

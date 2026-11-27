@@ -5,22 +5,33 @@ local math_clamp = math.Clamp
 local color_female = Color(240, 130, 170)
 local creation_genders = { male = CHAR_GENDER_MALE, female = CHAR_GENDER_FEMALE }
 
---- Returns a random name for the character being created, for its faction and chosen gender.
+--- Returns a random name for the character being created, for its species and chosen gender.
 -- @param char_data [Map character data collected so far]
 -- @return [String the name, nil when there is no name to offer]
 local function random_name(char_data)
-  return Characters.random_name(PLAYER, char_data.faction, creation_genders[char_data.gender] or CHAR_GENDER_NONE)
+  return Characters.random_name(PLAYER, char_data.species, creation_genders[char_data.gender] or CHAR_GENDER_NONE)
 end
 
---- Checks whether the faction of the character being created offers a random name for any gender.
+--- Checks whether the species of the character being created offers a random name for any
+-- gender.
 -- @param char_data [Map character data collected so far]
 -- @return [Boolean]
 local function offers_random_name(char_data)
-  local faction_id = char_data.faction
+  local species_id = char_data.species
 
-  return Characters.random_name(PLAYER, faction_id, CHAR_GENDER_MALE) != nil
-    or Characters.random_name(PLAYER, faction_id, CHAR_GENDER_FEMALE) != nil
-    or Characters.random_name(PLAYER, faction_id, CHAR_GENDER_NONE) != nil
+  return Characters.random_name(PLAYER, species_id, CHAR_GENDER_MALE) != nil
+    or Characters.random_name(PLAYER, species_id, CHAR_GENDER_FEMALE) != nil
+    or Characters.random_name(PLAYER, species_id, CHAR_GENDER_NONE) != nil
+end
+
+--- Checks whether the species of the character being created lets the player choose a
+-- gender. An unregistered species does.
+-- @param char_data [Map character data collected so far]
+-- @return [Boolean]
+local function has_gender(char_data)
+  local species = Species.find_by_id(char_data.species)
+
+  return !species or species.has_gender == true
 end
 
 --- Base panel of the stages of character creation (`fl_character_creation_base`). It only
@@ -45,8 +56,11 @@ end
 vgui.Register('fl_character_creation_base', PANEL, 'fl_base_panel')
 
 --- The general stage of character creation (`fl_char_create_general`): lets the player pick a
--- gender, enter a name and a physical description, and choose a model and its skin. The models
--- on offer come from the GetCharacterCreationModels hook.
+-- gender, enter a name and a physical description, and choose a model and its skin. It adapts
+-- to the species chosen before: the gender, name and description controls are hidden when the
+-- species does not let players choose them, and a species without genders gets the universal
+-- one. The models on offer come from the GetCharacterCreationModels hook, or else from the
+-- species.
 local PANEL = {}
 PANEL.id = 'general'
 PANEL.text = 'ui.char_create.general'
@@ -210,18 +224,21 @@ function PANEL:Init()
   end
 end
 
---- Rebuilds the model icons from the GetCharacterCreationModels hook, clearing the selected
--- model if it is no longer among them.
+--- Rebuilds the model icons from the GetCharacterCreationModels hook, or else from the models
+-- of the chosen species for the chosen gender, clearing the selected model if it is not among
+-- them.
 function PANEL:rebuild_models()
   local char_data = self:GetParent().char_data
   --- Asks for the models the player can choose from in the general stage of character
   -- creation. Called on the client every time the model list is rebuilt, which happens when
-  -- the stage is opened with a gender already chosen and whenever the gender changes.
-  -- @param char_data [Map character data collected so far, including the gender ('male',
-  --   'female' or 'universal') that has been picked]
-  -- @return [List<String> model paths. The stage has no models of its own, so it offers none
-  --   unless a handler returns a list, as the Factions plugin does]
-  local models = hook.Run('GetCharacterCreationModels', char_data) or {}
+  -- the stage is opened with a gender already chosen and whenever the gender changes. The
+  -- server only accepts the models of the species of the character.
+  -- @param char_data [Map character data collected so far, including the species and the
+  --   gender ('male', 'female' or 'universal') that have been picked]
+  -- @return [List<String> model paths; the models of the species for the gender when nothing
+  --   is returned]
+  local models = hook.Run('GetCharacterCreationModels', char_data)
+    or Species.find_by_id(char_data.species)?.:get_gender_models(char_data.gender) or {}
   local i = 0
   local icon_size = math.scale(64)
   local step = math.scale(68)
@@ -307,40 +324,95 @@ function PANEL:rebuild_models()
   end
 end
 
---- Restores the name, description, gender, model and skin that were entered earlier.
+--- Hides the controls that the chosen species does not let the player use: the gender buttons
+-- of a species without genders, which are also made inactive while the character gets the
+-- 'universal' gender and its models; the description entry of a species without descriptions;
+-- and the name entry and random name button of a species without names.
 -- @param parent [Panel the character creation menu]
-function PANEL:on_open(parent)
-  self.name_entry:SetText(parent.char_data.name or '')
-  self.desc_entry:SetText(parent.char_data.description or '')
-  self.models_list.model = parent.char_data.model
+function PANEL:adapt_to_species(parent)
+  local species = Species.find_by_id(parent.char_data.species)
 
-  if parent.char_data.gender == 'female' then
-    self.gender_female:set_active(true)
-    self.gender_female:set_text_color(color_female)
+  if !species then return end
 
-    self:rebuild_models()
-  elseif parent.char_data.gender == 'male' then
-    self.gender_male:set_active(true)
-    self.gender_male:set_text_color(Theme.get_color('info'))
+  if !species.has_gender then
+    local text_color = Theme.get_color('text')
 
+    self.gender_label:SetVisible(false)
+    self.gender_female:SetVisible(false)
+    self.gender_male:SetVisible(false)
+    self.gender_female:set_active(false)
+    self.gender_female:set_text_color(text_color)
+    self.gender_male:set_active(false)
+    self.gender_male:set_text_color(text_color)
+
+    parent.char_data.gender = 'universal'
     self:rebuild_models()
   end
 
-  local skin = parent.char_data.skin
+  if !species.has_description then
+    self.desc_label:SetVisible(false)
+    self.desc_entry:SetVisible(false)
+  end
+
+  if !species.has_name then
+    self.name_label:SetVisible(false)
+    self.name_entry:SetVisible(false)
+
+    if IsValid(self.name_random) then
+      self.name_random:SetVisible(false)
+    end
+  end
+end
+
+--- Adapts the stage to the chosen species, then restores the name, description, model and
+-- skin that were entered earlier, and the gender when the species has genders. The skin is
+-- restored once the model list has been built, and its counter is shown for a model with more
+-- than one skin.
+-- @param parent [Panel the character creation menu]
+function PANEL:on_open(parent)
+  local char_data = parent.char_data
+
+  self.name_entry:SetText(char_data.name or '')
+  self.desc_entry:SetText(char_data.description or '')
+  self.models_list.model = char_data.model
+
+  self:adapt_to_species(parent)
+
+  if has_gender(char_data) then
+    if char_data.gender == 'female' then
+      self.gender_female:set_active(true)
+      self.gender_female:set_text_color(color_female)
+
+      self:rebuild_models()
+    elseif char_data.gender == 'male' then
+      self.gender_male:set_active(true)
+      self.gender_male:set_text_color(Theme.get_color('info'))
+
+      self:rebuild_models()
+    end
+  end
+
+  local skin = char_data.skin
 
   if IsValid(self.model.Entity) and skin then
+    local skins = self.model.Entity:SkinCount()
+
     self.model.Entity:SetSkin(skin)
-    self.skin:SetVisible(true)
-    self.skin:set_max(self.model.Entity:SkinCount())
+    self.skin:SetVisible(skins > 1)
+    self.skin:set_max(skins)
     self.skin:set_value(skin + 1)
   end
 end
 
---- Stores the entered name, description, gender, model and skin in the character data.
+--- Stores the entered name, description, gender, model and skin in the character data. The
+-- gender of a species without genders is 'universal', whatever the gender buttons say.
 -- @param parent [Panel the character creation menu]
 function PANEL:on_close(parent)
-  local gender =
-    (self.gender_female:is_active() and 'female') or (self.gender_male:is_active() and 'male') or 'universal'
+  local gender = 'universal'
+
+  if has_gender(parent.char_data) then
+    gender = (self.gender_female:is_active() and 'female') or (self.gender_male:is_active() and 'male') or 'universal'
+  end
 
   parent:collect_data({
     name = self.name_entry:GetValue(),
@@ -351,12 +423,16 @@ function PANEL:on_close(parent)
   })
 end
 
---- Checks the name and description lengths and that a model is selected, skipping the
--- controls that are hidden.
+--- Checks that a gender is picked when the chosen species has genders, the name and
+-- description lengths and that a model is selected, skipping the controls that are hidden.
 -- @return [Boolean false when invalid, String translated error; nothing when valid]
 function PANEL:on_validate()
   local name = self.name_entry:GetValue()
   local desc = self.desc_entry:GetValue()
+
+  if has_gender(self:GetParent().char_data) and !self.gender_female:is_active() and !self.gender_male:is_active() then
+    return false, t'ui.char_create.no_gender'
+  end
 
   if self.name_entry:IsVisible() then
     if !isstring(name) then

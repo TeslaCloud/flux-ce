@@ -1,8 +1,6 @@
---- Server side of the `Factions` functions: who may be moved into a faction, the default
--- description of its members, the base names that the name templates of factions build on,
--- the character counts that character creation shows, and what the members of a faction get
--- from the faction and their rank: weapons, maximum health and armor, a model and the
--- feelings of NPCs.
+--- Server side of the `Factions` functions: who may be given the starter kit of a faction,
+-- giving the kit, and what the members of a faction get from the faction and their rank:
+-- weapons, maximum health and armor, a model and the feelings of NPCs.
 
 local IsValid = IsValid
 local isnumber = isnumber
@@ -42,20 +40,20 @@ local function set_npc_relation(target, npc, disposition)
   npc:AddEntityRelationship(target, disposition, relation_priority)
 end
 
---- Checks whether a player may be moved into a faction: asks the `Faction:can_transfer`
--- callback of that faction, then the PlayerCanTransferFaction hook. The SetFaction command
--- uses it; `Player:set_faction` moves the player without asking. Server only.
+--- Checks whether a player may be given the starter kit of a faction: asks the
+-- `Faction:can_transfer` callback of that faction, then the PlayerCanTransferFaction hook. The
+-- SetFaction command uses it; `Factions.give_kit` gives the kit without asking. Server only.
 -- ```
 -- local allowed, reason, arguments = Factions.can_transfer(target, faction_table)
 --
 -- if allowed then
---   target:set_faction(faction_table.faction_id)
+--   Factions.give_kit(target, faction_table)
 -- else
 --   actor:notify(reason, arguments)
 -- end
 -- ```
--- @param target [Player the player who is to be moved]
--- @param faction_table [Faction the faction they are to be moved into]
+-- @param target [Player the player who is to be given the kit]
+-- @param faction_table [Faction the faction whose kit it is]
 -- @return [Boolean true when the transfer is allowed; otherwise false, String the reason
 --   as a language phrase and Map the arguments of the phrase]
 function Factions.can_transfer(target, faction_table)
@@ -72,12 +70,12 @@ function Factions.can_transfer(target, faction_table)
   local allowed, reason, reason_arguments = faction_table:can_transfer(target, old_faction)
 
   if allowed != false then
-    --- Decides whether a player may be moved into a faction. Called on the server by
-    -- `Factions.can_transfer`, which the SetFaction command uses, after the can_transfer
-    -- callback of the faction has allowed it.
-    -- @param target [Player the player who is to be moved]
-    -- @param faction_table [Faction the faction they are to be moved into]
-    -- @param old_faction [Faction the faction they are in, nil if it is not registered]
+    --- Decides whether a player may be given the starter kit of a faction, which makes them a
+    -- member. Called on the server by `Factions.can_transfer`, which the SetFaction command
+    -- uses, after the can_transfer callback of the faction has allowed it.
+    -- @param target [Player the player who is to be given the kit]
+    -- @param faction_table [Faction the faction whose kit it is]
+    -- @param old_faction [Faction the faction they are in, nil when they are in none]
     -- @return [Boolean return false to refuse the transfer, String a language phrase that
     --   tells why and Map the arguments of the phrase; a generic text is used when the
     --   reason is omitted]
@@ -95,80 +93,53 @@ function Factions.can_transfer(target, faction_table)
   return true
 end
 
---- Returns the physical description that a faction gives to the characters of a player,
--- translated to the language of that player. Server only.
--- @param faction_table [Faction]
--- @param target=nil [Player the player whose language is used; English without one]
--- @return [String]
-function Factions.get_default_description(faction_table, target)
-  return t(faction_table:get_phys_desc() or '', nil, Flux.Lang:get_player_lang(target))
-end
-
---- Returns the base name of the active character of a player: the name that the name
--- templates of factions put in for {name}. It is the name the player chose when they
--- created the character, the random name it was given in a faction without names of its own,
--- or the name it was given last with `Characters.set_name` from outside the Factions plugin.
--- A character that has no base name stored takes its current name as its base name, which
--- is stored with it from then on. Server only.
+--- Gives a player the starter kit of a faction (see `Faction:get_kit`): every item of the kit
+-- goes into their default inventory, and an equipable item is then moved into the inventory
+-- it is equipped in, which equips it, when that is allowed; otherwise it stays where it is.
+-- With a rank, the items that grant the faction get that rank in their data. The player has
+-- to have the inventories of a loaded character. The membership of the player is refreshed on
+-- the next tick, as for any item they receive. Server only.
+-- ```
+-- local missing = Factions.give_kit(target, Factions.find_by_id('police'), 2)
+--
+-- if #missing > 0 then
+--   target:notify('notification.faction_kit_incomplete', { items = table.concat(missing, ', ') })
+-- end
+-- ```
 -- @param target [Player]
--- @return [String the base name, nil when the player has no active character]
-function Factions.get_base_name(target)
-  local character = target:get_character()
+-- @param faction_table [Faction the faction whose kit is given]
+-- @param rank=nil [Number rank index for the items that grant the faction; the rank those items
+--   start with otherwise (see `Factions.get_item_rank`)]
+-- @return [List<String> the IDs of the items of the kit that could not be given, empty when
+--   the whole kit was given]
+function Factions.give_kit(target, faction_table, rank)
+  local missing = {}
 
-  if !character then return end
-
-  local base_name = Characters.get_custom_data(character, 'base_name')
-
-  if !isstring(base_name) then
-    base_name = character.name
-
-    Characters.set_custom_data(character, 'base_name', base_name)
+  if !faction_table:get_rank(rank) then
+    rank = nil
   end
 
-  return base_name
-end
+  for _, item_id in ipairs(faction_table:get_kit()) do
+    local template = Item.find_by_id(item_id)
+    local grants = template and template.faction == faction_table.faction_id
+    local item_obj = template and Item.create(item_id, (grants and rank) ? { data = { rank = rank } } : nil)
 
---- Names the active character of a player after the name template of a faction for a rank,
--- with the base name of the character in place of {name}, and keeps that base name stored
--- on the character. Server only.
--- @param target [Player]
--- @param faction_table [Faction]
--- @param rank [Number rank index]
--- @param base_name=nil [String a base name to give the character; the stored one by default]
--- @param no_send=false [Boolean leave sending the character list to the player to the caller]
--- @see [Factions.get_base_name]
-function Factions.apply_name(target, faction_table, rank, base_name, no_send)
-  base_name = base_name or Factions.get_base_name(target)
+    if item_obj and target:add_item(item_obj) then
+      local equip_inv = item_obj.equip_inv
 
-  Characters.set_name(target, faction_table:generate_name(target, rank, nil, base_name), no_send)
-
-  local character = target:get_character()
-
-  if character then
-    Characters.set_custom_data(character, 'base_name', base_name)
-  end
-end
-
---- Networks to a player how many characters they have in each faction, which lets their
--- client tell whether they may create another character of a faction. The plugin calls it
--- whenever the characters of a player or their factions change. Server only.
--- @param target [Player]
--- @param except=nil [Character character that is not counted, such as one that is about
---   to be deleted]
-function Factions.send_character_counts(target, except)
-  if !IsValid(target) or target:IsBot() or !istable(target.record) then return end
-
-  local counts = {}
-
-  if istable(target.record.characters) then
-    for _, char in ipairs(target.record.characters) do
-      if char != except and isstring(char.faction) then
-        counts[char.faction] = (counts[char.faction] or 0) + 1
+      if isfunction(item_obj.is_equipped) and isstring(equip_inv) and target:get_inventory(equip_inv) then
+        target:transfer_item(item_obj.instance_id, equip_inv)
       end
+    else
+      if item_obj then
+        Item.remove(item_obj)
+      end
+
+      missing[#missing + 1] = item_id
     end
   end
 
-  target:set_private_nv('faction_characters', counts)
+  return missing
 end
 
 --- Brings the weapons of a player in line with the loadout of their faction and rank:

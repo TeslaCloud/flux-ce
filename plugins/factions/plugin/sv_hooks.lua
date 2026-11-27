@@ -1,51 +1,85 @@
---- Server side of the Factions plugin: keeps the team, the networked faction and the rank of
--- a player in line with their character, stores the faction on new characters, checks the
--- faction, the whitelist, the gender and the model of a character that is being created
--- against the faction's definition, loads the whitelists with the user record of a player
--- and networks them. It also enforces the whitelist and the limits of factions and ranks
--- when a character is loaded and the amount of characters a player may have in a faction,
--- and gives the members of a faction their weapons, maximum health and armor, rank model
--- and the feelings of NPCs whenever they spawn or their membership changes.
+--- Server side of the Factions plugin: resolves the membership of a player again when their
+-- character is applied, when its items have been loaded and on the next tick after any of
+-- their items has been added, taken or moved; keeps bots in a random faction; gives the
+-- members of a faction their team, weapons, maximum health and armor, rank model and the
+-- feelings of NPCs whenever they spawn or their membership changes; starts new characters as
+-- members of the faction of their creation option, giving them its kit the first time they are
+-- loaded; and loads and networks the whitelists of players.
+--
+-- The membership of a player is forgotten when a character is about to be applied, when the
+-- active character is dropped and when the player disconnects: the on_player_leave callback
+-- of their faction runs then, without PlayerFactionChanged. The first resolution after a
+-- character has been applied therefore starts from no faction: when it finds one, it calls
+-- the on_player_join callback of that faction and runs `PlayerFactionChanged(target, faction,
+-- nil)`.
 
 Cable.check_networked_string('fl_faction_creation_refused')
 
-local function can_bypass_limit(actor, faction_table, rank_table, character)
-  --- Decides whether a player may load a character although its faction, or its rank in
-  -- that faction, already has as many members online as the limit allows, or although the
-  -- faction is whitelisted and the player is not on its whitelist. Called on the server when
-  -- a player asks to load such a character.
-  -- @param actor [Player the player who wants to load the character]
-  -- @param faction_table [Faction the faction of the character]
-  -- @param rank_table [Map the rank that is full, nil when it is the faction that is full or
-  --   the whitelist that is missing]
-  -- @param character [Character the character they want to load]
-  -- @return [Boolean return true to let the player in regardless of the limit]
-  return hook.Run('PlayerCanBypassFactionLimit', actor, faction_table, rank_table, character) == true
-end
+--- Key of the generic character data that holds the kit a new character is still to be given:
+-- the faction and the rank.
+const pending_kit_key = 'faction_kit'
 
---- Sets the player's team from their faction, puts bots into a random faction, and gives a
--- member of a faction the maximum health and armor of their faction and rank, filled up.
--- @param actor [Player]
-function Factions:PostPlayerSpawn(actor)
-  local faction_table = actor:get_faction()
+--- Forgets the membership of a player: undoes the feelings of NPCs, forgets the rank model and
+-- that the items of the character have been loaded, clears the networked faction and rank,
+-- puts the player into the unassigned team and then calls the on_player_leave callback of the
+-- faction they were in. PlayerFactionChanged is not run.
+-- @param target [Player]
+local function forget_membership(target)
+  local faction_table = target:get_faction()
+
+  Factions.reset_npc_relations(target)
+
+  target.faction_model = nil
+  target.faction_items_character = nil
+
+  target:set_nv('faction', nil)
+  target:set_nv('rank', nil)
+  target:SetTeam(TEAM_UNASSIGNED)
 
   if faction_table then
-    actor:SetTeam(faction_table.team_id or 1)
+    faction_table:on_player_leave(target)
   end
+end
 
-  local is_bot = actor:IsBot()
+--- Returns the rank that a new member of a faction holds once they wear its kit: the highest
+-- rank that the faction_rank fields of the kit items that grant the faction name, the
+-- default rank of the faction for an item without one or when no kit item grants it.
+-- @param faction_table [Faction]
+-- @return [Number rank index]
+local function kit_rank(faction_table)
+  local default_rank = faction_table:get_default_rank()
+  local best
 
-  if is_bot then
-    local factions = self.all()
+  for _, item_id in ipairs(faction_table:get_kit()) do
+    local template = Item.find_by_id(item_id)
 
-    if table.Count(factions) > 0 then
-      local random_faction = table.Random(factions)
+    if template and template.faction == faction_table.faction_id then
+      local rank = faction_table:find_rank(template.faction_rank) or default_rank
 
-      actor:set_faction(random_faction.faction_id)
+      best = best and math.max(best, rank) or rank
     end
   end
 
-  if is_bot or actor:is_character_loaded() then
+  return best or default_rank
+end
+
+--- Puts a bot that has no faction yet into a random faction of its species, which it keeps
+-- (see `Factions.keep_random_membership`), and sets the team of every spawning member and
+-- gives them the maximum health and armor of their faction and rank, filled up.
+-- @param actor [Player]
+function Factions:PostPlayerSpawn(actor)
+  if actor:IsBot() then
+    self.keep_random_membership(actor)
+    self.refresh_membership(actor)
+  end
+
+  local faction_table = actor:get_faction()
+
+  if faction_table then
+    actor:SetTeam(faction_table.team_id)
+  end
+
+  if actor:IsBot() or actor:is_character_loaded() then
     self.apply_vitals(actor, true)
   end
 end
@@ -76,108 +110,200 @@ function Factions:GetPlayerModel(actor)
   end
 end
 
---- Networks the faction and the rank of the character that has just been loaded, giving a
--- character whose rank does not exist in its faction the default rank, and gives the player
--- what the faction grants them in the world: the weapons, the maximum health and armor
--- (full armor if the character had none saved), the model of the rank and the feelings of
--- NPCs towards the faction. The hook runs once the Characters plugin has spawned the
--- player, given them the model of the character and restored their saved health, armor and
--- ammo, so the model of the rank is put over that of the character here no matter which
--- plugin's handler of ActiveCharacterSet ran first. The team of the player is set as they
--- spawn, see Factions:PostPlayerSpawn. A player whose faction is not registered only loses
--- the rank model and the feelings of NPCs that an earlier character of theirs has left.
+--- Resolves the membership of a player whose character is about to be applied, before they
+-- are spawned, so that their team, spawn point and loadout are those of their faction. The
+-- membership of the character that was active before is forgotten first, which calls the
+-- on_player_leave callback of its faction, so the resolution starts from no faction: when it
+-- finds one, it calls the on_player_join callback of that faction and runs
+-- PlayerFactionChanged with no old faction, whatever the previous character was. The items
+-- of the character are not loaded yet, so the membership is provisional (see
+-- `Factions.resolve_membership`).
+-- @param owner [Player]
+-- @param _character [Character]
+function Factions:PreLoadCharacter(owner, _character)
+  forget_membership(owner)
+
+  self.refresh_membership(owner)
+end
+
+--- Gives the player what their faction grants them in the world once the Characters plugin
+-- has spawned them, given them the model of the character and restored their saved health,
+-- armor and ammo: the weapons, the maximum health and armor (full armor if the character had
+-- none saved), the model of the rank over that of the character and the feelings of NPCs.
 -- @param owner [Player]
 -- @param character [Character]
 function Factions:PostLoadCharacter(owner, character)
-  owner:set_nv('faction', character.faction)
-
-  local faction_table = owner:get_faction()
-
-  if !faction_table then
-    self.apply_model(owner)
-    self.apply_npc_relations(owner)
-
-    return
-  end
-
-  local rank = tonumber(character.rank)
-
-  if !rank or !faction_table:get_rank(rank) then
-    rank = faction_table:get_default_rank()
-  end
-
-  character.rank = rank
-
-  owner:set_nv('rank', rank)
-
   self.apply_membership(owner)
+  self.apply_npc_relations(owner)
 
-  local max_armor = faction_table:get_max_armor(rank)
+  local faction_table, rank = self.get_membership(owner)
+  local max_armor = faction_table and faction_table:get_max_armor(rank)
 
   if max_armor and tonumber(character.armor) == nil then
     owner:SetArmor(max_armor)
   end
+end
 
-  self.apply_npc_relations(owner)
+--- Ends the provisional membership of a player once the items of their active character have
+-- been loaded, and resolves it from the items.
+-- @param owner [Player]
+-- @param character [Character the character whose items have been loaded]
+-- @param _items [List<Item>]
+function Factions:CharacterItemsLoaded(owner, character, _items)
+  if owner:get_character() != character then return end
+
+  owner.faction_items_character = character
+
+  self.refresh_membership(owner)
+end
+
+--- Resolves the membership of the player whose inventory an item has been put into.
+-- @param _item_obj [Item]
+-- @param inventory [Inventory]
+-- @param _x [Number]
+-- @param _y [Number]
+function Factions:ItemAdded(_item_obj, inventory, _x, _y)
+  self.queue_refresh(inventory.owner)
+end
+
+--- Resolves the membership of the player whose inventory an item has been taken out of.
+-- @param _item_obj [Item]
+-- @param inventory [Inventory]
+function Factions:ItemTaken(_item_obj, inventory)
+  self.queue_refresh(inventory.owner)
+end
+
+--- Resolves the memberships of the players whose inventories an item has left and entered,
+-- which is how equipping and unequipping an item changes a membership.
+-- @param _item_obj [Item]
+-- @param new_inventory [Inventory nil when the item has left for the world or been removed]
+-- @param old_inventory [Inventory nil when the item has been picked up]
+function Factions:ItemTransferred(_item_obj, new_inventory, old_inventory)
+  if new_inventory then
+    self.queue_refresh(new_inventory.owner)
+  end
+
+  if old_inventory then
+    self.queue_refresh(old_inventory.owner)
+  end
 end
 
 --- Takes the faction of a character away from the player who drops it: clears the networked
--- faction and rank, forgets the rank model, undoes the feelings of NPCs and puts the player
--- back into the unassigned team.
+-- faction and rank, forgets the rank model, undoes the feelings of NPCs, puts the player back
+-- into the unassigned team and calls the on_player_leave callback of the faction.
+-- PlayerFactionChanged is not run.
 -- @param owner [Player]
 -- @param _character [Character the character that is being dropped]
 function Factions:ActiveCharacterCleared(owner, _character)
-  self.reset_npc_relations(owner)
-
-  owner.faction_model = nil
-
-  owner:set_nv('faction', nil)
-  owner:set_nv('rank', nil)
-  owner:SetTeam(TEAM_UNASSIGNED)
+  forget_membership(owner)
 end
 
---- Copies the faction and the rank from the creation data to the new character, using the
--- 'player' faction and the default rank of the faction when they are missing. Creation
--- requests of clients never carry a rank (see Factions:PreCreateCharacter), so their
--- characters start at the default rank unless the on_character_create callback of the
--- faction has set one. A faction or rank that sets a maximum health or armor makes the
--- character start with them. The base name of the character (see `Factions.get_base_name`)
--- is the name the player chose, or in a faction without names of its own the random name
--- that Factions:PreCreateCharacter has picked.
--- @param owner [Player]
+--- Takes the faction a character starts in from the creation option the player has chosen,
+-- never from what the client has sent, and discards the rank, which a client has no say in.
+-- @param _actor [Player]
+-- @param data [Map character creation data, changed in place]
+-- @param option [Map the creation option the player has chosen]
+function Factions:PreCreateCharacter(_actor, data, option)
+  data.rank = nil
+  data.faction = option?.data?.faction
+end
+
+--- Lets the on_character_create callback of the faction a character starts in refuse the
+-- character, with the reason the callback gives.
+-- @param actor [Player]
+-- @param data [Map character creation data]
+-- @return [Number CHAR_ERR_FACTION_REFUSED or the code the callback of the faction returned
+--   when the character is refused, otherwise nil]
+function Factions:PlayerCreateCharacter(actor, data)
+  local faction_table = isstring(data.faction) and self.find_by_id(data.faction)
+
+  if !faction_table then return end
+
+  local result, reason, arguments = faction_table:on_character_create(actor, data)
+
+  if isnumber(result) and result != CHAR_SUCCESS then
+    return result
+  elseif result == false then
+    if isstring(reason) then
+      Cable.send(actor, 'fl_faction_creation_refused', reason, arguments)
+    end
+
+    return CHAR_ERR_FACTION_REFUSED
+  end
+end
+
+--- Starts a new character as a member of the faction of its creation option. For the default
+-- faction of its species, the rank the on_character_create callback has set goes into the
+-- record of the character; any other faction leaves a note to give the character the kit of
+-- the faction, at that rank, the first time it is loaded (see Factions:AddDefaultItems). The
+-- faction is the provisional membership of the character until its items have been loaded
+-- (see `Factions.set_provisional_membership`), at the rank the callback has set or else the
+-- rank the character will hold: the one its kit grants for a kit faction, the default rank of
+-- the faction otherwise. The character starts with the maximum health and armor of the
+-- faction and rank when they set them.
+-- @param _owner [Player]
 -- @param char [Character the character being created]
 -- @param char_data [Map character creation data]
-function Factions:PostCreateCharacter(owner, char, char_data)
-  local faction_table = isstring(char_data.faction) and Factions.find_by_id(char_data.faction)
+function Factions:PostCreateCharacter(_owner, char, char_data)
+  local faction_table = isstring(char_data.faction) and self.find_by_id(char_data.faction)
+
+  if !faction_table then return end
+
+  local faction_id = faction_table.faction_id
   local rank = tonumber(char_data.rank)
 
-  if faction_table and (!rank or !faction_table:get_rank(rank)) then
-    rank = faction_table:get_default_rank()
+  if !rank or !faction_table:get_rank(rank) then
+    rank = nil
   end
 
-  char.faction = char_data.faction or 'player'
-  char.rank = rank or 1
+  local start_rank = rank
 
-  if faction_table then
-    if faction_table.has_name then
-      Characters.set_custom_data(char, 'base_name', char_data.name)
-    else
-      Characters.set_custom_data(char, 'base_name', char_data.base_name)
+  if faction_table == self.get_default_faction(Species.find_by_id(char.species)) then
+    if rank then
+      self.set_record(char, faction_id, 'rank', rank)
     end
+  else
+    Characters.set_custom_data(char, pending_kit_key, { faction = faction_id, rank = rank })
 
-    local max_health = faction_table:get_max_health(char.rank)
-    local max_armor = faction_table:get_max_armor(char.rank)
-
-    if max_health then
-      char.health = max_health
-    end
-
-    if max_armor then
-      char.armor = max_armor
-    end
+    start_rank = rank or kit_rank(faction_table)
   end
 
-  self.send_character_counts(owner)
+  start_rank = start_rank or faction_table:get_default_rank()
+
+  local max_health = faction_table:get_max_health(start_rank)
+  local max_armor = faction_table:get_max_armor(start_rank)
+
+  self.set_provisional_membership(char, faction_table, start_rank)
+
+  if max_health then
+    char.health = max_health
+  end
+
+  if max_armor then
+    char.armor = max_armor
+  end
+end
+
+--- Gives a new character the kit of the faction it was created to start in, the first time it
+-- is loaded, and tells the player about the items of the kit that could not be given.
+-- @param owner [Player]
+-- @param char [Character the new character]
+function Factions:AddDefaultItems(owner, char)
+  local pending = Characters.get_custom_data(char, pending_kit_key)
+
+  if !istable(pending) then return end
+
+  Characters.set_custom_data(char, pending_kit_key, nil)
+
+  local faction_table = self.find_by_id(pending.faction)
+
+  if !faction_table then return end
+
+  local missing = self.give_kit(owner, faction_table, tonumber(pending.rank))
+
+  if #missing > 0 then
+    owner:notify('notification.faction_kit_incomplete', { items = table.concat(missing, ', ') })
+  end
 end
 
 --- Loads the whitelists of a player together with their user record.
@@ -186,8 +312,7 @@ function Factions:AdjustPlayerRecordPreloads(preloads)
   preloads[#preloads + 1] = 'whitelists'
 end
 
---- Networks to the player the IDs of the factions they are whitelisted for, and how many
--- characters they have in each faction.
+--- Networks to the player the IDs of the factions they are whitelisted for.
 -- @param actor [Player]
 -- @param record [User the player's database record]
 function Factions:PlayerRestored(actor, record)
@@ -200,23 +325,14 @@ function Factions:PlayerRestored(actor, record)
 
     actor:set_private_nv('whitelists', whitelists)
   end
-
-  self.send_character_counts(actor)
 end
 
---- Updates the networked amounts of characters per faction of a player who is deleting one
--- of their characters.
--- @param actor [Player]
--- @param _id [Number ID of the character]
--- @param character [Character the character that is about to be deleted]
-function Factions:PreDeleteCharacter(actor, _id, character)
-  self.send_character_counts(actor, character)
-end
-
---- Makes NPCs forget what the faction of a disconnecting player has made them feel.
+--- Forgets the membership of a disconnecting player: makes NPCs forget what their faction has
+-- made them feel and calls the on_player_leave callback of the faction. PlayerFactionChanged
+-- is not run.
 -- @param actor [Player]
 function Factions:PlayerDisconnected(actor)
-  self.reset_npc_relations(actor)
+  forget_membership(actor)
 end
 
 --- Makes a newly created NPC feel about the players the way their factions say. This is done
@@ -230,34 +346,6 @@ function Factions:OnEntityCreated(entity)
   end
 end
 
---- Gives the player a random model of their faction that matches the new gender. A player
--- whose faction is not registered keeps their model. The character list is left for
--- `Characters.set_gender` to send.
--- @param owner [Player]
--- @param _char [Character]
--- @param _new_gender [Number CHAR_GENDER_* value]
--- @param _old_gender [Number CHAR_GENDER_* value]
-function Factions:CharacterGenderChanged(owner, _char, _new_gender, _old_gender)
-  local faction_table = owner:get_faction()
-
-  if faction_table then
-    Characters.set_model(owner, faction_table:get_random_model(owner), true)
-  end
-end
-
---- Makes a name that the active character of a player has been given from outside the
--- Factions plugin its base name, which the name templates of factions build on from then
--- on. `Factions.apply_name` puts the base name back after it has named a character.
--- @param _owner [Player]
--- @param char [Character the active character, nil if the player has none]
--- @param new_name [String]
--- @param _old_name [String]
-function Factions:CharacterNameChanged(_owner, char, new_name, _old_name)
-  if char then
-    Characters.set_custom_data(char, 'base_name', new_name)
-  end
-end
-
 --- Keeps the model of the rank on a player whose character model has been changed.
 -- @param owner [Player]
 -- @param _char [Character the active character, nil if the player has none]
@@ -267,133 +355,15 @@ function Factions:CharacterModelChanged(owner, _char, _model, _old_model)
   self.apply_model(owner)
 end
 
---- Refuses to load a character of a whitelisted faction when the player is not on its
--- whitelist, unless they may create characters past the whitelist
--- (`Factions.can_bypass_creation_limits`) or a PlayerCanBypassFactionLimit hook lets them in.
--- Also refuses it when its faction or its rank already has as many members online as the
--- limit allows, unless a PlayerCanBypassFactionLimit hook lets the player in.
--- The player themselves is not counted, so switching between two characters of a full
--- faction is possible. A character whose rank does not exist in its faction is checked
--- against the default rank, which it is given when it is loaded.
--- @param actor [Player]
--- @param character [Character the character the player wants to load]
--- @return [Boolean false, String the reason and Map its arguments when the character is
---   refused, otherwise nil]
-function Factions:PlayerCanUseCharacter(actor, character)
-  local faction_table = isstring(character.faction) and Factions.find_by_id(character.faction)
+--- Shows a member of a faction under the name that the faction gives them (see
+-- `Faction:get_display_name`).
+-- @param target [Player]
+-- @param _character [Character the active character of the player]
+-- @return [String the display name, nil for the real name]
+function Factions:GetCharacterDisplayName(target, _character)
+  local faction_table, rank = self.get_membership(target)
 
-  if !faction_table then return end
-
-  local faction_id = faction_table.faction_id
-  local rank = tonumber(character.rank)
-
-  if !rank or !faction_table:get_rank(rank) then
-    rank = faction_table:get_default_rank()
-  end
-
-  local rank_table = faction_table:get_rank(rank)
-  local lang = Flux.Lang:get_player_lang(actor)
-
-  if faction_table.whitelisted and !actor:has_whitelist(faction_id) and
-     !Factions.can_bypass_creation_limits(actor) and !can_bypass_limit(actor, faction_table, nil, character) then
-    return false, 'error.faction.no_whitelist', { faction = t(faction_table.name, nil, lang) }
-  end
-
-  if Factions.is_full(faction_id, nil, actor) and !can_bypass_limit(actor, faction_table, nil, character) then
-    local faction_name = t(faction_table.name, nil, lang)
-
-    return false, 'error.faction.full', { faction = faction_name }
-  end
-
-  if rank_table and Factions.is_full(faction_id, rank, actor) and
-     !can_bypass_limit(actor, faction_table, rank_table, character) then
-    return false, 'error.faction.rank_full', { rank = rank_table.id }
-  end
-end
-
---- Cleans up the creation data a client has sent: discards the rank and the base name, which
--- a client has no say in, and replaces the description with the default description of a
--- faction that does not let players write one. A faction that does not let players pick a
--- name (has_name false) names the character from its name template, with a random name from
--- `Characters.random_name` in place of {name}, or an empty one when no random name is
--- offered; that random name becomes the base_name field of the data. The Characters plugin
--- counts a replaced name or description as generated, which lets the name repeat the name
--- of another character and frees the description from the length limits that apply to the
--- ones players write.
--- @param actor [Player]
--- @param data [Map character creation data, modified in place]
-function Factions:PreCreateCharacter(actor, data)
-  data.rank = nil
-  data.base_name = nil
-
-  local faction_table = isstring(data.faction) and Factions.find_by_id(data.faction)
-
-  if !faction_table then return end
-
-  if !faction_table.has_name then
-    local gender = faction_table.has_gender and Characters.creation_gender(data.gender) or CHAR_GENDER_NONE
-
-    data.base_name = Characters.random_name(actor, faction_table.faction_id, gender)
-    data.name = faction_table:generate_name(actor, faction_table:get_default_rank(), nil, data.base_name)
-  end
-
-  if !faction_table.has_description then
-    data.description = self.get_default_description(faction_table, actor)
-  end
-end
-
---- Rejects character creation when the chosen faction is not registered (CHAR_ERR_FACTION) or
--- requires a whitelist that the player does not have (CHAR_ERR_FACTION_WHITELIST), when the
--- player already has as many characters of the faction as it allows (neither applies when
--- `Factions.can_bypass_creation_limits` lets the player past them), when the gender does not
--- fit the faction (a faction with genders needs a male or female character, any other
--- faction a genderless one), when the model is not one of the faction's models for that
--- gender, or when the on_character_create callback of the faction refuses the character.
--- @param actor [Player]
--- @param data [Map character creation data]
--- @return [Number CHAR_ERR_FACTION, CHAR_ERR_FACTION_WHITELIST, CHAR_ERR_FACTION_LIMIT,
---   CHAR_ERR_GENDER, CHAR_ERR_MODEL, CHAR_ERR_FACTION_REFUSED or the code the callback of the
---   faction returned when the data is rejected, otherwise nil]
-function Factions:PlayerCreateCharacter(actor, data)
-  local faction_table = isstring(data.faction) and Factions.find_by_id(data.faction)
-
-  if !faction_table then
-    return CHAR_ERR_FACTION
-  end
-
-  if !Factions.can_bypass_creation_limits(actor, data) then
-    if faction_table.whitelisted and !actor:has_whitelist(data.faction) then
-      return CHAR_ERR_FACTION_WHITELIST
-    end
-
-    if Factions.character_limit_reached(actor, data.faction) then
-      return CHAR_ERR_FACTION_LIMIT
-    end
-  end
-
-  local genderless = data.gender == CHAR_GENDER_NONE
-
-  if genderless == tobool(faction_table.has_gender) then
-    return CHAR_ERR_GENDER
-  end
-
-  local gender_models = faction_table:get_gender_models(
-    genderless and 'universal' or data.gender == CHAR_GENDER_FEMALE and 'female' or 'male'
-  )
-
-  if !gender_models or !table.HasValue(gender_models, data.model) then
-    return CHAR_ERR_MODEL
-  end
-
-  local result, reason, arguments = faction_table:on_character_create(actor, data)
-
-  if isnumber(result) and result != CHAR_SUCCESS then
-    return result
-  elseif result == false then
-    if isstring(reason) then
-      Cable.send(actor, 'fl_faction_creation_refused', reason, arguments)
-    end
-
-    return CHAR_ERR_FACTION_REFUSED
+  if faction_table then
+    return faction_table:get_display_name(target, target:name(true), faction_table:get_rank(rank))
   end
 end

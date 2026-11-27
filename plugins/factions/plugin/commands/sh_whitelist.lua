@@ -1,6 +1,8 @@
---- Staff command that manages the faction whitelists of players. `/whitelist add <target>
--- <faction>` whitelists players for a faction and `/whitelist remove <target> <faction>`
--- takes that whitelist away again. The faction is named by its whole ID or name.
+--- Staff command that manages the faction whitelists of players, which let them create
+-- characters that start as members of a faction. `/whitelist add <target> <faction>`
+-- whitelists players for a faction and `/whitelist remove <target> <faction>` takes that
+-- whitelist away again; characters created before keep what they have. The faction is named
+-- by its whole ID or name.
 
 CMD.name = 'Whitelist'
 CMD.description = 'command.whitelist.description'

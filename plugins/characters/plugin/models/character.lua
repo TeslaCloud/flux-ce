@@ -1,7 +1,8 @@
 --- A character of a player, stored in the `characters` table.
--- It belongs to a `User` and holds the name, gender, physical description, model, skin,
--- health, armor, reserve ammo and ban state of the character; other plugins add their own
--- columns and relations, as Factions does with the faction and rank. A record is only valid
+-- It belongs to a `User` and holds the name, species (the ID of a `Species`, 'human' by
+-- default), gender, physical description, model, skin, health, armor, reserve ammo and ban
+-- state of the character; other plugins add their own columns and relations, as Levels does
+-- with the level and experience. A record is only valid
 -- with a name and a physical description; how long they may be is set by the
 -- `characters_min_name_len`, `characters_max_name_len`, `characters_min_desc_len` and
 -- `characters_max_desc_len` configs and checked when a character is created or its description

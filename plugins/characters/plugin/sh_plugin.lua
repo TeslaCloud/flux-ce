@@ -26,12 +26,93 @@
 -- another record and drop it again, which runs `ActiveCharacterCleared`. A plugin that only
 -- needs to remember something about a character can keep it in the generic character data
 -- (`Player:set_character_data`) instead of adding a column.
+--
+-- Every character has a species, what the character is: a `Species` defined in a file of the
+-- `species` folder of a plugin or of the schema, which this plugin includes for all of them.
+-- The species owns the models of its characters, whether they have a gender, a name and a
+-- description of their own, their random names and how many characters of it one player may
+-- have. The first stage of character creation offers the options that
+-- `Characters.get_creation_options` builds, one per species unless an
+-- `AdjustCharacterCreationOptions` handler changes the list, and is left out when there is
+-- only one. `PlayerCanBypassCreationLimits` lifts the limit of characters per species.
+--
+-- The real name of a character is the public `name` networked variable of its player. A
+-- `GetCharacterDisplayName` handler can give it another name to be shown under, which
+-- `Characters.refresh_display_name` networks as `display_name`, which `Player:name` then
+-- returns on both realms and which commands accept besides the character name, as the public
+-- name of the player (see `Player:get_public_name`); the `model` argument type of commands
+-- completes the models of the species of the targets.
 
 PLUGIN:set_global('Characters')
 
+--- Returns the species of the players that a command argument names (see
+-- `Flux.Command:find_argument_players`). Every registered species is returned when the
+-- argument names nobody with a species.
+-- @param actor [Player the player who is typing, nil for the server console]
+-- @param target_arg [String the typed player argument]
+-- @return [List<Species>]
+local function suggested_species(actor, target_arg)
+  local targets = Flux.Command:find_argument_players(actor, target_arg)
+  local found, seen = {}, {}
+
+  for _, target in ipairs(targets) do
+    local species = target:get_species()
+
+    if species and !seen[species] then
+      seen[species] = true
+      found[#found + 1] = species
+    end
+  end
+
+  return #found > 0 ? found : Species.get_list()
+end
+
+--- Completes arguments of the 'model' type with the models of the species of the players
+-- named by the first argument, or of every species.
+-- @param actor [Player the player who is typing, nil for the server console]
+-- @param _partial [String the text typed for the argument so far]
+-- @param args [List<String> the arguments typed before the completed one]
+-- @return [List<String> model paths]
+local function complete_model(actor, _partial, args)
+  local values = {}
+
+  for _, species in ipairs(suggested_species(actor, isstring(args[1]) and args[1] or '')) do
+    for _, models in SortedPairs(species:get_models()) do
+      for _, model_path in ipairs(istable(models) and models or {}) do
+        values[#values + 1] = model_path
+      end
+    end
+  end
+
+  return values
+end
+
+Flux.Command:add_completer('model', complete_model)
+
 require_relative 'cl_hooks'
+require_relative 'sh_hooks'
 require_relative 'sv_plugin'
 require_relative 'sv_hooks'
+
+--- Registers the 'species' plugin folder and includes the species that come with this
+-- plugin.
+function Characters:OnPluginLoaded()
+  Plugin.add_extra('species')
+
+  Species.include_species(self:get_folder()..'/species/')
+end
+
+--- Includes the species of a plugin when its 'species' folder is being included.
+-- @param extra [String name of the folder being included]
+-- @param folder [String path to the plugin's folder]
+-- @return [Boolean true if the folder was handled here, nil otherwise]
+function Characters:PluginIncludeFolder(extra, folder)
+  if extra == 'species' then
+    Species.include_species(folder..'/species/')
+
+    return true
+  end
+end
 
 --- Registers the 'character' condition, which compares a player's active character ID.
 function Characters:RegisterConditions()

@@ -93,14 +93,14 @@ function Gamemastery:GetCharacterLimit(target, _limit)
   end
 end
 
---- Lets a character that goes into the pool be created in any faction: the whitelist and the
--- amount of characters its creator may have in the faction do not apply. That is every
--- character of a player of the `gamemaster` role, and a character a gamemaster creates for
--- the pool from the main menu.
+--- Lets a character that goes into the pool be created past the limits of creation: the
+-- amount of characters its creator may have of the species and, with the Factions plugin,
+-- the whitelists of factions do not apply. That is every character of a player of the
+-- `gamemaster` role, and a character a gamemaster creates for the pool from the main menu.
 -- @param target [Player]
 -- @param data [Map creation data; on the client the extra data of the creation screen]
 -- @return [Boolean true when the limits do not apply, otherwise nil]
-function Gamemastery:PlayerCanBypassFactionCreationLimits(target, data)
+function Gamemastery:PlayerCanBypassCreationLimits(target, data)
   if Gamemastery.has_gamemaster_role(target) then
     return true
   end

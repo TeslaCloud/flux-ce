@@ -162,9 +162,9 @@ function Gamemastery.get_possessor(character)
 end
 
 --- Builds the list of pool characters that is sent to the gamemasters: id, name, model, skin,
--- phys_desc, faction (when the character has one), banned, possessed_by (the Steam name of
--- the player who plays the character, nil when nobody does) and in_world (whether the
--- character stands in the world). Characters that have not been saved yet are left out.
+-- phys_desc, species, banned, possessed_by (the Steam name of the player who plays the
+-- character, nil when nobody does) and in_world (whether the character stands in the world).
+-- Characters that have not been saved yet are left out.
 -- @return [List<Map>]
 function Gamemastery.pool_to_networkable()
   local result = {}
@@ -183,7 +183,7 @@ function Gamemastery.pool_to_networkable()
       model = char_data.model or Characters.default_model,
       skin = tonumber(char_data.skin) or 0,
       phys_desc = char_data.phys_desc or '',
-      faction = isstring(char_data.faction) and char_data.faction or nil,
+      species = char_data.species or Characters.default_species,
       banned = tobool(char_data.banned),
       possessed_by = possessor and possessor:steam_name() or nil,
       in_world = IsValid(world_entities[id])

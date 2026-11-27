@@ -104,6 +104,10 @@ function Characters:ThemeLoaded(current_theme, resized)
     return vgui.Create('fl_char_load', parent)
   end)
 
+  current_theme:add_panel('ui.char_create.species', function(_id, parent, ...)
+    return vgui.Create('fl_char_create_species', parent)
+  end)
+
   current_theme:add_panel('ui.char_create.general', function(_id, parent, ...)
     return vgui.Create('fl_char_create_general', parent)
   end)
@@ -232,9 +236,27 @@ function Characters:PostRebuildScoreboardPlayerCard(card, target)
   end
 end
 
---- Adds the general stage (gender, name, description and model) to character creation.
+--- Adds the species stage as the first stage of character creation and the general stage
+-- (gender, name, description and model) after the stages added so far. When the local player
+-- has only one creation option (see `Characters.get_creation_options`) the species stage is
+-- left out and that option goes into the character data right away, as the stage would put
+-- it there.
 -- @param panel [Panel the character creation menu]
 function Characters:AddCharacterCreationMenuStages(panel)
+  local options = Characters.get_creation_options(PLAYER, panel.extra_data)
+
+  if #options == 1 then
+    local option = options[1]
+    local data = table.Copy(option.data)
+
+    data.option = option.id
+    data.species = option.species
+
+    panel:collect_data(data)
+  else
+    panel:add_stage('ui.char_create.species', 1)
+  end
+
   panel:add_stage('ui.char_create.general')
 end
 

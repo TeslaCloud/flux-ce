@@ -1,5 +1,6 @@
 name: Factions System
-description: Adds factions that a player's character can be a member of.
+description: Adds factions that characters are members of through what they carry and wear, or through their species.
 author: TeslaCloud Studios
 depends:
   - characters
+  - items

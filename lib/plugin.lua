@@ -12,12 +12,12 @@
 -- `lib/classes`, then `models`, `classes`, `meta`, `config`, `languages`, `controllers`,
 -- `views`, `views/lumen`, `tools`, `themes`, `entities`, `migrations`, the network message
 -- handlers in `nethooks` and the folders added with `Plugin.add_extra`, such as `commands`,
--- `items` or `factions`. The files of a folder are included in alphabetical order, each in
--- the realm its `cl_`, `sh_` or `sv_` prefix names, so a library cannot rely on anything the
--- main file sets up while it loads, and a network message handler uses the plugin's global
--- only inside its callback. The schema has the same layout in its `schema` folder, with
--- `sh_schema.lua`, `cl_schema.lua` and `sv_schema.lua` in place of the plugin files; its
--- main file is included before its extra folders.
+-- `items`, `species` or `factions`. The files of a folder are included in alphabetical
+-- order, each in the realm its `cl_`, `sh_` or `sv_` prefix names, so a library cannot rely
+-- on anything the main file sets up while it loads, and a network message handler uses the
+-- plugin's global only inside its callback. The schema has the same layout in its `schema`
+-- folder, with `sh_schema.lua`, `cl_schema.lua` and `sv_schema.lua` in place of the plugin
+-- files; its main file is included before its extra folders.
 --
 -- Every function of a registered plugin is put into the hook cache under its name, and
 -- `hook.Call` is overridden to run those functions before the regular hooks, so defining
@@ -1512,8 +1512,8 @@ function Plugin.include_folders(folder)
   for _, extra in ipairs(extras) do
     --- Called for every extra folder of a plugin or of the schema before Flux includes it: the
     -- default ones such as 'lib' or 'config' and those added with `Plugin.add_extra`.
-    -- Lets a plugin load the folders it has added in its own way, as the items and factions
-    -- plugins do. Runs on both the server and the client, whether the folder exists or not.
+    -- Lets a plugin load the folders it has added in its own way, as the items, characters
+    -- and factions plugins do. Runs on both the server and the client, whether the folder exists or not.
     -- @param extra [String name of the extra folder, relative to the plugin's folder]
     -- @param folder [String folder of the plugin or schema, without a trailing slash]
     -- @return [Boolean Return any value other than nil to take the folder over, so that Flux

@@ -24,7 +24,7 @@ plugins/notes/
     sv_hooks.lua
     lib/              libraries, lib/meta (metatable extensions), lib/classes (classes)
     commands/  roles/  config/  languages/  migrations/  models/  nethooks/
-    items/  factions/  views/  controllers/  tools/  themes/  entities/ ...
+    items/  species/  factions/  views/  controllers/  tools/  themes/  entities/ ...
 ```
 
 The root of `plugin/` holds only the files listed above, and only the ones the plugin needs. The main file is `sh_plugin.lua`, or `sh_<folder>.lua` named after the plugin's folder. Everything else goes into `lib/` or one of the folders that Flux includes by convention.
@@ -310,24 +310,78 @@ ITEM.health_delay = 1
 
 `ITEM:base_off` takes over a base from [`plugins/items/plugin/items/bases/`](../plugins/items/plugin/items/bases): `usable` (define `ITEM:use(actor)`), `consumable`, `medical`, `weapon`, `wearable` and others. The fields and callbacks an item can have are listed at the top of [`plugins/items/plugin/lib/classes/sh_item.lua`](../plugins/items/plugin/lib/classes/sh_item.lua). Compare `schema/items/sh_medical_bandage.lua` of HL2RP.
 
-## Factions
+## Species
 
-With the Factions plugin loaded, every file in a `factions/` folder is a faction, named after the file. `factions/sh_police.lua`:
+With the Characters plugin loaded, every file in a `species/` folder is a species, named after the file. A species is what a character is: it owns the models, whether characters have a gender, a name and a description of their own, their random names and how many characters of it a player may have. The first stage of character creation offers one option per species, and is left out when there is only one. Flux ships one species, `human`, in [`plugins/characters/plugin/species/sh_human.lua`](../plugins/characters/plugin/species/sh_human.lua). A file whose ID is registered already reopens that species instead of replacing it, so `species/sh_human.lua` of a schema amends the human of Flux:
 
 ```lua
---- The police, who keep order in the city. Only whitelisted players may join.
+--- Humans of the city: the citizens of Flux with random names, members of the citizen
+-- faction unless they carry something that makes them members of another one.
+
+SPECIES.default_faction = 'citizen'
+SPECIES.max_characters = 3
+SPECIES.random_names = {
+  male = { first = { 'John', 'Paul' }, last = { 'Doe', 'Smith' } },
+  female = { first = { 'Jane', 'Mary' }, last = { 'Doe', 'Smith' } }
+}
+```
+
+A species of its own sets `SPECIES.name` and `SPECIES.description` (phrases), `SPECIES.models` (`male`, `female` and `universal` lists) and `SPECIES.model_classes` (their animation classes), and `has_gender`, `has_name` and `has_description` to false to take those choices away from the player; `phys_desc` is the description it gives instead, and a `SPECIES:get_random_name(gender)` of its own names the characters. The fields are described in [`plugins/characters/plugin/lib/classes/sh_species.lua`](../plugins/characters/plugin/lib/classes/sh_species.lua).
+
+## Factions
+
+With the Factions plugin loaded, every file in a `factions/` folder is a faction, named after the file. A faction is what a character is recognized as. Nobody is put into one: a player is a member because of what they carry or wear, an item whose definition sets `ITEM.faction`, or else because it is the `default_faction` of their species. `factions/sh_police.lua`:
+
+```lua
+--- The police, who keep order in the city. Wearing the uniform makes a member; whitelisted
+-- players may create officers who start with it.
 
 FACTION.name = 'faction.police.title'
 FACTION.description = 'faction.police.desc'
 FACTION.color = Color(60, 100, 200)
+FACTION.species = 'human'
 FACTION.whitelisted = true
-FACTION.models.universal = { 'models/police.mdl' }
+FACTION.priority = 10
+FACTION.kit = { 'police_uniform', 'police_badge' }
+FACTION.name_template = '{rank} {name}'
 
 FACTION:add_rank('recruit', 'Rct.')
 FACTION:add_rank('officer', 'Ofc.')
 ```
 
-`FACTION.models` has `male`, `female` and `universal` lists, and `name_template`, `random_names`, `has_gender` and the rest are described in [`plugins/factions/plugin/lib/classes/sh_faction.lua`](../plugins/factions/plugin/lib/classes/sh_faction.lua). Compare `schema/factions/sh_citizen.lua` of HL2RP.
+The item that grants the faction, `items/sh_police_uniform.lua`. An equipable item grants it while it is equipped, any other item while it is carried, and the rank lives in the data of the item, so whoever wears the uniform holds the rank and `/rank` changes the uniform:
+
+```lua
+--- The uniform of the police, which makes its wearer a member.
+
+ITEM:base_off 'wearable'
+
+ITEM.name = 'item.police_uniform.name'
+ITEM.description = 'item.police_uniform.description'
+ITEM.model = 'models/props_c17/suitcase_passenger_physics.mdl'
+ITEM.model_group = 'police'
+ITEM.valid_model_group = '/citizens/'
+ITEM.equip_model_classes = { male = 'metrocop', female = 'female' }
+ITEM.faction = 'police'
+ITEM.faction_rank = 'recruit'
+```
+
+`model_group` dresses the wearer in the model of the same name in the `police` model folder: the last folder of the path of their model is replaced, so `models/<pack>/citizens/male01.mdl` becomes `models/<pack>/police/male01.mdl`, and `equip_model_classes` gives those models their animation classes, by the gender of the species model they replace. This needs a model whose last folder is named in letters. The human models Flux ships are in `models/humans/group01/`, which has no counterpart: no police model is found for them, no class is assigned, and a wearer would get the model of the item itself. `valid_model_group`, a pattern that the path of the wearer's model has to contain, keeps the uniform to the models that have a `police` counterpart; the example assumes a schema whose human species uses models of a pack in `citizens` folders.
+
+A whitelist restricts nobody: a player with the police whitelist gets a character creation option that starts a human with the kit. When the `default_faction` of a species is whitelisted, the option of that species is only offered to players with that whitelist and to players who may bypass creation limits (`PlayerCanBypassCreationLimits`). A faction that is neither a default of its species nor whitelisted is joined through its items only, and `/setfaction` hands out kits. To show members under something other than the template, a faction overrides `get_display_name`, here with the badge number kept in the data of the badge:
+
+```lua
+function FACTION:get_display_name(target, _name, _rank_table)
+  local badge = target:find_item('police_badge')
+  local number = badge and badge:get_data('number')
+
+  if number then
+    return 'Officer #'..number
+  end
+end
+```
+
+The real name of the character never changes; `Player:name()` shows the display name and `Player:name(true)` the real one. The other fields, the ranks and the callbacks are described in [`plugins/factions/plugin/lib/classes/sh_faction.lua`](../plugins/factions/plugin/lib/classes/sh_faction.lua). Compare `schema/factions/sh_cca.lua` of HL2RP.
 
 ## A single-file plugin
 

@@ -67,8 +67,8 @@ function SpawnPoints:sync(target)
 end
 
 --- Adds a spawn point, saves the list and sends it to the staff who edit spawn points.
--- The group is stored as it is given, so that points can be placed for a faction before it
--- is registered; see `SpawnPoints:is_valid_group` for checking it first.
+-- The group is stored as it is given, so that points can be placed for a faction or species
+-- before it is registered; see `SpawnPoints:is_valid_group` for checking it first.
 -- ```
 -- SpawnPoints:add_point(actor:GetPos(), actor:EyeAngles(), SpawnPoints:make_group('faction', 'police'))
 -- ```
@@ -181,18 +181,26 @@ function SpawnPoints:pick_point(points, ignore)
   return points[math.random(#points)]
 end
 
---- Returns the spawn point groups a player belongs to, the most specific one first: the
--- faction of their character, then `default`. They are read from the character itself,
--- which is already in place when the player is spawned for a character that is being
--- loaded.
+--- Returns the spawn point groups a player belongs to, the most specific one first: their
+-- faction, the species of their character, then `default`. The faction is the one their
+-- membership has been resolved to, which is already in place when the player is spawned for
+-- a character that is being loaded.
 -- @param actor [Player]
 -- @return [List<String> groups; always ends with 'default']
 function SpawnPoints:get_player_groups(actor)
   local groups = {}
-  local character = Characters and actor:is_character_loaded() and actor:get_character()
 
-  if istable(character) and Factions and isstring(character.faction) then
-    groups[1] = self:make_group('faction', character.faction)
+  if Characters and actor:is_character_loaded() then
+    local faction_id = Factions and actor:get_faction_id()
+    local species_id = actor:get_species_id()
+
+    if isstring(faction_id) then
+      groups[#groups + 1] = self:make_group('faction', faction_id)
+    end
+
+    if isstring(species_id) then
+      groups[#groups + 1] = self:make_group('species', species_id)
+    end
   end
 
   if groups[#groups] != 'default' then

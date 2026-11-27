@@ -1,6 +1,7 @@
 --- Client-side hooks of the Recognize plugin: opens the recognize menu, shows strangers as
 -- strangers on the target ID, in chat and on the scoreboard, and adds the options to
--- introduce yourself to a player and to forget them to the player menus.
+-- introduce yourself to a player and to forget them to the player menus. A player whose
+-- character has a display name is shown under it everywhere, recognized or not.
 
 --- Opens the recognize menu when the show team key is pressed, unless the recognition
 -- system is off.
@@ -15,25 +16,28 @@ function Recognition:PlayerBindPress(_client, bind, _pressed)
   end
 end
 
---- Replaces the name above players the local player does not recognize with a stranger label.
+--- Replaces the name above players the local player does not recognize with a stranger label,
+-- unless their character has a display name.
 -- @param target [Player player whose info is drawn]
 -- @param _x [Number x position of the info]
 -- @param _y [Number y position of the info]
 -- @param _distance [Number distance to the player]
 -- @param lines [Table info lines to draw, keyed by line ID]
 function Recognition:PreDrawPlayerInfo(target, _x, _y, _distance, lines)
-  if !PLAYER:recognizes(target) and lines['name'] then
+  if lines['name'] and !target:get_display_name() and !PLAYER:recognizes(target) then
     lines['name'].text = target:get_gender() == 'female' and t'ui.hud.stranger_female' or t'ui.hud.stranger_male'
   end
 end
 
 --- Returns the name the local player knows a player by, or the start of their physical
--- description, when it is not the real name of the player. Returns nothing for a real name
--- and while the recognition system is off, which leaves the name to other handlers.
+-- description, when it is not the real name of the player. Returns nothing for a real name,
+-- for a player whose character has a display name, which is shown to everyone instead (see
+-- `Characters.refresh_display_name`), and while the recognition system is off, which leaves
+-- the name to other handlers.
 -- @param target [Player player to get the name of]
 -- @return [String displayed name, nil when it is the real name]
 function Recognition:GetPlayerName(target)
-  if !IsValid(PLAYER) or !IsValid(target) or !self:is_enabled() then return end
+  if !IsValid(PLAYER) or !IsValid(target) or !self:is_enabled() or target:get_display_name() then return end
 
   local name = self:get_known_name(PLAYER, target)
 
@@ -42,22 +46,25 @@ function Recognition:GetPlayerName(target)
   end
 end
 
---- Shows real names in out of character messages.
--- @param _target [Player player whose name is processed]
+--- Shows real names in out of character messages, and the display name of a player whose
+-- character has one.
+-- @param target [Player player whose name is processed]
 -- @param message_data [Table chat message data]
--- @return [Boolean false for non-IC messages, nil otherwise]
-function Recognition:ShouldProcessChatPlayerName(_target, message_data)
-  if !message_data.ic then
+-- @return [Boolean false for non-IC messages of players without a display name, nil
+--   otherwise]
+function Recognition:ShouldProcessChatPlayerName(target, message_data)
+  if !message_data.ic and !target:get_display_name() then
     return false
   end
 end
 
---- Hides the character card of players the local player does not recognize.
+--- Hides the character card of players the local player does not recognize, unless their
+-- character has a display name.
 -- @param _card [Panel character card]
 -- @param target [Player player the card belongs to]
 -- @return [Boolean false if the player is not recognized, nil otherwise]
 function Recognition:ShouldShowCharacterCard(_card, target)
-  if !PLAYER:recognizes(target) then
+  if !target:get_display_name() and !PLAYER:recognizes(target) then
     return false
   end
 end
@@ -161,7 +168,8 @@ function Recognition:AdjustScoreboardPlayerMenu(options, target, _card)
   }
 end
 
---- Moves players the local player does not recognize out of their faction into a players online category.
+--- Moves players the local player does not recognize out of their faction into a players
+-- online category; players whose character has a display name stay in their faction.
 -- @param players_table [Table lists of players keyed by faction category]
 function Recognition:PreRebuildFactionCategories(players_table)
   local client = PLAYER
@@ -169,7 +177,7 @@ function Recognition:PreRebuildFactionCategories(players_table)
 
   for _, group in pairs(players_table) do
     for index, member in pairs(group) do
-      if !client:recognizes(member) then
+      if !member:get_display_name() and !client:recognizes(member) then
         players_online[#players_online + 1] = member
         group[index] = nil
       end

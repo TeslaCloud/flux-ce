@@ -20,7 +20,8 @@ end
 
 --- Leaves the player without an active character. The active character is saved first and
 -- the ActiveCharacterCleared hook is run while it is still active; then the player's name
--- goes back to their Steam name and their gender, description and model to the defaults.
+-- goes back to their Steam name, their gender, description and model to the defaults, and
+-- they lose the species and the display name of the character.
 -- The player is neither spawned nor killed here.
 function player_meta:clear_active_character()
   local character = self.current_character
@@ -48,6 +49,8 @@ function player_meta:clear_active_character()
   self:set_nv('gender', CHAR_GENDER_MALE)
   self:set_nv('phys_desc', '')
   self:set_nv('model', Characters.default_model)
+  self:set_nv('species', nil)
+  self:set_nv('display_name', nil)
 end
 
 --- Sets a field on the player's active character and networks it under the same name.

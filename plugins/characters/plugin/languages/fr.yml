@@ -79,6 +79,14 @@ fr:
   permission:
     categories:
       character_management: "Gestion des personnages"
+  species:
+    unknown:
+      name: Race inconnue
+      description: "Cette race n'a pas de description."
+      phys_desc: "Cette race n'a pas de description physique par défaut."
+    human:
+      name: Humain
+      description: Un être humain ordinaire.
   ui:
     gender:
       male: "Masculin"
@@ -93,6 +101,10 @@ fr:
       continue: "Continuer"
       developed_by: "Développé par {author}."
     char_create:
+      species: Race
+      no_species: "Vous n'avez pas choisi de race."
+      option_unavailable: Cette option ne vous est pas proposée.
+      species_limit: Vous ne pouvez pas avoir plus de personnages de cette race.
       title: "CRÉER UN PERSONNAGE"
       text: "CRÉATION DE PERSONNAGE"
       create: "CRÉER"

@@ -2,10 +2,11 @@
 -- player.
 
 --- Makes a character the active character of a player. Runs PreSwitchCharacter if another
--- character was active, networks the basic character data and runs ActiveCharacterSet, then
--- PostSwitchCharacter if another character was active. The character does not have to
--- belong to the player: one of another user record is sent to the player on its own, so
--- that their client knows the character it is playing. Nothing is
+-- character was active, networks the basic character data (its ID, name, species, gender,
+-- description and model; the display name of the previous character is cleared) and runs
+-- ActiveCharacterSet, then PostSwitchCharacter if another character was active. The
+-- character does not have to belong to the player: one of another user record is sent to the
+-- player on its own, so that their client knows the character it is playing. Nothing is
 -- checked here: the requests of players go through `Characters.can_use` first, which is what
 -- keeps banned characters from being loaded.
 -- @param target [Player]
@@ -38,12 +39,14 @@ function Characters.activate(target, character)
   target.current_character = character
 
   target:set_nv('name', character.name or target:steam_name())
+  target:set_nv('display_name', nil)
+  target:set_nv('species', character.species or Characters.default_species)
   target:set_nv('gender', character.gender or CHAR_GENDER_MALE)
   target:set_nv('phys_desc', character.phys_desc or '')
   target:set_nv('model', character.model or Characters.default_model)
 
   --- Called on the server when a character has become the active character of a player, after
-  -- its ID, name, gender, description and model have been networked. The Characters plugin
+  -- its ID, name, species, gender, description and model have been networked. The Characters plugin
   -- spawns the player from its own handler of this hook; other plugins use it to apply what
   -- they keep on the character.
   -- @param owner [Player]

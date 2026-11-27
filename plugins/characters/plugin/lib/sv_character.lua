@@ -1,6 +1,6 @@
 --- Server side of the `Characters` functions: they create, save, delete, ban and edit
--- characters, keep the names that are taken, send the characters to their owners and check
--- the requests of players to load or delete a character.
+-- characters, keep the names that are taken, send the characters to their owners, network the
+-- display names of characters and check the requests of players to load or delete a character.
 
 local IsValid = IsValid
 local isnumber = isnumber
@@ -14,6 +14,10 @@ local string_trim = string.Trim
 
 --- The model of a character that has none of its own.
 Characters.default_model = 'models/humans/group01/male_02.mdl'
+
+--- The species of a character that is created without one, which is also the default of the
+-- `species` column.
+Characters.default_species = 'human'
 
 Characters.taken_names = Characters.taken_names or {}
 
@@ -482,8 +486,8 @@ function Characters.all_to_networkable(target)
 end
 
 --- Builds the table of character fields that is sent to the owning client: id, user_id,
--- steam_id, name, gender, phys_desc, model, skin, banned and custom_data, which holds the
--- keys of the generic data registered with `Characters.network_data`. Server only.
+-- steam_id, name, species, gender, phys_desc, model, skin, banned and custom_data, which holds
+-- the keys of the generic data registered with `Characters.network_data`. Server only.
 -- @param target [Player owner of the character]
 -- @param char [Character]
 -- @return [Map character data, or nil if the player or the character is not valid]
@@ -495,6 +499,7 @@ function Characters.to_networkable(target, char)
     user_id = char.user_id,
     steam_id = target:SteamID(),
     name = char.name,
+    species = char.species or Characters.default_species,
     gender = char.gender,
     phys_desc = char.phys_desc or t('ui.char_desc.none', nil, Flux.Lang:get_player_lang(target)),
     model = char.model or Characters.default_model,
@@ -569,8 +574,9 @@ function Characters.delete(target, id)
   Characters.send_to_client(target)
 end
 
---- Changes the name of the player's active character, networks it and runs the
--- CharacterNameChanged hook. The name is not checked against the names of other
+--- Changes the name of the player's active character, networks it, runs the
+-- CharacterNameChanged hook and refreshes the display name of the character (see
+-- `Characters.refresh_display_name`). The name is not checked against the names of other
 -- characters; use `Characters.is_name_taken` first where that matters. Server only.
 -- @param target [Player]
 -- @param new_name [String ignored when it is not a string]
@@ -599,6 +605,8 @@ function Characters.set_name(target, new_name, no_send)
   -- @param new_name [String]
   -- @param old_name [String the name that was networked before the change]
   hook.Run('CharacterNameChanged', target, char, new_name, old_name)
+
+  Characters.refresh_display_name(target)
 
   if !no_send then
     Characters.send_to_client(target)
@@ -666,9 +674,11 @@ function Characters.set_model(target, model, no_send)
   end
 end
 
---- Changes the gender of the player's active character, networks it and runs the
--- CharacterGenderChanged hook. The character list is sent to the player after the hook,
--- so handlers that change other fields of the character need not send it. Server only.
+--- Changes the gender of the player's active character, networks it, gives the player a
+-- random model of their species for the new gender and runs the CharacterGenderChanged hook.
+-- A player whose species is not registered, or has no model for the gender, keeps their
+-- model. The character list is sent to the player after the hook, so handlers that change
+-- other fields of the character need not send it. Server only.
 -- @param target [Player]
 -- @param new_gender [Number/String CHAR_GENDER_* value, or 'male', 'female' or 'no_gender']
 -- @param no_send=false [Boolean leave sending the character list to the player to the
@@ -688,8 +698,15 @@ function Characters.set_gender(target, new_gender, no_send)
   end
 
   target:set_nv('gender', new_gender)
+
+  local model = target:get_species()?.:get_random_model(Characters.gender_names[new_gender])
+
+  if model then
+    Characters.set_model(target, model, true)
+  end
+
   --- Called on the server after `Characters.set_gender` has changed the gender of a player's
-  -- active character and networked it.
+  -- active character, networked it and given the player a model of their species for it.
   -- @param owner [Player]
   -- @param char [Character the active character, nil if the player has none]
   -- @param new_gender [Number CHAR_GENDER_* value]
@@ -722,7 +739,8 @@ end
 -- and at once as well when that happens later.
 -- @param target [Player the player the character is created for, its owner unless a
 --   GetCharacterOwner hook names another record]
--- @param data [Map creation data: name, phys_desc, gender, model and optionally skin. Set
+-- @param data [Map creation data: name, phys_desc, gender, model, species (the default
+--   species without it) and optionally skin. Set
 --   name_generated to true when the name was not chosen by the player, which lets it
 --   repeat the name of another character, and description_generated to true when the
 --   description was not written by the player, which frees it from the length limits]
@@ -732,8 +750,10 @@ function Characters.create(target, data)
   -- `Characters.create`, which the plugin runs on the server, before the character record is
   -- built.
   -- @param owner [Player the player the character is created for]
-  -- @param data [Map creation data: name, phys_desc, gender, model, skin, name_generated,
-  --   description_generated and the fields that other plugins add]
+  -- @param data [Map creation data: name, phys_desc, species, gender, model, skin,
+  --   name_generated, description_generated and, for a request from the creation menu,
+  --   option (the ID of the chosen creation option) and the fields of the data of that
+  --   option, and the fields that other plugins add]
   -- @return [Number return a CHAR_ERR_* code to refuse the character; it becomes the result of
   --   Characters.create and is sent to the client. Return nothing to accept the data]
   local hook_result = hook.Run('PlayerCreateCharacter', target, data)
@@ -758,6 +778,7 @@ function Characters.create(target, data)
   local char = Character.new()
     char.steam_id = record.steam_id or target:SteamID()
     char.name = data.name
+    char.species = isstring(data.species) and data.species or Characters.default_species
     char.model = data.model or ''
     char.skin = data.skin or 0
     char.gender = data.gender
@@ -803,4 +824,53 @@ function Characters.create(target, data)
   end
 
   return CHAR_SUCCESS
+end
+
+--- Works out the name the active character of a player is shown under and networks it as the
+-- public `display_name` variable, which `Player:name` returns on both realms while it is set.
+-- The name comes from the GetCharacterDisplayName hook; a name that is empty, not a string or
+-- the real name of the character leaves the character under its real name and clears the
+-- variable. Runs the CharacterDisplayNameChanged hook when the display name is set, changed
+-- or cleared. The Characters plugin calls it when a character is applied and when its name
+-- changes, and the Factions plugin whenever the membership, the rank or the items of a player
+-- change; a plugin whose handler depends on something else calls it when that changes.
+-- Server only.
+-- @param target [Player]
+function Characters.refresh_display_name(target)
+  if !IsValid(target) then return end
+
+  local character = target:is_character_loaded() and target:get_character()
+  local real_name = target:name(true)
+  local display_name
+
+  if character then
+    --- Asks for the name a character is shown under in place of its real name, such as a
+    -- rank in front of the name or a designation that replaces it. Called on the server by
+    -- `Characters.refresh_display_name`; the Factions plugin answers it with
+    -- `Faction:get_display_name`. The real name of the character stays what it is.
+    -- @param target [Player the player of the character]
+    -- @param character [Character the active character of the player]
+    -- @return [String the name to show; nothing, an empty string or the real name to show
+    --   the real name]
+    display_name = hook.Run('GetCharacterDisplayName', target, character)
+  end
+
+  if !isstring(display_name) or display_name == '' or display_name == real_name then
+    display_name = nil
+  end
+
+  local old_display_name = target:get_display_name()
+
+  if display_name == old_display_name then return end
+
+  target:set_nv('display_name', display_name)
+
+  --- Called on the server when the name a character is shown under has changed: its display
+  -- name has been set, changed or cleared by `Characters.refresh_display_name`.
+  -- @param target [Player the player of the character]
+  -- @param new_name [String the name the character is shown under now, its real name when it
+  --   has no display name]
+  -- @param old_name [String the name it was shown under before, its real name when it had no
+  --   display name]
+  hook.Run('CharacterDisplayNameChanged', target, display_name or real_name, old_display_name or real_name)
 end

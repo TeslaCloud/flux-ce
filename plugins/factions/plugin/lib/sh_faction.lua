@@ -1,11 +1,13 @@
---- The shared `Factions` functions: they register and look up factions, count their members
--- against the limits of the factions and their ranks and tell who may promote and demote
--- whom. The loader of faction definition files is here as well. What the members of a
--- faction get from it on the server is in `sv_faction.lua`, and the player methods that read
--- and change the faction, rank and whitelists of a player are in `lib/meta`.
+--- The shared `Factions` functions: they register and look up factions, read the resolved
+-- membership of a player, tell which items grant a faction and at which rank, and who may
+-- promote and demote whom. The loader of faction definition files is here as well. How the
+-- server resolves memberships is in `sv_membership.lua`, what the members of a faction get
+-- from it in `sv_faction.lua`, and the player methods that read and change the faction, rank
+-- and whitelists of a player are in `lib/meta`.
 -- @module [Factions]
 
 local IsValid = IsValid
+local isfunction = isfunction
 local isnumber = isnumber
 local isstring = isstring
 local istable = istable
@@ -20,12 +22,12 @@ local count = Factions.count or 0
 Factions.stored = stored
 Factions.count = count
 
---- Returns the faction of a player and their rank in it, if the player counts as a member:
--- bots always do, other players only while they have an active character.
+--- Returns the faction of a player and their rank in it, as their membership was last resolved
+-- (see `Factions.refresh_membership`), if the player counts as a member: bots always do, other
+-- players only while they have an active character.
 -- @param target [Player]
--- @return [Faction the faction and Number the rank index (nil for a bot that has no rank
---   yet, -1 on the client when no rank has been networked); nothing for anyone who is not a
---   member of a registered faction]
+-- @return [Faction the faction and Number the rank index (-1 on the client when no rank has
+--   been networked); nothing for anyone who is not a member of a registered faction]
 function Factions.get_membership(target)
   if !IsValid(target) or !target:IsPlayer() then return end
   if !target:IsBot() and !target:is_character_loaded() then return end
@@ -53,13 +55,13 @@ local function get_authority(faction_table, rank, value)
 end
 
 --- Registers a faction: fills in the default name and description (the 'faction.unknown.*'
--- phrases) and color, sets up its team and assigns the animation class of each of its
--- models and of the models of its ranks.
+-- phrases), color, species, priority, kit, loadout and NPC relations, and sets up its team.
+-- The team ID also tells the order in which the factions were registered. The species of the
+-- faction, the default factions of the species and the animation classes of the rank models
+-- are checked and assigned once every plugin has been loaded (see `Factions.check_definitions`).
 -- ```
 -- local faction = Faction.new('citizen')
 -- faction.name = 'Citizen'
--- faction.models.male = { 'models/humans/group01/male_02.mdl' }
--- faction.models.female = { 'models/humans/group01/female_01.mdl' }
 --
 -- -- Same as faction:register()
 -- Factions.add_faction(faction.faction_id, faction)
@@ -74,8 +76,9 @@ function Factions.add_faction(id, data)
   data.name = data.name or 'faction.unknown.title'
   data.description = data.description or 'faction.unknown.description'
   data.color = data.color or Color(255, 255, 255)
-  data.limit = tonumber(data.limit) or 0
-  data.max_characters = tonumber(data.max_characters) or 0
+  data.species = isstring(data.species) and data.species or 'human'
+  data.priority = tonumber(data.priority) or 0
+  data.kit = istable(data.kit) and data.kit or {}
   data.loadout = istable(data.loadout) and data.loadout or {}
   data.npc_relations = istable(data.npc_relations) and data.npc_relations or {}
 
@@ -85,37 +88,65 @@ function Factions.add_faction(id, data)
 
   stored[data.faction_id] = data
   count += 1
+end
 
-  for gender, model_class in pairs(data.model_classes) do
-    local gender_models = data:get_gender_models(gender)
+--- Assigns the animation class of each model of the ranks of a faction: a single model path
+-- gets the model_class of the rank and nothing without one; each path of a table of models
+-- gets the model_class of the rank, or else the class the species of the faction has for the
+-- same key.
+-- @param faction_table [Faction]
+local function assign_rank_model_classes(faction_table)
+  local species = faction_table:get_species()
+  local species_classes = species and species.model_classes or {}
 
-    if gender_models then
-      for _, model_path in pairs(gender_models) do
-        Flux.Anim:set_model_class(model_path, model_class)
-      end
-    end
-  end
+  for _, rank_table in ipairs(faction_table.rank) do
+    local model = rank_table.model
 
-  for _, rank_table in ipairs(data.rank) do
-    if isstring(rank_table.model) then
+    if isstring(model) then
       if rank_table.model_class then
-        Flux.Anim:set_model_class(rank_table.model, rank_table.model_class)
+        Flux.Anim:set_model_class(model, rank_table.model_class)
       end
-    elseif istable(rank_table.model) then
-      for gender, model in pairs(rank_table.model) do
-        local model_class = rank_table.model_class or data.model_classes[gender]
+    elseif istable(model) then
+      for gender, model_path in pairs(model) do
+        local model_class = rank_table.model_class or species_classes[gender]
 
-        if isstring(model) and model_class then
-          Flux.Anim:set_model_class(model, model_class)
+        if isstring(model_path) and model_class then
+          Flux.Anim:set_model_class(model_path, model_class)
         end
       end
     end
   end
+end
 
-  for npc_class, value in pairs(data.npc_relations) do
-    if !data:get_npc_disposition(npc_class) then
-      ErrorNoHalt('[Flux:Factions] The \''..data.faction_id..'\' faction has an invalid relation \''..
-        tostring(value)..'\' towards \''..tostring(npc_class)..'\'!\n')
+--- Checks the definitions of the factions and species once all of them have been registered,
+-- since the species and factions folders of plugins and the schema load in no fixed order:
+-- warns about a faction whose species is not registered, a faction with an NPC relation
+-- that is not a disposition and a species whose default_faction is not a registered faction
+-- of that species, and assigns the animation classes of the rank models. The plugin calls it
+-- when all plugins have been loaded, on both realms.
+function Factions.check_definitions()
+  for faction_id, faction_table in pairs(stored) do
+    if !faction_table:get_species() then
+      ErrorNoHalt('[Flux:Factions] The \''..faction_id..'\' faction belongs to the species \''..
+        tostring(faction_table.species)..'\', which is not registered!\n')
+    end
+
+    for npc_class, value in pairs(faction_table.npc_relations) do
+      if !faction_table:get_npc_disposition(npc_class) then
+        ErrorNoHalt('[Flux:Factions] The \''..faction_id..'\' faction has an invalid relation \''..
+          tostring(value)..'\' towards \''..tostring(npc_class)..'\'!\n')
+      end
+    end
+
+    assign_rank_model_classes(faction_table)
+  end
+
+  for _, species in ipairs(Species.get_list()) do
+    local default_faction = species.default_faction
+
+    if default_faction != nil and Factions.get_default_faction(species) == nil then
+      ErrorNoHalt('[Flux:Factions] The default faction \''..tostring(default_faction)..'\' of the \''..
+        species.species_id..'\' species is not a registered faction of that species!\n')
     end
   end
 end
@@ -127,7 +158,20 @@ function Factions.find_by_id(id)
   return stored[id]
 end
 
---- Returns every connected player whose faction is the given one.
+--- Returns the default faction of a species: the registered faction its default_faction field
+-- names, if that faction belongs to the species. A character of the species who carries
+-- nothing that grants a faction is a member of it.
+-- @param species [Species]
+-- @return [Faction the faction, nil when the species has no valid default faction]
+function Factions.get_default_faction(species)
+  local faction_table = species and stored[species.default_faction]
+
+  if faction_table and faction_table.species == species.species_id then
+    return faction_table
+  end
+end
+
+--- Returns every connected player whose resolved faction is the given one.
 -- @param id [String faction ID]
 -- @return [List<Player>]
 function Factions.get_players(id)
@@ -175,135 +219,65 @@ function Factions.all()
   return stored
 end
 
---- Returns how many members of a faction, or holders of one of its ranks, may be online at
--- once: the limit field of the faction or of the rank, unless a GetFactionLimit hook returns
--- another number.
--- @param id [String faction ID]
--- @param rank=nil [Number rank index; the limit of the faction is returned without it]
--- @return [Number 0 when there is no limit, and when the faction or the rank does not exist]
-function Factions.get_limit(id, rank)
-  local faction_table = stored[id]
+--- Returns every registered faction in the order in which they were registered.
+-- @return [List<Faction>]
+function Factions.get_list()
+  local list = {}
 
-  if !faction_table then return 0 end
-
-  local rank_table
-  local limit
-
-  if rank != nil then
-    rank_table = faction_table:get_rank(rank)
-
-    if !rank_table then return 0 end
-
-    limit = tonumber(rank_table.limit) or 0
-  else
-    limit = tonumber(faction_table.limit) or 0
+  for _, faction_table in pairs(stored) do
+    list[#list + 1] = faction_table
   end
 
-  --- Lets plugins change how many members of a faction, or holders of one of its ranks, may
-  -- be online at once, for example to scale the limit with the amount of players online.
-  -- Called on both realms by `Factions.get_limit`.
-  -- @param faction_table [Faction the faction]
-  -- @param limit [Number the limit set by the definition of the faction or of the rank, 0
-  --   for no limit]
-  -- @param rank_table [Map the rank whose limit is asked for, nil when it is the limit of
-  --   the whole faction]
-  -- @return [Number the limit to use instead, 0 for no limit; return nothing to keep the
-  --   limit of the definition]
-  local override = hook.Run('GetFactionLimit', faction_table, limit, rank_table)
+  table.sort(list, |a, b| -> a.team_id < b.team_id)
 
-  if isnumber(override) then
-    limit = override
-  end
-
-  return math.max(0, limit)
+  return list
 end
 
---- Checks whether a faction, or one of its ranks, has as many members online as its limit
--- allows. Bots and players with an active character count as members.
--- @param id [String faction ID]
--- @param rank=nil [Number rank index; the whole faction is checked without it]
--- @param except=nil [Player player who is not counted, such as the one who wants to join]
--- @return [Boolean false as well when there is no limit]
--- @see [Factions.get_limit]
-function Factions.is_full(id, rank, except)
-  local limit = Factions.get_limit(id, rank)
-
-  if limit <= 0 then return false end
-
-  local members = 0
-
-  for _, client in player.Iterator() do
-    if client != except then
-      local faction_table, member_rank = Factions.get_membership(client)
-
-      if faction_table and faction_table.faction_id == id and (rank == nil or member_rank == rank) then
-        members += 1
-      end
-    end
-  end
-
-  return members >= limit
-end
-
---- Returns how many characters of a faction a player has. The server counts the characters
--- of the player's record; a client only knows the count of the local player, which the
--- server networks to them.
--- @param target [Player]
--- @param faction_id [String]
--- @return [Number]
-function Factions.count_characters(target, faction_id)
-  if CLIENT then
-    local counts = target:get_nv('faction_characters')
-
-    return istable(counts) and tonumber(counts[faction_id]) or 0
-  end
-
-  local amount = 0
-
-  if istable(target.record) and istable(target.record.characters) then
-    for _, char in ipairs(target.record.characters) do
-      if char.faction == faction_id then
-        amount += 1
-      end
-    end
-  end
-
-  return amount
-end
-
---- Checks whether a player has as many characters of a faction as its max_characters field
--- allows, so that they cannot create another one. On the client only the local player can
--- be checked.
--- @param target [Player]
--- @param faction_id [String]
--- @return [Boolean false as well when the faction does not limit the characters]
--- @see [Factions.count_characters]
-function Factions.character_limit_reached(target, faction_id)
-  local faction_table = stored[faction_id]
-  local maximum = faction_table and tonumber(faction_table.max_characters) or 0
-
-  return maximum > 0 and Factions.count_characters(target, faction_id) >= maximum
-end
-
---- Checks whether a player may create a character in a faction without being whitelisted
--- for it and beyond the amount of characters the faction allows them, which is what a
--- PlayerCanBypassFactionCreationLimits handler decides.
--- @param target [Player]
--- @param data [Map creation data on the server; on the client the extra data of the creation
---   screen, nil when it has none]
+--- Checks whether an item grants its faction to the player who has it in one of their own
+-- inventories. An item whose definition has a grants_faction(owner) method decides itself;
+-- otherwise an equipable item grants it while it is equipped and any other item while it is
+-- carried. Whether the item names a registered faction is not looked at here. The plugin
+-- resolves memberships again whenever an item of a player is added, taken or moved; an item
+-- whose answer changes while it stays where it is calls `Factions.queue_refresh` for its owner.
+-- ```
+-- -- items/sh_police_badge.lua: grants the faction only while the badge is shown.
+-- ITEM.faction = 'police'
+--
+-- function ITEM:grants_faction(_owner)
+--   return self:get_data('shown') == true
+-- end
+-- ```
+-- @param item_obj [Item an item in one of the inventories of the player]
+-- @param owner [Player the player who has the item]
 -- @return [Boolean]
-function Factions.can_bypass_creation_limits(target, data)
-  --- Decides whether a player may create a character in a faction they are not whitelisted
-  -- for, or beyond the amount of characters the faction allows them. Called on the server
-  -- when a creation request is checked, and on the client for the local player when the
-  -- faction stage of the creation screen lists the factions and checks the chosen one, so
-  -- a handler that is meant to be seen in the menu has to be shared.
-  -- @param target [Player the player who creates the character]
-  -- @param data [Map the creation data on the server; the extra data of the creation screen
-  --   on the client, nil when it has none]
-  -- @return [Boolean return true to let the player create the character regardless of the
-  --   whitelist and the limit]
-  return hook.Run('PlayerCanBypassFactionCreationLimits', target, data) == true
+function Factions.item_grants(item_obj, owner)
+  if isfunction(item_obj.grants_faction) then
+    return item_obj:grants_faction(owner) == true
+  end
+
+  if isfunction(item_obj.is_equipped) then
+    return item_obj:is_equipped() == true
+  end
+
+  return true
+end
+
+--- Returns the rank that an item grants in its faction: the rank index in the rank field of
+-- its data, else the faction_rank field of its definition (a rank ID or index), else the
+-- default rank of the faction. A rank the faction does not have is skipped.
+-- @param item_obj [Item]
+-- @param faction_table [Faction the faction the item grants]
+-- @return [Number rank index]
+function Factions.get_item_rank(item_obj, faction_table)
+  local rank = tonumber(item_obj:get_data('rank'))
+
+  if rank and faction_table:get_rank(rank) then
+    return rank
+  end
+
+  local start_rank = faction_table:find_rank(item_obj.faction_rank)
+
+  return start_rank or faction_table:get_default_rank()
 end
 
 --- Returns the model that a player uses because of their rank, instead of the model of
@@ -389,7 +363,8 @@ end
 -- FACTION.description = 'Keeps order in the city.'
 -- FACTION.color = Color(60, 100, 200)
 -- FACTION.whitelisted = true
--- FACTION.models.universal = { 'models/police.mdl' }
+-- FACTION.kit = { 'police_uniform' }
+-- FACTION.name_template = '{rank} {name}'
 -- FACTION:add_rank('recruit', 'Rct.')
 -- FACTION:add_rank('officer', 'Ofc.')
 -- ```

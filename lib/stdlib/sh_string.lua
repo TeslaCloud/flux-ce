@@ -151,8 +151,9 @@ end
 
 --- Finds all occurrences of a pattern in a string.
 -- ```
--- local hits = string.find_all('{data:rank} {callback:get_name}', '{([%w_]+):([%w_]+)}')
--- -- hits[1] = { text = '{data:rank}', start_pos = 1, end_pos = 11, matches = { 'data', 'rank' } }
+-- local hits = string.find_all('{name} of {city}', '{([%w_]+)}')
+-- -- hits[1] = { text = '{name}', start_pos = 1, end_pos = 6, matches = { 'name' } }
+-- -- hits[2] = { text = '{city}', start_pos = 11, end_pos = 16, matches = { 'city' } }
 -- ```
 -- @param str [String string to search in]
 -- @param pattern [String Lua pattern to search for]

@@ -1,21 +1,21 @@
 es:
   command:
     whitelist:
-      description: "Gestiona las listas blancas de facciones de los jugadores."
+      description: "Gestiona las listas blancas de facciones de los jugadores, que les permiten crear personajes que empiecen en una facción."
       add:
-        description: "Añade a un jugador a la lista blanca de una facción."
+        description: "Permite a un jugador crear personajes que empiecen en una facción."
         syntax: "<jugador> <facción>"
         message: "{player} ha añadido a {target} a la lista blanca de {faction}."
         none: "No se ha podido añadir a ninguno de estos jugadores a la lista blanca de {faction}: ya están en ella o sus datos aún no se han cargado."
       remove:
-        description: "Quita a un jugador de la lista blanca de una facción."
+        description: "Impide a un jugador crear personajes que empiecen en una facción. Sus personajes conservan lo que tienen."
         syntax: "<jugador> <facción>"
         message: "{player} ha quitado a {target} de la lista blanca de {faction}."
         none: "Ninguno de estos jugadores está en la lista blanca de {faction}."
     setfaction:
-      description: "Establece la facción de un personaje. Facciones: {factions}"
+      description: "Da a un personaje el equipo inicial de una facción, que lo hace miembro de ella. Facciones: {factions}"
       syntax: "<jugador> <facción>"
-      message: "{player} ha añadido a {target} a la facción {faction}."
+      message: "{player} ha dado a {target} el equipo inicial de la facción {faction}."
     rank:
       description: "Cambia los rangos de los personajes en sus facciones."
       set:
@@ -44,12 +44,11 @@ es:
   error:
     faction:
       invalid: "¡'{faction}' no es una facción válida!"
-      not_selected: No has seleccionado una facción.
-      full: "La facción {faction} no tiene sitio para otro miembro en este momento."
-      rank_full: "El rango {rank} de la facción de este personaje no tiene sitio para otro miembro en este momento."
-      no_whitelist: "No estás en la lista blanca de la facción {faction}, así que no puedes jugar con este personaje."
       creation_refused: Esta facción no acepta a este personaje.
-      transfer_refused: "{target} no puede ser transferido a la facción {faction}."
+      transfer_refused: "No se puede dar a {target} el equipo inicial de la facción {faction}."
+      wrong_species: "{target} no es de la raza de la facción {faction}."
+      no_kit: "La facción {faction} no tiene equipo inicial que dar."
+      kit_incomplete: "No se han podido dar a {target} estos objetos del equipo inicial: {items}"
       no_character: "{target} no tiene personaje."
     rank:
       cannot_promote: No puedes ascender a ninguno de estos jugadores.
@@ -58,21 +57,15 @@ es:
   notification:
     demote_rank: "Has sido degradado al rango {rank}."
     promote_rank: "Has sido ascendido al rango {rank}."
-    faction_changed: "Tu facción ha cambiado a {faction}."
+    faction_kit_given: "Has recibido el equipo inicial de la facción {faction}."
+    faction_kit_incomplete: "No se te han podido dar estos objetos de tu equipo inicial: {items}"
     rank_changed: "Tu rango en la facción ha cambiado a {rank}."
-    whitelist_taken: "Has perdido el acceso a la facción {faction}."
-    whitelist_given: "Se te ha concedido acceso a la facción {faction}."
+    whitelist_taken: "Ya no puedes crear personajes que empiecen en la facción {faction}."
+    whitelist_given: "Ahora puedes crear personajes que empiecen en la facción {faction}."
   faction:
     unknown:
       title: "Facción desconocida"
       description: "Esta facción no tiene descripción."
-      phys_desc: "Esta facción no tiene una descripción física predeterminada."
-  ui:
-    char_create:
-      faction: Facción
-      no_whitelist: No tienes acceso a esta facción.
-      no_faction: No has elegido una facción.
-      faction_limit: No puedes tener más personajes en esta facción.
   permission:
     manage_ranks:
       name: "Gestionar rangos de facción"

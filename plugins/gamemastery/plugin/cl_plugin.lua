@@ -4,7 +4,7 @@
 Gamemastery.pool = Gamemastery.pool or {}
 
 --- Returns the list of pool characters the server has sent last.
--- @return [List<Map> entries with the id, name, model, skin, phys_desc, faction, banned,
+-- @return [List<Map> entries with the id, name, model, skin, phys_desc, species, banned,
 --   possessed_by and in_world fields]
 function Gamemastery.get_pool()
   return Gamemastery.pool

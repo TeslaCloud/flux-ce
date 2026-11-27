@@ -1,7 +1,7 @@
 --- A button that shows an image instead of a title (`fl_image_button`).
 -- Set the image with `SetImage`. The image is darkened until the button is hovered, and an
 -- accent colored outline is drawn around it while the button is active. Derives from
--- `fl_button`; the faction chooser of the character creation uses it.
+-- `fl_button`; the species chooser of the character creation uses it.
 
 local math_clamp = math.Clamp
 

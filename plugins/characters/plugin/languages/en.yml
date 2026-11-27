@@ -79,6 +79,14 @@ en:
   permission:
     categories:
       character_management: Character Management
+  species:
+    unknown:
+      name: Unknown Species
+      description: This species has no description.
+      phys_desc: This species has no default physical description.
+    human:
+      name: Human
+      description: An ordinary human being.
   ui:
     gender:
       male: Male
@@ -93,6 +101,10 @@ en:
       continue: Continue
       developed_by: Developed by {author}.
     char_create:
+      species: Species
+      no_species: You didn't choose a species.
+      option_unavailable: This option is not available to you.
+      species_limit: You cannot have any more characters of this species.
       title: CREATE A CHARACTER
       text: CHARACTER CREATION
       create: CREATE

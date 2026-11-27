@@ -1,7 +1,7 @@
 en:
   error:
     spawn_points:
-      invalid_group: This faction does not exist. Pick another group in the tool settings.
+      invalid_group: This faction or species does not exist. Pick another group in the tool settings.
       no_room: There is no room for a spawn point here. Stand where players should appear.
       none_aimed: You are not aiming at a spawn point.
   notification:
@@ -20,6 +20,7 @@ en:
       group:
         default: Everyone
         faction: "Faction: {name}"
+        species: "Species: {name}"
   permission:
     manage_spawn_points:
       name: Manage spawn points

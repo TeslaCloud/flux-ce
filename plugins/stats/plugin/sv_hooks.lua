@@ -123,7 +123,7 @@ function Stats:OneSecond()
   end
 end
 
---- Replaces the stat bonuses of a player who has been moved to another faction.
+--- Replaces the stat bonuses of a player whose faction has changed.
 -- @param target [Player]
 -- @param _faction_table [Faction the faction the player is in now]
 -- @param _old_faction [Faction the faction the player was in before, or nil]

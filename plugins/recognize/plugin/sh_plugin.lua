@@ -22,11 +22,17 @@
 --
 -- The plugin also keeps the completion of player arguments of commands from giving names
 -- away: players without the 'staff' permission are only offered the real names of the
--- characters they know by that name and of their own (see `Recognition.complete_player`).
+-- characters they know by that name and of their own, besides the public names that everyone
+-- sees (see `Player:get_public_name` and `Recognition.complete_player`). The name a player
+-- knows someone by is never offered, since it is only known to that player's client and
+-- commands do not accept it.
 --
 -- Recognition masks names in the interface only. The real name of every character is the
 -- public 'name' networked variable of its player, so client-side code can still read it with
--- `Player:name(true)`.
+-- `Player:name(true)`. A character with a display name (see `Characters.refresh_display_name`),
+-- such as a designation that a faction gives its members, is shown under it to everyone,
+-- whether they recognize the character or not: the display name takes precedence over
+-- recognition in the name of the player, in chat, on the scoreboard and on the target ID.
 
 PLUGIN:set_global('Recognition')
 
@@ -81,8 +87,8 @@ end
 -- that type before. Staff and the server console get all of its suggestions. Other players
 -- are not offered the real name of a character they do not know by that name: they get the
 -- names of their own character and of the characters they know by their real names, along
--- with Steam names and SteamIDs; the Steam name of a character they do not know is offered
--- whenever it contains the typed text.
+-- with public names (`Player:get_public_name`), Steam names and SteamIDs; the Steam name of a
+-- character they do not know is offered whenever it contains the typed text.
 -- @param actor [Player the player who is typing, nil for the server console]
 -- @param partial [String the text typed for the argument so far]
 -- @param args [List<String> the arguments typed before it]

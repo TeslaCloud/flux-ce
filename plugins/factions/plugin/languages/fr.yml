@@ -1,27 +1,27 @@
 fr:
   command:
     whitelist:
-      description: "Gère les listes blanches de factions des joueurs."
+      description: "Gère les whitelists de factions des joueurs, qui leur permettent de créer des personnages qui commencent dans une faction."
       add:
-        description: "Ajoute un joueur à la liste blanche d'une faction."
+        description: "Permet à un joueur de créer des personnages qui commencent dans une faction."
         syntax: "<cible> <faction>"
-        message: "{player} a ajouté {target} à la liste blanche de la faction {faction}."
-        none: "Aucun de ces joueurs n'a pu être ajouté à la liste blanche de la faction {faction} : ils y figurent déjà ou leurs données ne sont pas encore chargées."
+        message: "{player} a ajouté {target} à la whitelist de la faction {faction}."
+        none: "Aucun de ces joueurs n'a pu être ajouté à la whitelist de la faction {faction} : ils y figurent déjà ou leurs données ne sont pas encore chargées."
       remove:
-        description: "Retire un joueur de la liste blanche d'une faction."
+        description: "Empêche un joueur de créer des personnages qui commencent dans une faction. Ses personnages gardent ce qu'ils ont."
         syntax: "<cible> <faction>"
-        message: "{player} a retiré {target} de la liste blanche de la faction {faction}."
-        none: "Aucun de ces joueurs n'est sur la liste blanche de la faction {faction}."
+        message: "{player} a retiré {target} de la whitelist de la faction {faction}."
+        none: "Aucun de ces joueurs n'est sur la whitelist de la faction {faction}."
     setfaction:
-      description: "Change la faction d'un personnage. Factions : {factions}"
+      description: "Donne à un personnage le paquetage de départ d'une faction, qui en fait un membre. Factions : {factions}"
       syntax: "<cible> <faction>"
-      message: "{player} a ajouté {target} à la faction {faction}."
+      message: "{player} a donné à {target} le paquetage de départ de la faction {faction}."
     rank:
-      description: "Change le grade des personnages dans leur faction."
+      description: "Change le rang des personnages dans leur faction."
       set:
-        description: "Définit le grade d'un personnage dans sa faction, d'après son numéro, son ID ou son nom."
-        syntax: "<cible> <grade>"
-        message: "{player} a défini le grade de {target} dans sa faction : {rank}."
+        description: "Définit le rang d'un personnage dans sa faction, d'après son numéro, son ID ou son nom."
+        syntax: "<cible> <rang>"
+        message: "{player} a défini le rang de {target} dans sa faction : {rank}."
       promote:
         description: "Promeut un personnage dans sa faction."
         syntax: "<cible>"
@@ -36,43 +36,36 @@ fr:
       text: "Faction {operator} {faction}"
       message: "Sélectionnez une faction"
     rank:
-      name: "Joueur d'un certain grade dans une faction précise"
-      text: "Grade {faction} {operator} {rank}"
-      message: "Sélectionnez un grade"
+      name: "Joueur d'un certain rang dans une faction précise"
+      text: "Rang {faction} {operator} {rank}"
+      message: "Sélectionnez un rang"
     factions: "Factions"
-    ranks: "Grades"
+    ranks: "Rangs"
   error:
     faction:
       invalid: "« {faction} » n'est pas une faction valide !"
-      not_selected: "Vous n'avez pas sélectionné de faction."
-      full: "La faction {faction} n'a plus de place pour un nouveau membre pour le moment."
-      rank_full: "Le grade {rank} de la faction de ce personnage n'a plus de place pour un nouveau membre pour le moment."
-      no_whitelist: "Vous n'êtes pas sur la liste blanche de la faction {faction} : vous ne pouvez pas jouer ce personnage."
       creation_refused: "Cette faction n'accepte pas ce personnage."
-      transfer_refused: "{target} ne peut pas être transféré dans la faction {faction}."
+      transfer_refused: "{target} ne peut pas recevoir le paquetage de départ de la faction {faction}."
+      wrong_species: "{target} n'est pas de la race de la faction {faction}."
+      no_kit: "La faction {faction} n'a pas de paquetage de départ à donner."
+      kit_incomplete: "Ces objets du paquetage de départ n'ont pas pu être donnés à {target} : {items}"
       no_character: "{target} n'a pas de personnage."
     rank:
       cannot_promote: "Vous ne pouvez promouvoir aucun de ces joueurs."
       cannot_demote: "Vous ne pouvez rétrograder aucun de ces joueurs."
-      not_found: "Aucune des factions de ces personnages n'a le grade « {rank} »."
+      not_found: "Aucune des factions de ces personnages n'a le rang « {rank} »."
   notification:
-    demote_rank: "Vous avez été rétrogradé au grade {rank}."
-    promote_rank: "Vous avez été promu au grade {rank}."
-    faction_changed: "Votre faction est désormais {faction}."
-    rank_changed: "Votre grade dans la faction est désormais {rank}."
-    whitelist_taken: "Vous avez perdu l'accès à la faction {faction}."
-    whitelist_given: "Vous avez obtenu l'accès à la faction {faction}."
+    demote_rank: "Vous avez été rétrogradé au rang {rank}."
+    promote_rank: "Vous avez été promu au rang {rank}."
+    faction_kit_given: "Vous avez reçu le paquetage de départ de la faction {faction}."
+    faction_kit_incomplete: "Ces objets de votre paquetage de départ n'ont pas pu vous être donnés : {items}"
+    rank_changed: "Votre rang dans la faction est désormais {rank}."
+    whitelist_taken: "Vous ne pouvez plus créer de personnages qui commencent dans la faction {faction}."
+    whitelist_given: "Vous pouvez désormais créer des personnages qui commencent dans la faction {faction}."
   faction:
     unknown:
       title: "Faction inconnue"
       description: "Cette faction n'a pas de description."
-      phys_desc: "Cette faction n'a pas de description physique par défaut."
-  ui:
-    char_create:
-      faction: "Faction"
-      no_whitelist: "Vous n'avez pas accès à cette faction."
-      no_faction: "Vous n'avez pas choisi de faction."
-      faction_limit: "Vous ne pouvez plus avoir de personnages dans cette faction."
   permission:
     manage_ranks:
       name: "Gérer les rangs des factions"

@@ -179,18 +179,6 @@ function Gamemastery:PlayerCanUseCharacter(actor, character)
   end
 end
 
---- Lets gamemasters play pool characters of factions that are full.
--- @param actor [Player]
--- @param _faction_table [Faction]
--- @param _rank_table [Map]
--- @param character [Character]
--- @return [Boolean true for a gamemaster and a pool character, otherwise nil]
-function Gamemastery:PlayerCanBypassFactionLimit(actor, _faction_table, _rank_table, character)
-  if Gamemastery.is_pool_character(character) and Gamemastery.is_gamemaster(actor) then
-    return true
-  end
-end
-
 --- Forgets a world entity of a pool character that has been removed and sends the pool.
 -- @param entity [Entity]
 function Gamemastery:EntityRemoved(entity)

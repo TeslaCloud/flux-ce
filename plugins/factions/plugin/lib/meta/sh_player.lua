@@ -1,24 +1,16 @@
 --- Player extensions of the Factions plugin: the faction, rank and whitelists of a player,
--- and whether they may promote and demote other members.
+-- and whether they may promote and demote other members. The faction and the rank are those
+-- of the membership resolved last (see `Factions.refresh_membership`), which the server
+-- networks to everyone.
 
-local isstring = isstring
 local istable = istable
 local stored = Factions.stored
 local player_meta = FindMetaTable('Player')
 
---- Returns the ID of the player's faction. On the server it is read from the active
--- character, so that it is right as soon as the character is selected.
--- @return [String faction ID, 'player' when no faction has been networked]
+--- Returns the ID of the player's faction.
+-- @return [String faction ID, nil when the player is in no faction]
 function player_meta:get_faction_id()
-  if SERVER then
-    local char = self.current_character
-
-    if char and isstring(char.faction) then
-      return char.faction
-    end
-  end
-
-  return self:get_nv('faction', 'player')
+  return self:get_nv('faction')
 end
 
 --- Returns the faction the player belongs to.
@@ -28,13 +20,9 @@ function player_meta:get_faction()
 end
 
 --- Returns the player's rank in their faction as an index into the faction's rank list.
--- On the server it is read from the active character, and from the networked rank when the
--- player has no character or the character no rank.
--- @return [Number rank index; -1 when no rank has been networked]
+-- @return [Number rank index; -1 when the player is in no faction]
 function player_meta:get_rank()
-  local rank = SERVER and self:get_character()?.rank
-
-  return rank or self:get_nv('rank', -1)
+  return self:get_nv('rank', -1)
 end
 
 --- Returns the ID of the player's current rank. Errors if the player has no faction or rank.
@@ -93,7 +81,8 @@ function player_meta:can_demote(target)
   return Factions.can_demote(self, target)
 end
 
---- Returns the faction whitelists of the player.
+--- Returns the faction whitelists of the player. A whitelist for a faction lets the player
+-- create characters that start as members of it.
 -- @return [List Whitelist records on the server, empty for a player without a user record;
 --   whitelisted faction IDs on the client, which knows those of the local player alone]
 function player_meta:get_whitelists()
@@ -104,7 +93,8 @@ function player_meta:get_whitelists()
   return self:get_nv('whitelists', {})
 end
 
---- Checks whether the player is whitelisted for a faction.
+--- Checks whether the player is whitelisted for a faction, which lets them create characters
+-- that start as members of it.
 -- @param faction_id [String]
 -- @return [Boolean]
 function player_meta:has_whitelist(faction_id)

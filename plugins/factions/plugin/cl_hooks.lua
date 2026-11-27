@@ -1,87 +1,5 @@
---- Client side of the Factions plugin: adds the faction stage to character creation, adapts
--- the general stage to the chosen faction, explains why the server has refused a character
--- because of its faction, and groups the scoreboard by faction.
-
---- Hides the gender, description and name controls of the 'ui.char_create.general' stage
--- when the chosen faction does not have them. Factions without gender get the 'universal' one.
--- @param id [String ID of the stage that has just been opened]
--- @param panel [Panel the panel of that stage]
-function Factions:CharacterCreationPanelCreated(id, panel)
-  if id == 'ui.char_create.general' then
-    local faction_table
-    local char_data = panel:GetParent().char_data
-
-    if char_data and char_data.faction then
-      faction_table = Factions.find_by_id(char_data.faction)
-    end
-
-    if faction_table then
-      if !faction_table.has_gender then
-        panel.gender_label:SetVisible(false)
-        panel.gender_female:SetVisible(false)
-        panel.gender_male:SetVisible(false)
-
-        panel:GetParent().char_data.gender = 'universal'
-        panel:rebuild_models()
-      end
-
-      if !faction_table.has_description then
-        panel.desc_label:SetVisible(false)
-        panel.desc_entry:SetVisible(false)
-      end
-
-      if !faction_table.has_name then
-        panel.name_label:SetVisible(false)
-        panel.name_entry:SetVisible(false)
-
-        if IsValid(panel.name_random) then
-          panel.name_random:SetVisible(false)
-        end
-      end
-    end
-  end
-end
-
---- Stops the player from leaving the 'ui.char_create.general' stage without picking a gender
--- when the chosen faction requires one.
--- @param id [String ID of the stage being left]
--- @param panel [Panel the panel of that stage]
--- @return [Boolean false to block the change, String translated error; nothing otherwise]
-function Factions:PreChangeStage(id, panel)
-  if id == 'ui.char_create.general' then
-    local gender =
-      (panel.gender_female:is_active() and 'female') or (panel.gender_male:is_active() and 'male') or 'universal'
-    local faction_id = panel:GetParent().char_data.faction
-    local faction_table = Factions.find_by_id(faction_id)
-
-    if gender == 'universal' and faction_table.has_gender then
-      return false, t'ui.char_create.no_gender'
-    end
-  end
-end
-
---- Registers the faction selection panel with the theme.
--- @param current_theme [ThemeBase]
-function Factions:ThemeLoaded(current_theme)
-  current_theme:add_panel('ui.char_create.faction', function(_id, parent, ...)
-    return vgui.Create('fl_char_create_faction', parent)
-  end)
-end
-
---- Adds faction selection as the first stage of character creation.
--- @param panel [Panel the character creation menu]
-function Factions:AddCharacterCreationMenuStages(panel)
-  panel:add_stage('ui.char_create.faction', 1)
-end
-
---- Returns the models of the chosen faction that match the chosen gender.
--- @param char_data [Map character data collected so far; needs faction and gender]
--- @return [List<String> model paths]
-function Factions:GetCharacterCreationModels(char_data)
-  local faction_table = Factions.find_by_id(char_data.faction)
-
-  return faction_table:get_gender_models(char_data.gender)
-end
+--- Client side of the Factions plugin: explains why the server has refused a character
+-- because of the faction it would start in, and groups the scoreboard by faction.
 
 --- Returns where the category of a faction goes on the scoreboard: the team ID of the
 -- faction, which follows the order in which the factions were registered. Categories that
@@ -210,25 +128,17 @@ function Factions:PreRebuildScoreboard(panel, w, h)
   return true
 end
 
---- Supplies the error text shown when character creation fails because of the faction: no
--- faction was chosen, the player is not on the whitelist of the faction, the player has too
--- many characters of it, or the faction has refused the character, in which case the reason
--- the server has sent is shown if there is one.
+--- Supplies the error text shown when character creation fails because the faction the
+-- character would start in has refused it: the reason the server has sent, if there is one.
 -- @param _success [Boolean]
 -- @param status [Number CHAR_* status code sent by the server]
--- @return [String translated error for the CHAR_ERR_FACTION codes, otherwise nil]
+-- @return [String translated error for CHAR_ERR_FACTION_REFUSED, otherwise nil]
 function Factions:GetCharacterCreationErrorText(_success, status)
   local refusal = self.creation_refusal
 
   self.creation_refusal = nil
 
-  if status == CHAR_ERR_FACTION then
-    return t'error.faction.not_selected'
-  elseif status == CHAR_ERR_FACTION_WHITELIST then
-    return t'ui.char_create.no_whitelist'
-  elseif status == CHAR_ERR_FACTION_LIMIT then
-    return t'ui.char_create.faction_limit'
-  elseif status == CHAR_ERR_FACTION_REFUSED then
+  if status == CHAR_ERR_FACTION_REFUSED then
     return refusal or t'error.faction.creation_refused'
   end
 end

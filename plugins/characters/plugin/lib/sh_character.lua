@@ -12,6 +12,10 @@
 -- and `Player:set_character_data` (or `Character:get_data` and `Character:set_data`). The
 -- data stays on the server unless a key is passed to `Characters.network_data`, which makes
 -- the server send the value of that key to the owner of the character, and to nobody else.
+--
+-- The species side of character creation is here too: the options of its first stage
+-- (`Characters.get_creation_options`), the random names (`Characters.random_name`) and the
+-- limit of characters per species (`Characters.species_limit_reached`).
 -- @module [Characters]
 
 local isnumber = isnumber
@@ -205,21 +209,158 @@ function Characters.normalize_desc(text)
   return (string_trim(cleaned):gsub('\n', ' | '))
 end
 
---- Returns a random name for a character of a faction, for the random name button of character
--- creation and for a player whose faction starts giving them a name of their own.
+--- Returns a random name for a character of a species, for the random name button of
+-- character creation and for the characters of a species without names of their own: the name
+-- a GetRandomCharacterName handler returns, or else one from `Species:get_random_name`.
 -- @param actor [Player the player the name is for]
--- @param faction_id [String ID of the faction of the character, nil without one]
+-- @param species_id [String ID of the species of the character]
 -- @param gender [Number CHAR_GENDER_* value of the character]
 -- @return [String the name, nil when there is no name to offer]
-function Characters.random_name(actor, faction_id, gender)
+function Characters.random_name(actor, species_id, gender)
   --- Asks for a random name for a character. Called on both realms by
   -- `Characters.random_name`: on the client by character creation, on the server when a
-  -- player moves into a faction with names of its own. The Factions plugin answers from the
-  -- random_names lists of the faction.
+  -- character of a species without names of its own is created. The species picks a name
+  -- itself when no handler returns one.
   -- @param actor [Player the player the name is for]
-  -- @param faction_id [String ID of the faction of the character, nil without one]
+  -- @param species_id [String ID of the species of the character]
   -- @param gender [Number CHAR_GENDER_* value of the character]
   -- @return [String the name; the first non-nil return wins. Character creation shows no
-  --   random name button when no handler returns a name for any gender of the faction]
-  return hook.Run('GetRandomCharacterName', actor, faction_id, gender)
+  --   random name button when neither the handlers nor the species offer a name for any
+  --   gender]
+  local name = hook.Run('GetRandomCharacterName', actor, species_id, gender)
+
+  if isstring(name) then
+    return name
+  end
+
+  return Species.find_by_id(species_id)?.:get_random_name(gender)
+end
+
+--- Returns how many characters of a species a player has. The server counts the characters
+-- of the player's record; a client only knows the characters of the local player.
+-- @param target [Player]
+-- @param species_id [String]
+-- @return [Number]
+function Characters.count_species(target, species_id)
+  local amount = 0
+
+  for _, character in ipairs(target:get_all_characters()) do
+    if character.species == species_id then
+      amount += 1
+    end
+  end
+
+  return amount
+end
+
+--- Checks whether a player has as many characters of a species as its max_characters field
+-- allows, so that they cannot create another one. On the client only the local player can be
+-- checked.
+-- @param target [Player]
+-- @param species_id [String]
+-- @return [Boolean false as well when the species does not limit the characters or is not
+--   registered]
+-- @see [Characters.count_species]
+function Characters.species_limit_reached(target, species_id)
+  local species = Species.find_by_id(species_id)
+  local maximum = species and species:get_max_characters() or 0
+
+  return maximum > 0 and Characters.count_species(target, species_id) >= maximum
+end
+
+--- Checks whether a player may create a character beyond the amount of characters its
+-- species allows them, which is what a PlayerCanBypassCreationLimits handler decides. The
+-- Factions plugin also offers such a player every whitelisted faction.
+-- @param target [Player]
+-- @param data [Map creation data on the server; on the client the extra data of the creation
+--   screen, nil when it has none]
+-- @return [Boolean]
+function Characters.can_bypass_creation_limits(target, data)
+  --- Decides whether a player may create characters past the limits of character creation:
+  -- the amount of characters a species allows them and, with the Factions plugin, the
+  -- whitelists of factions. Called on the server when a creation request is checked, and on
+  -- the client for the local player when the creation screen builds its options and checks
+  -- the chosen one, so a handler that is meant to be seen in the menu has to be shared.
+  -- @param target [Player the player who creates the character]
+  -- @param data [Map the creation data on the server; the extra data of the creation screen
+  --   on the client, nil when it has none]
+  -- @return [Boolean return true to let the player create the character regardless of the
+  --   limits]
+  return hook.Run('PlayerCanBypassCreationLimits', target, data) == true
+end
+
+--- Builds the options of the first stage of character creation: one per registered species,
+-- in the order of `Species.get_list`, which the AdjustCharacterCreationOptions handlers then
+-- add to, remove from and relabel. An option is a Map with `id` (unique among the options),
+-- `species` (the species ID of the character), `name` and `description` (texts or language
+-- phrases), `image` (material path, optional), `sounds` (List<String> of sounds, one of which
+-- plays when the option is picked, optional), `color` (optional) and `data` (Map of fields
+-- that choosing the option puts into the creation data; an option that a handler leaves
+-- without a `data` table gets an empty one once the handlers have run). The list is built the
+-- same way on both realms: the creation screen shows it, and the server builds it again for a
+-- creation request and copies `species` and `data` of the chosen option over what the client
+-- has sent.
+-- @param actor [Player the player who creates the character]
+-- @param extra_data=nil [Map creation data on the server; on the client the extra data of
+--   the creation screen]
+-- @return [List<Map> the options]
+function Characters.get_creation_options(actor, extra_data)
+  local options = {}
+
+  for _, species in ipairs(Species.get_list()) do
+    options[#options + 1] = {
+      id = species.species_id,
+      species = species.species_id,
+      name = species:get_name(),
+      description = species:get_description(),
+      image = species:get_image(),
+      sounds = species.menu_sound,
+      data = {}
+    }
+  end
+
+  --- Lets plugins add, remove and relabel the options of the first stage of character
+  -- creation. Called on both realms by `Characters.get_creation_options`, with one option
+  -- per species in the list; handlers change the list and its options in place and return
+  -- nothing. A handler must give the same answer on both realms, since the server checks a
+  -- request against the options it builds itself. The Factions plugin labels the option of
+  -- a species with its default faction and adds the whitelisted factions.
+  -- ```
+  -- function PLUGIN:AdjustCharacterCreationOptions(actor, options, extra_data)
+  --   for _, option in ipairs(options) do
+  --     if option.species == 'human' then
+  --       option.data.starting_city = 'city17'
+  --     end
+  --   end
+  -- end
+  -- ```
+  -- @param actor [Player the player who creates the character]
+  -- @param options [List<Map> the options, see `Characters.get_creation_options`, changed in
+  --   place]
+  -- @param extra_data [Map creation data on the server; on the client the extra data of the
+  --   creation screen, nil when it has none]
+  hook.Run('AdjustCharacterCreationOptions', actor, options, extra_data)
+
+  for _, option in ipairs(options) do
+    if !istable(option.data) then
+      option.data = {}
+    end
+  end
+
+  return options
+end
+
+--- Finds a character creation option by its ID among the options of a player.
+-- @param actor [Player the player who creates the character]
+-- @param id [String option ID]
+-- @param extra_data=nil [Map creation data on the server; on the client the extra data of
+--   the creation screen]
+-- @return [Map the option, nil when the player has no such option]
+-- @see [Characters.get_creation_options]
+function Characters.find_creation_option(actor, id, extra_data)
+  for _, option in ipairs(Characters.get_creation_options(actor, extra_data)) do
+    if option.id == id then
+      return option
+    end
+  end
 end

@@ -1,30 +1,40 @@
---- Factions puts every character into a faction, which is also the team of its player.
+--- Factions makes every character a member of a faction, which is also the team of its player.
 -- A faction is a `Faction` object, normally defined in a file of the factions folder of a
--- schema or plugin. It sets the name, color, models and ranks of its members, whether they
--- choose a name, description and gender of their own, and whether a whitelist is needed to
--- join. The plugin makes the choice of a faction the first stage of character creation,
--- generates character names from the name template of the faction, groups the scoreboard by
--- faction, and adds commands that change factions, ranks and whitelists. Every character
--- keeps a base name, the name its player chose (see `Factions.get_base_name`), which the
--- name template builds on whenever the rank or the faction of the character changes.
+-- schema or plugin. It is what a character is recognized as: an organization with a name, a
+-- color, ranks, a loadout, maximum health and armor, NPC relations, stat bonuses and the
+-- name its members are shown under. Every faction belongs to one species of the Characters
+-- plugin, `human` by default.
 --
--- A faction can also limit how many of its members, or holders of one of its ranks, may be
--- online at once, which is checked when a character is loaded, and how many characters one
--- player may have in it, which is checked when a character is created. Its members spawn
--- with the weapons, the maximum health and the maximum armor that the faction and their rank
--- set, wear the model of their rank if it has one, and are liked, feared or hated by the NPC
--- classes that the faction names. A rank can let its holders promote and demote other
--- members with `/rank promote` and `/rank demote`, which staff with the 'manage_ranks'
--- permission may use on anyone.
+-- Nothing stores which faction a character is in. A player is a member because of what they
+-- carry or wear: an item whose definition sets `ITEM.faction` grants that faction, an
+-- equipable item while it is equipped and any other item while it is in one of the player's
+-- own inventories (see `Factions.item_grants`), and the rank is in the data of that item, so
+-- whoever holds the item holds the rank. Without such an item the player is a member of the
+-- `default_faction` of their species, at the rank kept in the record of the character for
+-- that faction (see `Factions.get_record`). Among the items of several factions the highest
+-- `priority` wins, and the faction registered first among equals. The membership is resolved
+-- again whenever it may have changed (see `Factions.refresh_membership`); until the items of
+-- a character are loaded, the one resolved last for it stands in.
 --
--- The `Factions` functions register and look up factions, and the `Player` extensions read and
--- change the faction, rank and whitelists of a player. The `PlayerFactionChanged` and
--- `PlayerRankChanged` hooks report changes, `ShouldNameGenerate` can stop a name from being
--- generated, `GetFactionLimit` and `PlayerCanBypassFactionLimit` adjust the limits, and
--- `PlayerCanTransferFaction` can refuse a transfer by the SetFaction command. The plugin
--- answers `GetRandomCharacterName` from the random_names lists of a faction. The 'faction'
--- and 'rank' conditions are registered for the Conditions package, and the 'faction', 'rank'
--- and 'model' argument types for the completion of commands.
+-- A whitelist for a faction restricts nobody: it adds an option to character creation, a new
+-- character of the species of the faction that starts with its `kit`, the items that make
+-- someone a member. The option of a species whose default faction is whitelisted is only
+-- offered to players who have that whitelist. `/setfaction` hands out kits, `/rank` changes
+-- ranks where the membership comes from, and `/whitelist` manages whitelists. A faction can
+-- show its members under another name than the real name of their character, with a
+-- `name_template` or a `Faction:get_display_name` of its own. Its members spawn with the
+-- weapons, the maximum health and the maximum armor that the faction and their rank set, wear
+-- the model of their rank if it has one, and are liked, feared or hated by the NPC classes
+-- that the faction names. A rank can let its holders promote and demote other members with
+-- `/rank promote` and `/rank demote`, which staff with the 'manage_ranks' permission may use on
+-- anyone. The scoreboard is grouped by faction.
+--
+-- The `Factions` functions register and look up factions and resolve memberships, and the
+-- `Player` extensions read the faction and rank of a player and change their rank and
+-- whitelists. The `PlayerFactionChanged` and `PlayerRankChanged` hooks report changes, and
+-- `PlayerCanTransferFaction` can refuse a kit given by the SetFaction command. The 'faction'
+-- and 'rank' conditions are registered for the Conditions package, and the 'faction' and
+-- 'rank' argument types for the completion of commands.
 
 PLUGIN:set_global('Factions')
 
@@ -34,13 +44,13 @@ require_relative 'cl_hooks'
 require_relative 'sh_hooks'
 require_relative 'sv_hooks'
 
---- Returns the factions of the players that a command argument names, the way the server
--- finds them: by their exact name or SteamID, or '^' for the actor.
+--- Returns the factions of the players that a command argument names (see
+-- `Flux.Command:find_argument_players`).
 -- @param actor [Player the player who is typing, nil for the server console]
 -- @param target_arg [String the typed player argument]
 -- @return [List<Faction> the factions, empty if the argument names nobody with a faction]
 local function factions_of(actor, target_arg)
-  local targets = target_arg == '^' and IsValid(actor) ? { actor } : player.find_exact(target_arg)
+  local targets = Flux.Command:find_argument_players(actor, target_arg)
   local found, seen = {}, {}
 
   for _, target in ipairs(targets) do
@@ -98,29 +108,8 @@ local function complete_rank(actor, _partial, args)
   return values
 end
 
---- Completes arguments of the 'model' type with the models of the factions of the players
--- named by the first argument, or of every faction.
--- @param actor [Player the player who is typing, nil for the server console]
--- @param _partial [String the text typed for the argument so far]
--- @param args [List<String> the arguments typed before the completed one]
--- @return [List<String> model paths]
-local function complete_model(actor, _partial, args)
-  local values = {}
-
-  for _, faction_table in ipairs(suggested_factions(actor, args)) do
-    for _, models in SortedPairs(faction_table:get_models() or {}) do
-      for _, model_path in ipairs(istable(models) and models or {}) do
-        values[#values + 1] = model_path
-      end
-    end
-  end
-
-  return values
-end
-
 Flux.Command:add_completer('faction', complete_faction)
 Flux.Command:add_completer('rank', complete_rank)
-Flux.Command:add_completer('model', complete_model)
 
 --- Registers the 'manage_ranks' permission, which lets staff promote and demote any member
 -- of any faction, whatever their own rank.
@@ -140,13 +129,11 @@ function Factions:PluginIncludeFolder(extra, folder)
   end
 end
 
---- Prevents faction name generation for bots.
--- @param target [Player]
--- @return [Boolean false for bots, otherwise nil]
-function Factions:ShouldNameGenerate(target)
-  if target:IsBot() then
-    return false
-  end
+--- Checks the definitions of the factions and species once every plugin, and with them every
+-- faction and species, has been loaded.
+-- @see [Factions.check_definitions]
+function Factions:PluginsLoaded()
+  self.check_definitions()
 end
 
 --- Registers the 'faction' and 'rank' conditions, which compare a player's faction and their
@@ -165,7 +152,7 @@ function Factions:RegisterConditions()
     check = function(target, data)
       if !data.operator or !data.faction_id then return false end
 
-      return util.process_operator(data.operator, target:get_faction_id(), data.faction_id)
+      return util.process_operator(data.operator, target:get_faction_id() or '', data.faction_id)
     end,
     set_parameters = function(_id, data, panel, _menu, parent)
       parent:create_selector(data.name, 'condition.faction.message', 'condition.factions', self.all(),

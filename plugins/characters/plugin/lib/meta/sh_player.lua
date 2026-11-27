@@ -1,6 +1,6 @@
---- Player extensions of the Characters plugin: the characters of a player and the fields of
--- the active one. On the server they are `Character` records, on the client the networked
--- tables that the server sends to the owner of the characters.
+--- Player extensions of the Characters plugin: the characters of a player, the fields of the
+-- active one, its species and its display name. On the server they are `Character` records,
+-- on the client the networked tables that the server sends to the owner of the characters.
 
 local player_meta = FindMetaTable('Player')
 
@@ -107,6 +107,28 @@ end
 -- @return [String the description, or the 'ui.char_desc.none' text if none is set]
 function player_meta:get_phys_desc()
   return self:get_character_var('phys_desc') or t'ui.char_desc.none'
+end
+
+--- Returns the ID of the species of the player's active character, which is networked to
+-- everyone. A bot has the species it was given when it joined.
+-- @return [String species ID, nil while the player has no active character]
+function player_meta:get_species_id()
+  return self:get_nv('species')
+end
+
+--- Returns the species of the player's active character.
+-- @return [Species the species, nil while the player has no active character or its species
+--   is not registered]
+function player_meta:get_species()
+  return Species.find_by_id(self:get_species_id())
+end
+
+--- Returns the name the player's active character is shown under in place of its real name,
+-- which is networked to everyone (see `Characters.refresh_display_name`). `Player:name`
+-- returns it when it is set; `Player:name(true)` always returns the real name.
+-- @return [String the display name, nil when the character is shown under its real name]
+function player_meta:get_display_name()
+  return self:get_nv('display_name')
 end
 
 --- Returns the gender of the player's character as a string.

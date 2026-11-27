@@ -79,6 +79,14 @@ ru:
   permission:
     categories:
       character_management: Управление персонажем
+  species:
+    unknown:
+      name: Неизвестная раса
+      description: У этой расы нет описания.
+      phys_desc: У этой расы нет стандартного внешнего описания.
+    human:
+      name: Человек
+      description: Обычный человек.
   ui:
     gender:
       male: Мужской
@@ -93,6 +101,10 @@ ru:
       continue: Продолжить
       developed_by: Под авторством {author}.
     char_create:
+      species: Раса
+      no_species: Вы не выбрали расу.
+      option_unavailable: Этот вариант вам недоступен.
+      species_limit: У вас не может быть больше персонажей этой расы.
       title: СОЗДАТЬ ПЕРСОНАЖА
       text: СОЗДАНИЕ ПЕРСОНАЖА
       create: СОЗДАТЬ

@@ -256,7 +256,7 @@ A plugin is a folder, or a single `.lua` file whose `sv_`, `sh_` or `cl_` prefix
 
 A schema without `profile` loads its `depends` alone. Every other key of `<schema>.yml` is a config value that the schema sets, such as `damage_scale_head: 2`; a value changed in game wins over it. The `hl2rp.yml` of HL2RP is an example.
 
-How to write a plugin or a schema, from its folder layout to commands, items, factions, migrations and net messages, is described in [docs/plugins.md](docs/plugins.md) of this repository. `fpkg new plugin <name>` creates a working one to start from.
+How to write a plugin or a schema, from its folder layout to commands, items, species, factions, migrations and net messages, is described in [docs/plugins.md](docs/plugins.md) of this repository. `fpkg new plugin <name>` creates a working one to start from.
 
 ## Upgrading
 

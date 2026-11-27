@@ -79,6 +79,14 @@ es:
   permission:
     categories:
       character_management: Gestión de personajes
+  species:
+    unknown:
+      name: Raza desconocida
+      description: Esta raza no tiene descripción.
+      phys_desc: Esta raza no tiene una descripción física predeterminada.
+    human:
+      name: Humano
+      description: Un ser humano corriente.
   ui:
     gender:
       male: Masculino
@@ -93,6 +101,10 @@ es:
       continue: Continuar
       developed_by: Desarrollado por {author}.
     char_create:
+      species: Raza
+      no_species: No has elegido una raza.
+      option_unavailable: Esta opción no está disponible para ti.
+      species_limit: No puedes tener más personajes de esta raza.
       title: CREAR UN PERSONAJE
       text: CREACIÓN DE PERSONAJE
       create: CREAR

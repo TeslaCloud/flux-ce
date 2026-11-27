@@ -1,6 +1,6 @@
 --- Animation classes for models built on the skeletons of the stock Half-Life 2 NPCs:
 -- 'metrocop' (metropolice), 'combine_soldier' (combine soldiers), 'vortigaunt' and 'zombie'
--- (both without weapon animations). A faction assigns them to its models in `model_classes`.
+-- (both without weapon animations). A species assigns them to its models in `model_classes`.
 -- @module [Flux.Anim]
 
 const metrocop_vehicles = {

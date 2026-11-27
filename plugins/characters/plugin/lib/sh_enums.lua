@@ -10,6 +10,9 @@
 -- * `CHAR_ERR_MODEL`: no model was selected.
 -- * `CHAR_ERR_RECORD`: the player has no database record.
 -- * `CHAR_ERR_UNKNOWN`: something else went wrong.
+-- * `CHAR_ERR_SPECIES`: the chosen option of character creation is not one the player is
+--   offered, or its species is not registered.
+-- * `CHAR_ERR_SPECIES_LIMIT`: the player has as many characters of the species as it allows.
 
 enumerate [[
   CHAR_SUCCESS
@@ -21,4 +24,6 @@ enumerate [[
   CHAR_ERR_MODEL
   CHAR_ERR_RECORD
   CHAR_ERR_UNKNOWN
+  CHAR_ERR_SPECIES
+  CHAR_ERR_SPECIES_LIMIT
 ]]

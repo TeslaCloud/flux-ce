@@ -1,18 +1,21 @@
---- A faction that characters can belong to.
--- It holds the name, description, color and image of the faction, its models by gender, its
--- ranks from the lowest to the highest, the template that character names are generated
--- from and the lists that random names are picked from. It can also limit how many of its
--- members may be online at once and how many characters one player may have in it, give its
--- members weapons, maximum health and armor when they spawn, and set how the NPCs of the map
--- feel about them. A rank can carry a model, weapons, maximum health and armor of its own, a
--- limit, the right to promote and demote other members, and the mark of the rank that new
--- members start with.
+--- A faction: what characters are recognized as, an organization. It holds the name,
+-- description, color and image of the faction, the species its members are, its ranks from the
+-- lowest to the highest, its starter kit and the name its members are shown under. Members get
+-- weapons, maximum health and armor from it when they spawn, stat bonuses (read by the Stats
+-- plugin) and the feelings of the NPCs of the map. A rank can carry a model, weapons, maximum
+-- health and armor of its own, the right to promote and demote other members, and the mark of
+-- the rank that new members start with.
+--
+-- Nobody is put into a faction: a player is a member because of what they carry or wear, an
+-- item whose definition sets `ITEM.faction` to the ID of the faction (see
+-- `Factions.resolve_membership`), or because it is the `default_faction` of their species.
+-- The `kit` of a faction lists the items that make someone a member.
 --
 -- Factions are normally defined in the files of a factions folder, where the object is
 -- available as FACTION (see `Factions.include_factions`), and are registered with
--- `Faction:register`. A definition can override `Faction:on_player_join`,
--- `Faction:on_player_leave`, `Faction:on_character_create` and `Faction:can_transfer`, and
--- define make_name to build names itself.
+-- `Faction:register`. A definition can override `Faction:get_display_name`,
+-- `Faction:on_player_join`, `Faction:on_player_leave`, `Faction:on_character_create` and
+-- `Faction:can_transfer`.
 
 class 'Faction'
 
@@ -28,35 +31,28 @@ local dispositions = {
   neutral = disposition_neutral
 }
 
-local random_name_keys = {
-  [CHAR_GENDER_MALE] = 'male',
-  [CHAR_GENDER_FEMALE] = 'female'
-}
-
---- How many names `Faction:get_random_name` picks before it gives up on finding one within the
--- name length limits.
-const random_name_attempts = 8
-
 --- Creates a faction with default settings: the 'faction.unknown.*' phrases as its name and
--- descriptions, no ranks, no models, no limits, no loadout, name, description and gender
--- enabled, and the '{rank} {name}' name template, which may also contain {data:key} to
--- insert a value set with `Faction:set_data`. Fields are left unset when no ID is given.
+-- description, the human species, priority 0, no ranks, no kit, no loadout, no name template
+-- and no whitelist. Fields are left unset when no ID is given.
 -- ```
--- local faction = Faction.new('citizen')
--- faction.name = 'Citizen'
--- faction.has_description = false
--- faction.phys_desc = 'Wearing the worn out blue uniform of a citizen.'
--- faction.models.male = { 'models/humans/group01/male_02.mdl' }
--- faction.models.female = { 'models/humans/group01/female_01.mdl' }
--- faction:add_rank('citizen', 'Mr.')
+-- local faction = Faction.new('police')
+-- faction.name = 'Police'
+-- faction.color = Color(60, 100, 200)
+-- faction.whitelisted = true
+-- faction.kit = { 'police_uniform' }
+-- faction:add_rank('officer', 'Ofc.')
 -- faction:register()
 -- ```
 --
--- The fields that limit and equip the members are all optional:
+-- The other fields are all optional:
 -- ```
--- -- At most 8 members online at once, and 2 characters of the faction per player.
--- FACTION.limit = 8
--- FACTION.max_characters = 2
+-- -- The species of the members: an item never makes a character of another species a member.
+-- FACTION.species = 'human'
+-- -- When a player carries the items of several factions, the highest priority wins; ties go
+-- -- to the faction registered first.
+-- FACTION.priority = 10
+-- -- The name members are shown under, with {name} and {rank} (the name filter of the rank).
+-- FACTION.name_template = '{rank} {name}'
 -- -- Given on every spawn on top of the default loadout.
 -- FACTION.loadout = { 'weapon_stunstick' }
 -- -- Maximum health and armor of the members, who spawn with both of them full.
@@ -67,12 +63,6 @@ const random_name_attempts = 8
 --   npc_metropolice = 'like',
 --   npc_citizen = 'fear'
 -- }
--- -- Lists that random names are picked from, by 'male', 'female' and 'universal'; see
--- -- Faction#get_random_name.
--- FACTION.random_names = {
---   male = { first = { 'John', 'Paul' }, last = { 'Doe', 'Smith' } },
---   female = { first = { 'Jane', 'Mary' }, last = { 'Doe', 'Smith' } }
--- }
 -- ```
 -- @param id [String faction ID, normalized with to_id]
 function Faction:init(id)
@@ -81,20 +71,14 @@ function Faction:init(id)
   self.faction_id = id:to_id()
   self.name = 'faction.unknown.title'
   self.description = 'faction.unknown.description'
-  self.phys_desc = 'faction.unknown.phys_desc'
   self.whitelisted = false
   self.color = Color(255, 255, 255)
   self.material = nil
-  self.has_name = true
-  self.has_description = true
-  self.has_gender = true
-  self.model_classes = { male = 'player', female = 'female', universal = 'player' }
-  self.models = { male = {}, female = {}, universal = {} }
+  self.species = 'human'
+  self.priority = 0
+  self.kit = {}
   self.rank = {}
-  self.data = {}
-  self.name_template = '{rank} {name}'
-  self.limit = 0
-  self.max_characters = 0
+  self.name_template = nil
   self.loadout = {}
   self.max_health = nil
   self.max_armor = nil
@@ -125,24 +109,24 @@ function Faction:get_image()
   return self.material
 end
 
---- Returns a value stored with set_data.
--- @param key [String]
--- @return [String the stored value, or nil if nothing is stored under the key]
-function Faction:get_data(key)
-  return self.data[key]
-end
-
 --- Returns the description of the faction.
 -- @return [String]
 function Faction:get_description()
   return self.description
 end
 
---- Returns the physical description that characters of the faction get when the faction
--- does not let players write one (has_description is false).
--- @return [String description or its language phrase]
-function Faction:get_phys_desc()
-  return self.phys_desc
+--- Returns the species of the members of the faction.
+-- @return [Species the species, nil when it is not registered]
+function Faction:get_species()
+  return Species.find_by_id(self.species)
+end
+
+--- Returns the item IDs of the starter kit of the faction: the items that make someone a
+-- member, given to a character created with the faction as its starting option and by the
+-- SetFaction command.
+-- @return [List<String> item IDs, empty when the faction has no kit]
+function Faction:get_kit()
+  return istable(self.kit) and self.kit or {}
 end
 
 --- Returns the ranks of the faction, lowest first.
@@ -293,86 +277,15 @@ function Faction:get_npc_disposition(npc_class)
   end
 end
 
---- Returns all models of the faction.
--- @return [Map arrays of model paths keyed by 'male', 'female' and 'universal']
-function Faction:get_models()
-  return self.models
-end
-
---- Returns the models of the faction for a gender, falling back to the universal models when
--- the gender has none.
--- @param gender [String 'male', 'female', 'universal' or 'no_gender']
--- @return [List<String> model paths]
-function Faction:get_gender_models(gender)
-  local faction_models = self:get_models()
-
-  if gender == 'no_gender' or !faction_models[gender] or #faction_models[gender] == 0 then
-    gender = 'universal'
-  end
-
-  return faction_models[gender]
-end
-
-local function pick_random_name(lists)
-  local first_name = table.Random(lists.first)
-
-  if !first_name then return end
-
-  local last_name = lists.last and table.Random(lists.last)
-
-  return last_name ? first_name..' '..last_name : first_name
-end
-
---- Picks a random name from the random_names lists of the faction: a first name from the
--- lists of the gender, or the 'universal' ones when the gender has none, followed by a last
--- name when those lists have last names. A character without a gender falls back to the
--- 'male' lists after the 'universal' ones. A name shorter than `characters_min_name_len` or
--- longer than `characters_max_name_len` is picked again, up to random_name_attempts times.
--- @param gender [Number CHAR_GENDER_* value]
--- @return [String the name, nil when the faction has no lists for the gender or no name
---   within the length limits came up]
-function Faction:get_random_name(gender)
-  local random_names = self.random_names
-
-  if !random_names then return end
-
-  local lists = random_names[random_name_keys[gender]] or random_names.universal
-    or gender == CHAR_GENDER_NONE and random_names.male
-
-  if !lists or !lists.first then return end
-
-  local min_length = Config.get('characters_min_name_len')
-  local max_length = Config.get('characters_max_name_len')
-
-  for _ = 1, random_name_attempts do
-    local name = pick_random_name(lists)
-
-    if !name then return end
-
-    local length = utf8.len(name)
-
-    if length and length >= min_length and length <= max_length then
-      return name
-    end
-  end
-end
-
---- Picks a random faction model that matches the player's gender.
--- @param target [Player]
--- @return [String model path]
-function Faction:get_random_model(target)
-  return table.Random(self:get_gender_models(target:get_gender()))
-end
-
 --- Adds a rank above the ranks added so far. Besides its ID and the text it puts into
--- names, a rank can carry optional fields:
+-- display names, a rank can carry optional fields:
 -- * `model`: model that holders of the rank use instead of the model of their character,
 --   either a path or a table of paths keyed by 'male', 'female', 'no_gender' and 'universal'.
--- * `model_class`: animation class of that model (see `Flux.Anim:set_model_class`); for a
---   table of models it defaults to the model class the faction has for the same key.
+-- * `model_class`: animation class of that model (see `Flux.Anim:set_model_class`). A single
+--   path gets no class without it; each path of a table of models defaults to the model class
+--   the species of the faction has for the same key.
 -- * `loadout`: List<String> of weapon classes given on spawn on top of those of the faction.
 -- * `max_health`, `max_armor`: replace the maximum health and armor of the faction.
--- * `limit`: how many holders of the rank may be online at once, 0 or nil for no limit.
 -- * `default`: true makes it the rank that new members of the faction start with.
 -- * `can_promote`: the highest rank a holder may promote other members to, as a rank index
 --   or a rank ID; true stands for the rank right below their own.
@@ -382,13 +295,12 @@ end
 -- FACTION:add_rank('officer', 'Ofc.', { loadout = { 'weapon_pistol' }, max_armor = 50 })
 -- FACTION:add_rank('sergeant', 'Sgt.', {
 --   model = 'models/police_sergeant.mdl',
---   limit = 2,
 --   can_promote = 'officer',
 --   can_demote = 'officer'
 -- })
 -- ```
 -- @param id [String rank ID; nothing is added when it is nil]
--- @param name_filter=id [String/Map text that replaces {rank} in generated names. A table
+-- @param name_filter=id [String/Map text that replaces {rank} in display names. A table
 --   is taken as the data argument, and its name field as the text]
 -- @param data=nil [Map optional fields of the rank; the table itself becomes the rank table]
 -- @return [Map the rank table, or nil if nothing was added]
@@ -410,111 +322,62 @@ function Faction:add_rank(id, name_filter, data)
   return rank_table
 end
 
---- Builds a character name for a player from the faction's name template, which may contain
--- {name}, {rank}, {data:key} and {callback:method} placeholders. {name} becomes the name
--- passed in, and {rank} the name filter of the rank; either becomes an empty string when
--- there is none. The result is brought to the form of `Characters.normalize_name`, so the
--- spaces around an empty placeholder disappear. A faction that defines
--- make_name(target, char_name, rank, default_data) bypasses the template.
+--- Returns the name a member of the faction is shown under in place of the real name of their
+-- character, or nothing to show the real name. By default the name_template of the faction is
+-- filled in, its {name} with the real name and its {rank} with the name filter of the rank of
+-- the member, in one pass (see `string.fmt`); {rank} is empty for a member without a rank.
+-- The result is brought to the form of `Characters.normalize_name`, so the spaces around an
+-- empty placeholder disappear. A definition overrides it to build the name in any other way.
+-- Called on the server whenever the membership, the rank or the items of a member change (see
+-- `Characters.refresh_display_name`).
 -- ```
--- FACTION.name_template = '{data:unit} {rank} {name}'
--- FACTION:set_data('unit', 'C17')
+-- FACTION.name_template = '{rank} {name}'
 -- FACTION:add_rank('officer', 'Ofc.')
 --
--- FACTION:generate_name(target, 'officer', nil, 'John Doe') -- 'C17 Ofc. John Doe'
+-- faction_table:get_display_name(target, 'John Doe', faction_table:get_rank(1)) -- 'Ofc. John Doe'
 -- ```
--- @param target [Player]
--- @param rank [Number/String rank index or rank ID used for {rank}]
--- @param default_data=nil [Map values for {data:key} that override the faction's own data]
--- @param char_name=nil [String name used for {name}, such as the base name of the character
---   (see `Factions.get_base_name`)]
--- @return [String the generated name; the player's current name if a ShouldNameGenerate
---   hook returns false]
-function Faction:generate_name(target, rank, default_data, char_name)
-  default_data = default_data or {}
+-- @param _target [Player the member]
+-- @param name [String the real name of the character]
+-- @param rank_table [Map the rank of the member, nil when they have none]
+-- @return [String the name to show, nil for the real name]
+function Faction:get_display_name(_target, name, rank_table)
+  local template = self.name_template
 
-  --- Decides whether a character name is generated for a player. Called by
-  -- `Faction:generate_name` before the name template of the faction is applied; the Factions
-  -- plugin itself returns false for bots.
-  -- @param target [Player]
-  -- @param faction [Faction the faction that generates the name]
-  -- @param char_name [String the name used for {name}, nil when there is none]
-  -- @param rank [Number/String rank index or rank ID the name is generated for]
-  -- @param default_data [Map values for the {data:key} placeholders of the template]
-  -- @return [Boolean return false to keep the current name of the player]
-  if hook.Run('ShouldNameGenerate', target, self, char_name, rank, default_data) == false then return target:name() end
+  if !isstring(template) or template == '' then return end
 
-  if isfunction(self.make_name) then
-    return self:make_name(target, char_name, rank, default_data) or 'John Doe'
-  end
+  local rank_name = rank_table and isstring(rank_table.name) and rank_table.name or ''
 
-  local final_name = self.name_template
+  local display_name = string.fmt(template, { name = name, rank = rank_name })
 
-  if final_name:find('{name}') then
-    final_name = final_name:Replace('{name}', char_name or '')
-  end
-
-  if final_name:find('{rank}') then
-    local rank_name = ''
-
-    for index, rank_table in ipairs(self.rank) do
-      if rank_table.id == rank or index == rank then
-        rank_name = rank_table.name
-
-        break
-      end
-    end
-
-    final_name = final_name:replace('{rank}', rank_name)
-  end
-
-  local helpers = string.find_all(final_name, '{([%w_]+):([%w_]+)}')
-
-  for _, helper in ipairs(helpers) do
-    local m1, m2 = helper.matches[1], helper.matches[2]
-
-    if m1 == 'callback' then
-      local callback = self[m2]
-
-      if isfunction(callback) then
-        final_name = final_name:replace(helper.text, callback(self, target))
-      end
-    elseif m1 == 'data' then
-      local data = default_data[m2] or self.data[m2] or ''
-
-      if isstring(data) then
-        final_name = final_name:replace(helper.text, data)
-      end
-    end
-  end
-
-  return Characters.normalize_name(final_name)
+  return Characters.normalize_name(display_name)
 end
 
---- Stores a value on the faction for use as {data:key} in the name template. Both the key
--- and the value are converted to strings.
--- @param key [Any]
--- @param value [Any]
-function Faction:set_data(key, value)
-  self.data[tostring(key)] = tostring(value)
-end
-
---- Called on the server when a player is moved into this faction. Does nothing by default;
--- override it in the faction definition.
+--- Called on the server when a player becomes a member of this faction, as their membership is
+-- resolved again (see `Factions.refresh_membership`): when what they carry or wear changes
+-- their faction to this one, and on the first resolution after any character of this
+-- faction has been applied, which starts from no faction. The networked faction, rank and
+-- team of the player are those of this faction already. Does nothing by default; override
+-- it in the faction definition.
 -- @param _target [Player]
 function Faction:on_player_join(_target)
 end
 
---- Called on the server when a player is moved out of this faction. Does nothing by default;
--- override it in the faction definition.
+--- Called on the server when a player stops being a member of this faction: when their
+-- membership is resolved again and what they carry or wear puts them into another faction
+-- or none, and when their membership is forgotten: before another character is applied
+-- (which is the active character of the player by then), when the active character is
+-- dropped and when the player disconnects. The networked
+-- faction, rank and team of the player are those of the faction they are in afterwards, or
+-- cleared. Does nothing by default; override it in the faction definition.
 -- @param _target [Player]
 function Faction:on_player_leave(_target)
 end
 
---- Called on the server when a character of this faction is about to be created, after the
--- creation data has passed the checks of the Characters and Factions plugins. The callback
--- may change the data in place, for instance to set the rank the character starts with, and
--- may refuse the character. Does nothing by default; override it in the faction definition.
+--- Called on the server when a character that starts as a member of this faction is about to
+-- be created, after the creation data has passed the checks of the Characters plugin. The
+-- callback may change the data in place, for instance to set the rank the character starts
+-- with, and may refuse the character. Does nothing by default; override it in the faction
+-- definition.
 -- ```
 -- function FACTION:on_character_create(owner, data)
 --   if #Factions.get_players(self.faction_id) == 0 then
@@ -523,26 +386,26 @@ end
 -- end
 -- ```
 -- @param _owner [Player the player the character is created for]
--- @param _data [Map creation data: name, phys_desc, gender (a CHAR_GENDER_* value), model,
---   skin and faction; rank may be set]
+-- @param _data [Map creation data: name, phys_desc, species, gender (a CHAR_GENDER_* value),
+--   model, skin and faction; rank may be set]
 -- @return [Boolean/Number return false to refuse the character, optionally followed by a
 --   String language phrase that tells the player why and a Map of its arguments; or return
 --   a CHAR_ERR_* code to refuse it with the text of that code]
 function Faction:on_character_create(_owner, _data)
 end
 
---- Called on the server when `Factions.can_transfer` checks whether a player may be moved
--- into this faction, as the SetFaction command does. `Player:set_faction` itself does not
--- ask. Allows everyone by default; override it in the faction definition.
+--- Called on the server when `Factions.can_transfer` checks whether a player may be given the
+-- starter kit of this faction, as the SetFaction command does. Allows everyone by default;
+-- override it in the faction definition.
 -- ```
 -- function FACTION:can_transfer(target, old_faction)
---   if target:get_gender() == 'no_gender' then
---     return false, 'error.faction.humans_only'
+--   if target:get_gender() == 'female' then
+--     return false, 'error.faction.men_only'
 --   end
 -- end
 -- ```
--- @param _target [Player the player who is to be moved into the faction]
--- @param _old_faction [Faction the faction the player is in, nil if it is not registered]
+-- @param _target [Player the player who is to be given the kit]
+-- @param _old_faction [Faction the faction the player is in, nil when they are in none]
 -- @return [Boolean return false to refuse the transfer, optionally followed by a String
 --   language phrase that tells why and a Map of its arguments]
 function Faction:can_transfer(_target, _old_faction)

@@ -1,21 +1,21 @@
 en:
   command:
     whitelist:
-      description: "Manage the faction whitelists of players."
+      description: "Manage the faction whitelists of players, which let them create characters that start in a faction."
       add:
-        description: "Add a player to a faction whitelist."
+        description: "Let a player create characters that start in a faction."
         syntax: "<target> <faction>"
         message: "{player} has added {target} to the {faction} whitelist."
         none: "None of these players could be added to the {faction} whitelist: they are on it already or their data has not loaded yet."
       remove:
-        description: "Remove a player from a faction whitelist."
+        description: "Stop a player from creating characters that start in a faction. Their characters keep what they have."
         syntax: "<target> <faction>"
         message: "{player} has removed {target} from the {faction} whitelist."
         none: "None of these players is on the {faction} whitelist."
     setfaction:
-      description: "Set a character's faction. Factions: {factions}"
+      description: "Give a character the starter kit of a faction, which makes them a member. Factions: {factions}"
       syntax: "<target> <faction>"
-      message: "{player} has added {target} to the {faction} faction."
+      message: "{player} has given {target} the starter kit of the {faction} faction."
     rank:
       description: "Change the ranks of characters in their factions."
       set:
@@ -44,12 +44,11 @@ en:
   error:
     faction:
       invalid: "'{faction}' is not a valid faction!"
-      not_selected: You have not selected a faction.
-      full: The {faction} faction has no room for another member right now.
-      rank_full: The rank {rank} of this character's faction has no room for another member right now.
-      no_whitelist: You are not on the {faction} whitelist, so you cannot play this character.
       creation_refused: This faction does not accept this character.
-      transfer_refused: "{target} cannot be transferred to the {faction} faction."
+      transfer_refused: "{target} cannot be given the starter kit of the {faction} faction."
+      wrong_species: "{target} is not of the species of the {faction} faction."
+      no_kit: "The {faction} faction has no starter kit to give."
+      kit_incomplete: "These items of the starter kit could not be given to {target}: {items}"
       no_character: "{target} has no character."
     rank:
       cannot_promote: You cannot promote any of these players.
@@ -58,21 +57,15 @@ en:
   notification:
     demote_rank: You have been demoted to rank {rank}.
     promote_rank: You have been promoted to rank {rank}.
-    faction_changed: Your faction was set to {faction}.
+    faction_kit_given: You have been given the starter kit of the {faction} faction.
+    faction_kit_incomplete: "These items of your starter kit could not be given to you: {items}"
     rank_changed: Your faction rank was set to {rank}.
-    whitelist_taken: You have lost access to the {faction} faction.
-    whitelist_given: You have been granted access to the {faction} faction.
+    whitelist_taken: You can no longer create characters that start in the {faction} faction.
+    whitelist_given: You can now create characters that start in the {faction} faction.
   faction:
     unknown:
       title: "Unknown Faction"
       description: "This faction has no description."
-      phys_desc: "This faction has no default physical description."
-  ui:
-    char_create:
-      faction: Faction
-      no_whitelist: You don't have access to this faction.
-      no_faction: You didn't choose a faction.
-      faction_limit: You cannot have any more characters in this faction.
   permission:
     manage_ranks:
       name: Manage faction ranks

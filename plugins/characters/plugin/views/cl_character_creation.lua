@@ -4,7 +4,8 @@
 -- AddCharacterCreationMenuStages hook. A stage panel may define on_open(parent),
 -- on_close(parent) and on_validate(); it hands over what the player has entered with
 -- `collect_data`, and the collected char_data is what is sent to the server, together with
--- the extra_data table that whoever opened the screen may set on it.
+-- the extra_data table that whoever opened the screen may set on it, which builds the stages
+-- again.
 
 --- Loads the first character of the local player once its entry in the character list has
 -- an ID. Until a list with the ID has arrived from the server, it waits for the next one.
@@ -23,6 +24,22 @@ end
 local PANEL = {}
 PANEL.char_data = {}
 
+--- Collects the stages of the screen from the AddCharacterCreationMenuStages hook and goes
+-- back to the first one, without opening it.
+function PANEL:build_stages()
+  self.stage = 1
+  self.stages = {}
+
+  --- Lets plugins add their stages to the character creation screen. Called on the client each
+  -- time the screen is created, before its first stage is opened, and again when its extra
+  -- data is set. A handler may also put data into the character data instead of adding a
+  -- stage, as the Characters plugin does when there is only one creation option.
+  -- @param panel [Panel the fl_char_create panel; call its add_stage method with the ID of a
+  --   theme panel. Its extra_data field holds the extra data of the screen, nil when it has
+  --   none]
+  hook.Run('AddCharacterCreationMenuStages', self)
+end
+
 --- Builds the character creation screen: collects the stages from the
 -- AddCharacterCreationMenuStages hook, opens the first one and creates the navigation.
 function PANEL:Init()
@@ -35,15 +52,7 @@ function PANEL:Init()
 
   self.button_close:safe_remove()
 
-  self.stage = 1
-  self.stages = {}
-
-  --- Lets plugins add their stages to the character creation screen. Called on the client each
-  -- time the screen is created, before its first stage is opened.
-  -- @param panel [Panel the fl_char_create panel; call its add_stage method with the ID of a
-  --   theme panel]
-  hook.Run('AddCharacterCreationMenuStages', self)
-
+  self:build_stages()
   self:open_panel(self.stages[1])
 
   local x, y = self:GetWide() * 0.25, self:GetTall() / 6 + 8
@@ -355,6 +364,10 @@ function PANEL:next_stage()
               text = t'ui.char_create.name_taken'
             elseif status == CHAR_ERR_LIMIT then
               text = t('ui.char_create.limit', { limit = Characters.get_limit(PLAYER) })
+            elseif status == CHAR_ERR_SPECIES then
+              text = t'ui.char_create.option_unavailable'
+            elseif status == CHAR_ERR_SPECIES_LIMIT then
+              text = t'ui.char_create.species_limit'
             end
 
             Flux.intro_panel:notify(text)
@@ -390,13 +403,15 @@ function PANEL:close(callback)
 end
 
 --- Sets the extra data that is sent with the creation request on top of what the stages
--- collect, and opens the current stage again so that it can take the data into account.
--- Meant for whoever opens the screen, right after creating it.
+-- collect, collects the stages again and opens the first one, so that the stages can take
+-- the data into account. Meant for whoever opens the screen, right after creating it.
 -- @param data [Map extra request data, nil to send none]
 function PANEL:set_extra_data(data)
   self.extra_data = data
 
-  self:open_panel(self.stages[self.stage])
+  self:build_stages()
+  self:open_panel(self.stages[1])
+  self:rebuild()
 end
 
 --- Merges the data of a stage into the collected character data.
