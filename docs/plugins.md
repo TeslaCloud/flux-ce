@@ -322,7 +322,9 @@ if CLIENT then
 end
 ```
 
-The hotbar can be changed in the inventory tab of the tab menu, in the context menu and, for the keys, in the container view. An item of the main inventory or the pockets is put on a slot by dragging it there, or by pressing the number of the slot while the cursor is over the item; an entry is moved to another slot the same way. Dragging an entry back onto the inventory, or right-clicking it, takes it off; dragging it onto the world, or onto the bare background of the inventory tab, drops its item, and dragging it onto any other panel leaves it where it is. Pressing Q (`Hotbar.drop_key`) while the cursor is over an item or an entry drops one of it into the world; a pinned entry stays on the bar.
+The hotbar can be changed in the inventory tab of the tab menu, in the context menu and, for the keys, in the container view. An item of the main inventory or the pockets is put on a slot by dragging it there, or by pressing the number of the slot while the cursor is over the item; an entry is moved to another slot the same way. Dragging an entry back onto the inventory, or right-clicking it, takes it off; dragging it onto the world, or onto the bare background of the inventory tab or of the tab menu, drops its item, and dragging it onto any other panel, a button of the tab menu included, leaves it where it is. An item dragged out of an inventory is told apart the same way on those backgrounds and on the background of the container view (`Inventories.receive_item_on_background`): dropped onto their thin air it is dropped into the world, and dropped onto any other panel on them, the title bar and border of the window of an opened bag included, it stays in its inventory. Pressing Q (`Hotbar.drop_key`) while the cursor is over an item or an entry drops one of it into the world; a pinned entry stays on the bar. An equipped item that cannot be unequipped cannot be dropped either, and stays with a player who dies.
+
+While the scrolling weapon selector of the Weapon Selector plugin, opened with the walk key held and a number key or the mouse wheel, is open, the number keys, the mouse wheel and primary attack drive it: the hotbar selects nothing and runs no action, and while the hands hold an item of the hotbar it still keeps primary attack from the hands weapon, so that nothing punches. While a player carries or drags an object with the Pickup Objects plugin, primary attack throws it rather than using the item in the hands (`PlayerCanUseHotbarItem`).
 
 The library behind the hotbar is described at the top of [`plugins/items/plugin/lib/sh_hotbar.lua`](../plugins/items/plugin/lib/sh_hotbar.lua), its keys and drops at the top of [`plugins/items/plugin/lib/cl_hotbar_input.lua`](../plugins/items/plugin/lib/cl_hotbar_input.lua).
 
@@ -365,7 +367,7 @@ FACTION:add_rank('recruit', 'Rct.')
 FACTION:add_rank('officer', 'Ofc.')
 ```
 
-The item that grants the faction, `items/sh_police_uniform.lua`. An equipable item grants it while it is equipped, any other item while it is carried, and the rank lives in the data of the item, so whoever wears the uniform holds the rank and `/rank` changes the uniform:
+The item that grants the faction, `items/sh_police_uniform.lua`. An equipable item grants it while it is equipped, any other item while it is directly in one of the player's own inventories, such as the main inventory, the pockets or the equipment; an item inside a bag or another container item does not count. The rank lives in the data of the item, so whoever wears the uniform holds the rank and `/rank` changes the uniform:
 
 ```lua
 --- The uniform of the police, which makes its wearer a member.

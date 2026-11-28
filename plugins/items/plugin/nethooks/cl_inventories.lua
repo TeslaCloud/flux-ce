@@ -1,8 +1,10 @@
 --- Client-side receivers of the Items plugin for inventories: the inventories and the
 -- requests to open or close them that the server sends, and its requests to rebuild the
--- player model preview. Closing an inventory that the server has removed forgets the copy
--- of it as well, and clearing the inventories of the local player refreshes the hotbar, which
--- then has no item slots.
+-- player model preview. An inventory opened while the tab menu or the container view is open
+-- is shown in a window of its own, which is not a background: an item dropped onto its title
+-- bar or its border stays where it is. Closing an inventory that the server has removed forgets
+-- the copy of it as well, and clearing the inventories of the local player refreshes the
+-- hotbar, which then has no item slots.
 
 local IsValid = IsValid
 
@@ -88,6 +90,7 @@ Cable.receive('fl_inventory_open', function(inventory_id)
     local frame = vgui.Create('fl_frame', parent)
 
     local inventory_panel = inventory:create_panel(frame)
+    frame:Receiver('fl_item', Hotbar.receive_inventory_item)
     inventory_panel:set_title()
     inventory_panel:SizeToContents()
     inventory_panel:rebuild()

@@ -52,6 +52,7 @@ es:
       no_weapon_for_ammo: No llevas ningún arma que use esta munición.
       destroy_not_empty: Vacía este objeto antes de destruirlo.
       destroy_equipped: "No puedes destruir este objeto mientras no se pueda desequipar."
+      drop_equipped: "No puedes soltar este objeto mientras no se pueda desequipar."
       nothing_to_treat: No tienes heridas que esto pueda tratar.
       already_healing: Ya te estás curando.
     invalid_item: "El objeto '{item}' no es válido."

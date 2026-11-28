@@ -76,8 +76,10 @@
 -- selected, and what is in it is in the hands of the player: the mouse wheel and the number
 -- keys select a slot, primary attack runs the hotbar action of a held item that is not a
 -- weapon (see `ItemBase:on_hotbar_use`), and with the walk key held the number keys and the
--- wheel drive the weapon selector instead. The `items_hotbar_slots` config sets how many of
--- the slots 1 to 7 the players have.
+-- wheel open the weapon selector instead, which keeps them and primary attack for as long as
+-- it is open: the hotbar then selects nothing and runs no action, and still keeps primary
+-- attack from the hands weapon while an item is held. The `items_hotbar_slots` config sets how
+-- many of the slots 1 to 7 the players have.
 --
 -- The plugin also adds the GiveItem command, the 'item' argument type that completes item IDs
 -- for commands, an items tab to the spawn menu, and the `has_item` and `has_item_data`

@@ -2,8 +2,9 @@
 -- the use key, builds the menu of an item with its use, take, drop, destroy, pin and custom
 -- options, drives the hotbar (the number keys, the mouse wheel and primary attack, the
 -- selection that follows the active weapon, the keys that act on a hovered item and the bar
--- shown while the context menu is open), adds the inventory tab to the tab menu, and adds the
--- items tab to the spawn menu along with the `fl_icon_editor` console command.
+-- shown while the context menu is open), adds the inventory tab to the tab menu and makes the
+-- bare background of the menu drop what is dragged onto it, and adds the items tab to the spawn
+-- menu along with the `fl_icon_editor` console command.
 
 local IsValid = IsValid
 local IN_WALK = IN_WALK
@@ -215,27 +216,29 @@ end
 
 --- Turns the number keys and the mouse wheel into the selection of the hotbar, and primary
 -- attack into nothing while the hands hold an item of the hotbar, see `Hotbar.filter_attack`.
--- Leaves every bind alone while the walk key is held, when the binds drive the weapon
--- selector, and while the local player is dead. The mouse wheel is also left alone in a
--- vehicle and while primary attack is held, which the physgun uses. While the cursor is over
--- an item, the presses of the binds of the number keys and the drop key are taken and do
--- nothing, since those keys act on the item, and so are the releases of the binds whose
--- presses have been taken (see `Hotbar.take_hover_bind`).
+-- Leaves every bind alone while the walk key is held or the weapon selector is open (see
+-- `Hotbar.is_selector_open`), when the binds drive the weapon selector, and while the local
+-- player is dead; while the selector is open, the command still has primary attack taken from
+-- it while an item is held. The mouse wheel is also left alone in a vehicle and while primary
+-- attack is held, which the physgun uses. While the cursor is over an item, the presses of the
+-- binds of the number keys and the drop key are taken and do nothing, since those keys act on
+-- the item, and so are the releases of the binds whose presses have been taken (see
+-- `Hotbar.take_hover_bind`).
 -- @param client [Player]
 -- @param bind [String]
 -- @param pressed [Boolean]
 -- @return [Boolean true when the hotbar has taken the bind, nil otherwise]
 function Items:PlayerBindPress(client, bind, pressed)
   if Hotbar.take_hover_bind(bind, pressed) then return true end
-  if !pressed or client:KeyDown(IN_WALK) or !client:Alive() then return end
+  if !pressed or client:KeyDown(IN_WALK) or !client:Alive() or Hotbar.is_selector_open() then return end
 
   local slot = slot_binds[bind]
 
   if slot then
     --- Called on the client when the local player presses one of the slot binds, `slot1` to
-    -- `slot9` and `slot0`, without the walk key held. The Items plugin handles it by
-    -- selecting that slot of the hotbar, if the player is shown it. It is run with
-    -- `Plugin.call`, so gamemode functions do not receive it.
+    -- `slot9` and `slot0`, without the walk key held and while the weapon selector is not open.
+    -- The Items plugin handles it by selecting that slot of the hotbar, if the player is shown
+    -- it. It is run with `Plugin.call`, so gamemode functions do not receive it.
     -- @param client [Player The local player]
     -- @param slot [Number Number of the slot taken from the bind]
     -- @realm [client]
@@ -261,20 +264,25 @@ function Items:PlayerSelectSlot(_client, slot)
 end
 
 --- Keeps the weapon selector away from the number keys and the mouse wheel unless the walk key
--- is held: without it they belong to the hotbar. While the cursor is over an item, the binds
--- of the keys that act on it are kept away from it with the walk key held as well.
+-- is held or the selector is open already: without either they belong to the hotbar, so the
+-- selector only opens with the walk key held. While the cursor is over an item, the binds of
+-- the keys that act on it are kept away from it in any case.
 -- @param client [Player]
 -- @param bind [String]
 -- @param _pressed [Boolean]
 -- @return [Boolean false for those binds, nil otherwise]
 function Items:ShouldOpenWeaponSelect(client, bind, _pressed)
-  if !client:KeyDown(IN_WALK) and (slot_binds[bind] or cycle_binds[bind]) or Hotbar.is_hover_bind(bind) then
+  if Hotbar.is_hover_bind(bind) then return false end
+
+  if (slot_binds[bind] or cycle_binds[bind]) and !client:KeyDown(IN_WALK) and !Hotbar.is_selector_open() then
     return false
   end
 end
 
 --- Keeps primary attack from reaching the hands weapon while the local player holds an item of
--- the hotbar, and runs the hotbar action of that item.
+-- the hotbar, the weapon selector open or not, and runs the hotbar action of that item while
+-- the selector is closed. A handler of `PlayerCanUseHotbarItem` that refuses leaves the key to
+-- the hands weapon and runs no action (see `Hotbar.filter_attack`).
 -- @param user_cmd [CUserCmd]
 function Items:CreateMove(user_cmd)
   Hotbar.filter_attack(user_cmd)
@@ -348,6 +356,16 @@ function Items:AddTabMenuItems(menu)
       inv:SetTitle(t'ui.tab_menu.inventory')
     end
   })
+end
+
+--- Makes the bare background of the tab menu thin air, as the bare background of its inventory
+-- tab is: an item of an inventory or an entry of the hotbar dropped there is dropped into the
+-- world, and one dropped onto a button or another panel of the menu stays where it is (see
+-- `Inventories.receive_item_on_background` and `Hotbar.receive_entry_in_world`).
+-- @param menu [Panel the tab menu]
+function Items:TabMenuOpened(menu)
+  menu:Receiver('fl_item', Inventories.receive_item_on_background)
+  menu:Receiver('fl_hotbar', Hotbar.receive_entry_in_world)
 end
 
 --- Keeps the pockets panel no wider than the main inventory panel of the local player shown

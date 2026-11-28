@@ -1,7 +1,9 @@
 --- Server side of the Pickup Objects plugin: the holds, the functions that make a player
 -- pick up, drop or throw an entity, and the checks the hooks of the plugin are built on.
 -- A hold is kept in `PickupObjects.holds` under the holding player, as a table with the
--- entity, collision_group, drag, bone, mass, target and check_time fields.
+-- entity, collision_group, drag, bone, mass, target and check_time fields. Whether a player
+-- holds something is networked to that player alone as the `pickup_holding` networked
+-- variable, true from the start of a hold until its end.
 
 local IsValid = IsValid
 local CurTime = CurTime
@@ -72,10 +74,10 @@ function PickupObjects:is_drag_protected(ragdoll)
 end
 
 --- Ends a hold without asking anyone: forgets it, makes the engine let go of a carried
--- object, gives a dragged limb its mass back, restores the collision group of the entity
--- and starts the pickup cooldown of the player. The attack keys of the player stay out of
--- their commands until both are let go of, so that a key that is still down when the hold
--- ends does not reach the fists.
+-- object, gives a dragged limb its mass back, restores the collision group of the entity,
+-- starts the pickup cooldown of the player and sets their `pickup_holding` networked variable
+-- to false. The attack keys of the player stay out of their commands until both are let go
+-- of, so that a key that is still down when the hold ends does not reach the fists.
 -- @param actor [Player the holder; may no longer be valid]
 -- @param data [Map the hold, as kept in PickupObjects.holds]
 local function release(actor, data)
@@ -109,6 +111,7 @@ local function release(actor, data)
     actor.holding_object = nil
     actor.next_pickup = CurTime() + pickup_cooldown
     actor.pickup_keys_blocked = true
+    actor:set_private_nv('pickup_holding', false)
   end
 end
 
@@ -200,11 +203,12 @@ function PickupObjects:get_mass_limit(actor, ent)
 end
 
 --- Makes a player hold an entity without asking any hook. What the player held before is
--- dropped, and so is the entity by the player who held it.
--- A carried object is handed to the engine and does not collide with players while it is
--- held. A dragged entity follows the player by the given physics object, which is made
--- heavy enough to pull the rest along; the drag ends by itself once the player dies, leaves
--- their feet, puts the fists away or gets too far from the entity.
+-- dropped, and so is the entity by the player who held it. The `pickup_holding` networked
+-- variable of the player is set to true. A carried object is handed to the engine and does
+-- not collide with players while it is held. A dragged entity follows the player by the given
+-- physics object, which is made heavy enough to pull the rest along; the drag ends by itself
+-- once the player dies, leaves their feet, puts the fists away or gets too far from the
+-- entity.
 -- @param actor [Player]
 -- @param ent [Entity]
 -- @param bone=nil [Number index of the physics object to drag the entity by, as in the
@@ -269,6 +273,7 @@ function PickupObjects:force_pickup(actor, ent, bone)
   ent.pickup_holder = actor
   holds[actor] = data
   actor.next_pickup = CurTime() + pickup_cooldown
+  actor:set_private_nv('pickup_holding', true)
 
   return true
 end

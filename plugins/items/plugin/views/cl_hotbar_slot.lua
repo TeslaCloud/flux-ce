@@ -9,12 +9,13 @@
 -- An item dragged from an inventory onto one of the item slots is put on it and an entry
 -- dragged onto another item slot is moved there. An entry dragged onto an inventory of the
 -- storage of the player, or right-clicked, is taken off; one dragged onto the world outside the
--- card of its bar, or onto the bare background of the inventory tab, has its item dropped, and
--- one dragged onto any other panel stays (see `lib/cl_hotbar_input.lua`). Each of these is a
--- request to the server. A left click selects the slot. A press or a drag of the slot whose
--- drag state is cleared under it, as `fl_inventory:rebuild` does, ends with its release or with
--- a press of the other button, and neither that press nor the releases that follow do anything.
--- While the cursor is over an entry, the number keys move it and the drop key drops its item.
+-- card of its bar, or onto the bare background of the inventory tab or of the tab menu outside
+-- that card, has its item dropped, and one dragged onto any other panel stays (see
+-- `lib/cl_hotbar_input.lua`). Each of these is a request to the server. A left click selects
+-- the slot. A press or a drag of the slot whose drag state is cleared under it, as
+-- `fl_inventory:rebuild` does, ends with its release or with a press of the other button, and
+-- neither that press nor the releases that follow do anything. While the cursor is over an
+-- entry, the number keys move it and the drop key drops its item.
 
 local IsValid = IsValid
 local math_scale = math.scale
@@ -332,8 +333,8 @@ end
 -- the drop that its own release makes, no receiver has handled that drop, the world is under
 -- the cursor (see `Hotbar.is_world_panel`) and the cursor is outside the card that the theme
 -- draws around the bar (see `Hotbar.is_cursor_on_card`). Every other end of the drag keeps the
--- entry; the receivers of the bar, of the inventory panels and of the inventory tab handle the
--- drops onto them.
+-- entry; the receivers of the bar, of the inventory panels, of the inventory tab and of the tab
+-- menu handle the drops onto them.
 function PANEL:OnStopDragging()
   self.Dragging = false
 

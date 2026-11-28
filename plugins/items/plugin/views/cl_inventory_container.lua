@@ -1,7 +1,10 @@
 --- The `fl_inventory_container` panel is a fullscreen view that shows another inventory
 -- next to the main inventory and the pockets of the local player, so that items can be
--- dragged between them. A player without a character, such as a gamemaster in
--- gamemaster mode, has no inventories of their own and sees the other inventory alone.
+-- dragged between them. An item dropped onto the bare background of the view is dropped into
+-- the world, and one dropped onto the close button or another panel on it stays where it is
+-- (see `Inventories.receive_item_on_background`). A player without a character, such as a
+-- gamemaster in gamemaster mode, has no inventories of their own and sees the other inventory
+-- alone.
 -- The server opens it for a single inventory, such as that of a container, or for all
 -- inventories of another player. When it is removed it tells the server that the
 -- inventories have been closed. It shows no hotbar, but while the cursor is over an item of

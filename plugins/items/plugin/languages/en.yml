@@ -52,6 +52,7 @@ en:
       no_weapon_for_ammo: You are not carrying a weapon that uses this ammunition.
       destroy_not_empty: Empty this item before you destroy it.
       destroy_equipped: "You cannot destroy this item while it cannot be unequipped."
+      drop_equipped: "You cannot drop this item while it cannot be unequipped."
       nothing_to_treat: You have no wounds that this could treat.
       already_healing: You are already healing.
     invalid_item: Item '{item}' is not valid.

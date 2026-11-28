@@ -19,10 +19,14 @@
 -- `PlayerCanThrowObject`, `PlayerCanDragRagdoll`, `AdjustThrow` and `AdjustPickupMassLimit`
 -- hooks. What is held and by whom is answered by `Player:get_holding_entity`,
 -- `Entity:get_holder` and `Player:get_dragger`, and the functions of the `PickupObjects`
--- global make a player pick up, drop or throw an entity. All of it is serverside.
+-- global make a player pick up, drop or throw an entity. All of it is serverside, but for
+-- the `pickup_holding` networked variable, which tells a player alone whether they hold
+-- something, and the client handler of `PlayerCanUseHotbarItem`, which leaves primary attack
+-- to the throw while they do instead of running the action of an item of the hotbar.
 -- @module [PickupObjects]
 
 PLUGIN:set_global('PickupObjects')
 
+require_relative 'cl_hooks'
 require_relative 'sv_plugin'
 require_relative 'sv_hooks'

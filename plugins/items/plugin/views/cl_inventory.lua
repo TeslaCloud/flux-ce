@@ -1,11 +1,13 @@
 --- The `fl_inventory` panel displays an inventory as a grid of `fl_inventory_item` slots
 -- and lets the player drag items around.
 -- It is created with `Inventory:create_panel` and is rebuilt every time the inventory is
--- synchronized. Dropping an item onto a slot asks the server to move it there; dropping it
--- onto the parent of the panel asks the server to drop it into the world. Pressing R
--- rotates the item that is being dragged. An entry of the hotbar dropped onto the panel is
--- taken off the hotbar if the inventory is part of the storage of the local player and stays
--- otherwise (see `lib/cl_hotbar_input.lua`).
+-- synchronized. Dropping an item onto a slot asks the server to move it there. The parent of
+-- the panel is a background: dropping an item onto its thin air asks the server to drop it into
+-- the world, and dropping it onto anything else on it, the parts of the panel around its slots
+-- included, keeps it where it is (`Inventories.receive_item_on_background`). Pressing R rotates
+-- the item that is being dragged.
+-- An entry of the hotbar dropped onto the panel is taken off the hotbar if the inventory is
+-- part of the storage of the local player and stays otherwise (see `lib/cl_hotbar_input.lua`).
 
 local IsValid = IsValid
 
@@ -15,7 +17,9 @@ PANEL.slot_size = math.scale(64)
 PANEL.slot_padding = math.scale(3)
 
 --- Creates the scrollable grid of slots and makes it accept dragged items and entries of the
--- hotbar. Items dropped onto the parent panel get dropped into the world.
+-- hotbar. The parent panel becomes a background for items: dropped onto its thin air they are
+-- dropped into the world, and onto anything else on it they stay (see
+-- `Inventories.receive_item_on_background`).
 function PANEL:Init()
   self:RequestFocus()
   self.slot_panels = {}
@@ -91,20 +95,7 @@ function PANEL:Init()
   local parent = self:GetParent()
 
   if IsValid(parent) then
-    parent:Receiver('fl_item', function(_receiver, dropped_panels, is_dropped, _menu_index, _mouse_x, _mouse_y)
-      local dropped = dropped_panels[1]
-
-      if is_dropped then
-        Cable.send('fl_item_drop', dropped.instance_ids)
-      else
-        local drop_slot = Flux.inventory_drop_slot
-
-        if IsValid(drop_slot) then
-          drop_slot.is_hovered = false
-          Flux.inventory_drop_slot = nil
-        end
-      end
-    end)
+    parent:Receiver('fl_item', Inventories.receive_item_on_background)
   end
 end
 

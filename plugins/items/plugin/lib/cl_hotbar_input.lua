@@ -22,9 +22,13 @@
 -- An entry dragged off the bar is taken off the hotbar when it is dropped onto an inventory
 -- panel of the storage of the local player, and stays when it is dropped onto another one
 -- (`Hotbar.receive_entry_on_inventory`). Dropped onto the world outside the card of its bar,
--- or onto the bare background of the inventory tab, its item is dropped as the drop key drops
--- it (`Hotbar.receive_entry_in_world`, `Hotbar.is_world_panel`, `Hotbar.is_cursor_on_card`).
--- Any other panel keeps the entry.
+-- or onto the bare background of the inventory tab or of the tab menu outside that card, its
+-- item is dropped as the drop key drops it (`Hotbar.receive_entry_in_world`,
+-- `Hotbar.is_world_panel`, `Hotbar.is_cursor_on_card`, `Hotbar.is_cursor_in_air`). Any other
+-- panel keeps the entry, the buttons of the tab menu included. An item dragged out of an
+-- inventory is told apart the same way: dropped onto the thin air of those backgrounds or of
+-- the container view it is dropped into the world, and onto any other panel on them it stays
+-- in its inventory (`Inventories.receive_item_on_background`).
 -- @module [Hotbar]
 
 const IsValid = IsValid
@@ -300,11 +304,31 @@ function Hotbar.receive_entry_on_inventory(receiver, dropped, is_dropped)
   end
 end
 
---- Handles an entry of the bar dropped onto the inventory tab of the tab menu, whose bare
--- background drops items into the world: drops its item when nothing but the background is
--- under the cursor, and keeps it when a panel on the background without a receiver of its own
--- is. It is the receiver of the `fl_inventory_menu` panel for entries.
--- @param receiver [Panel the fl_inventory_menu]
+--- Checks whether the cursor is on the thin air of a panel whose bare background drops what is
+-- dropped onto it into the world: nothing but the panel itself is under the cursor, and the
+-- cursor is not on the card that the theme draws around a hotbar panel, which belongs to the bar
+-- (see `Hotbar.is_cursor_on_card`). The receivers of the backgrounds for entries of the bar and
+-- for items of inventories both ask it.
+-- @param receiver [Panel the background: the fl_inventory_menu, the tab menu or another panel
+--   that holds fl_inventory panels]
+-- @return [Boolean]
+function Hotbar.is_cursor_in_air(receiver)
+  if vgui.GetHoveredPanel() != receiver then return false end
+
+  for panel in pairs(Hotbar.panels) do
+    if Hotbar.is_cursor_on_card(panel) then return false end
+  end
+
+  return true
+end
+
+--- Handles an entry of the bar dropped onto the inventory tab of the tab menu or onto the tab
+-- menu itself, whose bare backgrounds drop items into the world: drops its item when the cursor
+-- is on their thin air (see `Hotbar.is_cursor_in_air`), and keeps it when a panel on the
+-- background without a receiver of its own is under the cursor, such as a button of the tab
+-- menu, or the card of the bar. It is the receiver of the `fl_inventory_menu` panel and of the
+-- tab menu for entries.
+-- @param receiver [Panel the fl_inventory_menu or the tab menu]
 -- @param dropped [List<Panel> the dragged fl_hotbar_slot panels]
 -- @param is_dropped [Boolean]
 function Hotbar.receive_entry_in_world(receiver, dropped, is_dropped)
@@ -314,7 +338,7 @@ function Hotbar.receive_entry_in_world(receiver, dropped, is_dropped)
 
   source.drop_handled = true
 
-  if source.kind and vgui.GetHoveredPanel() == receiver then
+  if source.kind and Hotbar.is_cursor_in_air(receiver) then
     Hotbar.drop_entry(source.slot)
   end
 end

@@ -162,8 +162,10 @@ end
 
 --- Called on the server before the item is unequipped: by ItemEquipable:can_transfer before
 -- the item is moved out of its equipment inventory or, for an item of the hotbar, out of the
--- storage of its player, and by `Hotbar.clear` before it is taken off the hotbar. It is not
--- asked when the item is dropped, used up or taken away.
+-- storage of its player, by `Hotbar.clear` before it is taken off the hotbar, and by the
+-- 'PlayerCanDropItem' and 'PlayerCanDestroyItem' handlers of the Items plugin before the item
+-- is dropped, on request of the player or on death, or destroyed. It is not asked when the
+-- item is used up or taken away.
 -- Override it and return false to prevent the item from being unequipped.
 -- @param _owner [Player the player that has the item, or nil if no player has it]
 -- @return [Boolean false to prevent unequipping, nil otherwise]

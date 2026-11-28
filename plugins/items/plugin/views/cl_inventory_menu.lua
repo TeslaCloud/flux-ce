@@ -4,7 +4,8 @@
 -- and the hotbar at the bottom of the screen, onto which items of the main inventory and the
 -- pockets are dragged or put with the number keys. Dropping an equipable item onto the model
 -- equips it. An item or an entry of the hotbar dropped onto the bare background of the tab has
--- its item dropped into the world (see `lib/cl_hotbar_input.lua`).
+-- its item dropped into the world, and one dropped onto anything else on the background, such
+-- as a column of the equipment slots, stays where it is (see `lib/cl_hotbar_input.lua`).
 
 local math_scale = math.scale
 local math_scale_x = math.scale_x
@@ -12,7 +13,8 @@ local math_scale_x = math.scale_x
 local PANEL = {}
 
 --- Makes the bare background of the tab drop the item of an entry of the hotbar into the
--- world. The inventory panels make it drop their items.
+-- world. The inventory panels make it drop their items the same way (see
+-- `Inventories.receive_item_on_background`).
 function PANEL:Init()
   self:Receiver('fl_hotbar', Hotbar.receive_entry_in_world)
 end

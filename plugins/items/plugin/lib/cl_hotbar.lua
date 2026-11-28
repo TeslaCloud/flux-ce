@@ -17,8 +17,14 @@
 -- it (`Hotbar.follow_active_weapon`); a player without a valid active weapon holds nothing.
 -- While the selected slot holds an item that is not a weapon and the player is alive and out
 -- of a vehicle, primary attack does not reach the hands weapon and runs the hotbar action of
--- the item instead (`Hotbar.filter_attack`, `ItemBase:on_hotbar_use`). What the keys and the
--- drags of the interfaces that show items do with the hotbar is in `cl_hotbar_input.lua`.
+-- the item instead (`Hotbar.filter_attack`, `ItemBase:on_hotbar_use`), unless a handler of
+-- `PlayerCanUseHotbarItem` refuses, as the Pickup Objects plugin does while the player holds
+-- an object. While the weapon selector is open (`Hotbar.is_selector_open`), the number keys,
+-- the mouse wheel and primary attack belong to it: the hotbar changes no selection and runs
+-- no action, and only keeps primary attack from the hands weapon while an item is held, so
+-- that a click that reaches the command while the selector is open does not punch. What the
+-- keys and the drags of the interfaces that show items do with the hotbar is in
+-- `cl_hotbar_input.lua`.
 --
 -- The internal state of the library is kept across a code refresh: `Hotbar.selected` (the
 -- selected slot, whose item or weapon the local player holds; nil until the first
@@ -329,12 +335,58 @@ function Hotbar.get_held_state()
   end
 end
 
+--- Checks whether the weapon selector of the Weapon Selector plugin is open, which owns the
+-- number keys, the mouse wheel and primary attack for as long as it is. False without the
+-- plugin.
+-- @return [Boolean]
+function Hotbar.is_selector_open()
+  return WeaponSelect != nil and WeaponSelect:is_open()
+end
+
+--- Takes primary attack from a command while the local player holds an item of the hotbar, and
+-- runs the hotbar action of the item when the key has just gone down, unless a handler of
+-- `PlayerCanUseHotbarItem` refuses.
+-- @param user_cmd [CUserCmd]
+-- @param client [Player the local player]
+-- @param state [Map the state of the held slot (see `Hotbar.get_held_state`)]
+local function use_held_item(user_cmd, client, state)
+  --- Called on the client for every command that is built while the local player holds
+  -- primary attack down with an item of the hotbar in their hands, before the hotbar takes
+  -- the key from the command. The Pickup Objects plugin refuses while the player carries or
+  -- drags an object, so that the click throws it. It is not run while the player is dead or
+  -- in a vehicle, nor while the weapon selector is open, when the hotbar takes the key without
+  -- asking and runs no action.
+  -- @param client [Player The local player]
+  -- @param item_obj [Item The item in the hands: the equipped item, the first carried
+  --   instance of a pinned item, or the item of a pin that the player has none of]
+  -- @return [Boolean Return false to leave primary attack to the hands weapon and run no
+  --   hotbar action]
+  -- @realm [client]
+  if hook.Run('PlayerCanUseHotbarItem', client, state.item) == false then return end
+
+  user_cmd:RemoveKey(IN_ATTACK)
+
+  local cur_time = CurTime()
+  local item_obj = state.instance
+
+  if !attack_was_down and next_use <= cur_time and item_obj then
+    next_use = cur_time + use_delay
+
+    item_obj:on_hotbar_use(client)
+  end
+end
+
 --- Keeps primary attack from reaching the hands weapon while the local player holds an item of
 -- the hotbar, and runs the hotbar action of the item (`ItemBase:on_hotbar_use`) when the key
 -- goes down, at most every 0.3 seconds. An item whose pinned instances have run out does
 -- nothing. A player who is dead or in a vehicle keeps primary attack, which the vehicle uses,
--- and runs no action; that is checked only once the key is down and an item is held. Called
--- for every command that is built; allocates nothing.
+-- and runs no action, and so does a player whom a handler of `PlayerCanUseHotbarItem` refuses;
+-- that is checked only once the key is down and an item is held. While the weapon selector is
+-- open, a held item still keeps the key from the command, so that the hands weapon does not
+-- punch, but no action runs and `PlayerCanUseHotbarItem` is not asked. An action runs only
+-- when the key goes down, so a press that began while the selector was open or a handler
+-- refused runs none for as long as the key stays down. Called for every command that is built;
+-- allocates nothing.
 -- @param user_cmd [CUserCmd]
 function Hotbar.filter_attack(user_cmd)
   if !user_cmd:KeyDown(IN_ATTACK) then
@@ -349,15 +401,10 @@ function Hotbar.filter_attack(user_cmd)
     local client = PLAYER
 
     if client:Alive() and !client:InVehicle() then
-      user_cmd:RemoveKey(IN_ATTACK)
-
-      local cur_time = CurTime()
-      local item_obj = state.instance
-
-      if !attack_was_down and next_use <= cur_time and item_obj then
-        next_use = cur_time + use_delay
-
-        item_obj:on_hotbar_use(client)
+      if Hotbar.is_selector_open() then
+        user_cmd:RemoveKey(IN_ATTACK)
+      else
+        use_held_item(user_cmd, client, state)
       end
     end
   end
@@ -368,8 +415,11 @@ end
 --- Handles an item of an inventory that is dragged over a hotbar panel or dropped onto it:
 -- takes the hover highlight off the inventory slot that was hovered last and, once the item
 -- is dropped, forgets the slot that it was dragged from and shows the item in its inventory
--- again. It is the receiver of the bar for items, and the receiver of its slots calls it.
--- @param _receiver [Panel the fl_hotbar or fl_hotbar_slot panel]
+-- again. It is the receiver for items of the bar and of the window that shows an inventory
+-- opened over the tab menu or the container view, and the receivers of the slots of the bar
+-- and of a background (`Inventories.receive_item_on_background`) call it.
+-- @param _receiver [Panel the fl_hotbar or fl_hotbar_slot panel, the window of an inventory or
+--   a background]
 -- @param dropped [List<Panel> the dragged fl_inventory_item panels]
 -- @param is_dropped [Boolean]
 -- @return [Item the dropped item, nil while it is dragged or when the panel shows no item]

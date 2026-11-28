@@ -2,7 +2,8 @@
 -- items written to the database, checks whether a player may perform a menu action on an
 -- item, does what the take, use and drop actions of items are supposed to do, and calls the
 -- `on_drop`, `on_destroy`, `on_loadout`, `on_save`, `on_created` and `on_transfer`
--- callbacks of items. It also creates the default inventories of players, loads and unloads
+-- callbacks of items, keeping equipped items that cannot be unequipped from being dropped or
+-- destroyed. It also creates the default inventories of players, loads and unloads
 -- the items of characters, enforces the rules of moving items between inventories, takes the
 -- equipped items that leave the storage of their player off the hotbar, closes the
 -- inventories that players are no longer entitled to. Config keys turn on destroying
@@ -19,6 +20,28 @@ Cable.check_networked_string('fl_inventories_clear')
 
 local function has_contents(item_obj)
   return item_obj.inventory != nil and !item_obj.inventory:is_empty()
+end
+
+--- Returns the player who has an equipped item, as `ItemEquipable:can_transfer` finds them: the
+-- player whose storage holds an item of the hotbar, the player who carries any other item.
+-- @param item_obj [Item]
+-- @return [Player, nil if no player has the item]
+local function get_holder(item_obj)
+  if item_obj.is_hotbar_item and item_obj:is_hotbar_item() then
+    return Hotbar.get_storage_owner(item_obj)
+  end
+
+  return item_obj:get_player()
+end
+
+--- Checks whether an item is equipped and its can_unequip callback does not let go of it. The
+-- callback is asked with the player who has the item (see `get_holder`), whoever wants to drop
+-- or destroy it.
+-- @param item_obj [Item]
+-- @return [Boolean]
+local function is_locked_equipped(item_obj)
+  return item_obj.is_equipped != nil and item_obj:is_equipped() and item_obj.can_unequip != nil
+    and item_obj:can_unequip(get_holder(item_obj)) == false
 end
 
 --- Loads the items of the current map once both the map entities and the database are
@@ -179,12 +202,19 @@ function Items:PlayerUsedItem(_actor, item_obj, _act, ...)
   end
 end
 
---- Lets the on_drop callback of the item decide whether the player is able to drop it.
+--- Keeps players from dropping equipped items that cannot be unequipped, on the hotbar or in an
+-- equipment inventory, asking the can_unequip callback with the player who has the item rather
+-- than the one who drops it, and lets the on_drop callback of the item decide whether the
+-- player is able to drop any other item.
 -- @param actor [Player]
 -- @param item_obj [Item]
--- @return [Boolean false to prevent the drop, nil otherwise]
+-- @return [Boolean false to prevent the drop, String error phrase; nothing to allow it]
 function Items:PlayerCanDropItem(actor, item_obj)
   if !istable(item_obj) then return end
+
+  if is_locked_equipped(item_obj) then
+    return false, 'error.item.drop_equipped'
+  end
 
   if item_obj.on_drop and item_obj:on_drop(actor) == false then
     return false
@@ -250,12 +280,11 @@ end
 
 --- Keeps players from destroying equipped items that cannot be unequipped, and container
 -- items that still have something inside.
--- @param actor [Player]
+-- @param _actor [Player]
 -- @param item_obj [Item]
 -- @return [Boolean false to prevent the destruction, String error phrase; nothing to allow it]
-function Items:PlayerCanDestroyItem(actor, item_obj)
-  if item_obj.is_equipped and item_obj:is_equipped() and item_obj.can_unequip
-  and item_obj:can_unequip(actor) == false then
+function Items:PlayerCanDestroyItem(_actor, item_obj)
+  if is_locked_equipped(item_obj) then
     return false, 'error.item.destroy_equipped'
   end
 
@@ -278,7 +307,9 @@ end
 
 --- Drops the equipped weapon items of a player into the world at the position of the
 -- player. Each item goes through the 'PlayerCanDropWeaponOnDeath' and 'PlayerCanDropItem'
--- hooks first; the 'PlayerDroppedWeaponOnDeath' hook is run for every item that drops.
+-- hooks first, so that an item that cannot be unequipped stays with the character, and
+-- nobody is notified of a refusal; the 'PlayerDroppedWeaponOnDeath' hook is run for every
+-- item that drops.
 -- @param victim [Player]
 -- @return [List<Entity> the item entities that have been spawned]
 function Items:drop_weapons(victim)
@@ -302,11 +333,13 @@ function Items:drop_weapons(victim)
       --- Called on the server before an item is dropped from an inventory into the world.
       -- The Items plugin runs it here for every equipped weapon item of a dying player
       -- that `PlayerCanDropWeaponOnDeath` has let go of, and when a player drops items from
-      -- an inventory. The Items plugin handles it by asking the `on_drop` callback
-      -- of the item and by naming the player as the dropper of the item.
+      -- an inventory; the Vendors plugin asks it before a player sells an item. The Items
+      -- plugin handles it by refusing an equipped item whose `can_unequip` callback does not
+      -- let go of it, then by asking the `on_drop` callback of the item.
       -- @param actor [Player The player dropping the item]
       -- @param item_obj [Item The item that is about to be dropped]
-      -- @return [Boolean Return false to prevent the drop]
+      -- @return [Boolean Return false to prevent the drop, String Error phrase to notify the
+      --   player with when they have asked for the drop; nobody is notified on death]
       if can_drop and hook.Run('PlayerCanDropItem', victim, entry) != false then
         if inventory:release_item(entry) then
           local offset = Vector(0, 0, 16 + #dropped * 8)
@@ -602,11 +635,15 @@ function Items:PlayerTakeItem(actor, item_obj, ...)
 end
 
 --- Takes the items out of their inventory and spawns them in front of the player. Does
--- nothing if the first item does not exist, is not in an inventory or its inventory is
--- disabled; stops at the first item that is not in that inventory. An item that a
--- 'PreTransferItem' handler takes out of the inventory by itself is not spawned.
+-- nothing if the first item does not exist or is not in an inventory, and only synchronizes
+-- the inventory if it is disabled; stops at the first item that is not in that inventory or
+-- that the 'PlayerCanDropItem' hook refuses, notifying the player of the error phrase of a
+-- refusal. The inventory of the first item is synchronized whenever it exists, so that the
+-- client shows every item where it is. An item that a 'PreTransferItem' handler takes out of
+-- the inventory by itself is not spawned.
 -- @param actor [Player]
 -- @param instance_ids [Number/List<Number> instance id(s) of items from the same inventory]
+-- @return [Boolean false if no item has been dropped, nil otherwise]
 function Items:PlayerDropItem(actor, instance_ids)
   if isnumber(instance_ids) then
     instance_ids = { instance_ids }
@@ -616,9 +653,16 @@ function Items:PlayerDropItem(actor, instance_ids)
   local first_item = Item.find_instance_by_id(table.first(instance_ids))
   local inventory = first_item and Inventories.find(first_item.inventory_id)
 
-  if !inventory or inventory:is_disabled() then return end
+  if !inventory then return false end
+
+  if inventory:is_disabled() then
+    inventory:sync()
+
+    return false
+  end
 
   local drop_near = trace.HitPos:DistToSqr(actor:GetPos()) < drop_near_distance_sqr
+  local has_dropped = false
 
   for index, instance_id in ipairs(instance_ids) do
     local item_obj = Item.find_instance_by_id(instance_id)
@@ -626,15 +670,26 @@ function Items:PlayerDropItem(actor, instance_ids)
     if !item_obj or item_obj.inventory_id != inventory.id then break end
 
     --- Called on the server before a player drops an item from an inventory into the
-    -- world, once for every item of a dropped stack. The Items plugin uses it to ask the
-    -- `on_drop` callback of the item.
+    -- world, once for every item of a dropped stack. The Items plugin uses it to refuse an
+    -- equipped item that cannot be unequipped and to ask the `on_drop` callback of the item.
     -- @param actor [Player The player dropping the item]
     -- @param item_obj [Item The item that is about to be dropped]
     -- @return [Boolean Return false to prevent the drop; the items of the stack that
-    --   come after this one are not dropped either]
-    if hook.Run('PlayerCanDropItem', actor, item_obj) == false then break end
+    --   come after this one are not dropped either, String Error phrase to notify the
+    --   player with]
+    local can_drop, error_text = hook.Run('PlayerCanDropItem', actor, item_obj)
+
+    if can_drop == false then
+      if isstring(error_text) then
+        actor:notify(error_text)
+      end
+
+      break
+    end
 
     if !inventory:release_item(item_obj) then continue end
+
+    has_dropped = true
 
     if drop_near then
       Item.spawn(trace.HitPos + Vector(0, 0, 5) * index, Angle(0, 0, 0), item_obj, actor)
@@ -649,6 +704,10 @@ function Items:PlayerDropItem(actor, instance_ids)
   end
 
   inventory:sync()
+
+  if !has_dropped then
+    return false
+  end
 end
 
 --- Calls the on_transfer callback of the item before it changes its inventory, and takes an

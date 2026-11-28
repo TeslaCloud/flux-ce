@@ -468,7 +468,8 @@ if SERVER then
       -- @param actor [Player The player dropping the item]
       -- @param instance_id [Number Instance id of the item]
       -- @return [Any Any value other than nil ends the action right there: the action
-      --   sound is not played and `PlayerUsedItem` is not run]
+      --   sound is not played and `PlayerUsedItem` is not run. The Items plugin returns
+      --   false when no item has been dropped]
       if hook.Run('PlayerDropItem', actor, self.instance_id) != nil then return end
     end
 

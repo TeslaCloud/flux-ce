@@ -52,6 +52,7 @@ fr:
       no_weapon_for_ammo: "Vous ne portez aucune arme qui utilise ces munitions."
       destroy_not_empty: "Videz cet objet avant de le détruire."
       destroy_equipped: "Vous ne pouvez pas détruire cet objet tant qu’il ne peut pas être déséquipé."
+      drop_equipped: "Vous ne pouvez pas lâcher cet objet tant qu’il ne peut pas être déséquipé."
       nothing_to_treat: "Vous n'avez aucune blessure que ceci pourrait soigner."
       already_healing: "Vous êtes déjà en train de vous soigner."
     invalid_item: "L'objet « {item} » n'est pas valide."
