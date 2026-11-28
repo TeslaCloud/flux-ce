@@ -1,16 +1,17 @@
 --- Server side of the memberships of factions. Nothing stores which faction a character is in:
 -- `Factions.resolve_membership` works it out from what the player carries and wears, and from
 -- the default faction of their species, and `Factions.refresh_membership` applies the result
--- whenever it may have changed. The plugin refreshes the membership when a character is
--- applied, when its items have been loaded, and on the next tick after anything that adds,
--- takes, moves, equips or unequips an item of the player (see `Factions.queue_refresh`). A
--- refresh that changes the faction calls the on_player_leave callback of the old faction and
--- the on_player_join callback of the new one, then runs PlayerFactionChanged. The plugin
--- forgets the membership of a player before a character is applied, when the active character
--- is dropped and when the player disconnects: that calls the on_player_leave callback of their
--- faction and runs no hook, so every applied character that is in a faction gets on_player_join
--- and `PlayerFactionChanged(target, faction, nil)` from its first resolution, and
--- on_player_leave when it stops being active.
+-- whenever it may have changed. Only the items right in the inventories of the player count,
+-- not those inside a container item such as a bag. The plugin refreshes the membership when a
+-- character is applied, when its items have been loaded, and on the next tick after anything
+-- that adds, takes, moves, equips or unequips an item of the player (see
+-- `Factions.queue_refresh`). A refresh that changes the faction calls the on_player_leave
+-- callback of the old faction and the on_player_join callback of the new one, then runs
+-- PlayerFactionChanged. The plugin forgets the membership of a player before a character is
+-- applied, when the active character is dropped and when the player disconnects: that calls the
+-- on_player_leave callback of their faction and runs no hook, so every applied character that
+-- is in a faction gets on_player_join and `PlayerFactionChanged(target, faction, nil)` from its
+-- first resolution, and on_player_leave when it stops being active.
 --
 -- Until the items of a character have been loaded, its membership is provisional: it is the
 -- membership resolved last for that character, which is kept in its generic character data
@@ -85,19 +86,23 @@ function Factions.has_items_loaded(target)
   return character != nil and target.faction_items_character == character
 end
 
---- Returns the faction and rank that the items of a player grant, among the items in their
--- own inventories whose faction is registered, belongs to the species of the player and is
--- granted by the item (see `Factions.item_grants`): the faction of the highest priority, the
--- one registered first among equals, at the highest rank its items grant.
+--- Returns the faction and rank that the items of a player grant, among the items directly in
+-- one of their own inventories, such as the main inventory, the pockets or the equipment, whose
+-- faction is registered, belongs to the species of the player and is granted by the item (see
+-- `Factions.item_grants`): the faction of the highest priority, the one registered first among
+-- equals, at the highest rank its items grant. The contents of a container item, such as a bag,
+-- do not count: a faction item put into a bag stops granting its faction.
 -- @param target [Player]
 -- @param species_id [String the species of the player]
 -- @return [Faction, Number rank index, Item the granting item; nothing when no item grants
 --   a faction]
 local function item_membership(target, species_id)
   local best_faction, best_rank, best_item
+  local find_instance_by_id = Item.find_instance_by_id
 
-  for _, item_obj in ipairs(target:get_items()) do
-    local faction_table = isstring(item_obj.faction) and stored[item_obj.faction]
+  for _, instance_id in ipairs(target:get_items_ids()) do
+    local item_obj = find_instance_by_id(instance_id)
+    local faction_table = item_obj and isstring(item_obj.faction) and stored[item_obj.faction]
 
     if faction_table and faction_table.species == species_id and Factions.item_grants(item_obj, target) then
       local rank = Factions.get_item_rank(item_obj, faction_table)
@@ -333,9 +338,9 @@ end
 
 --- Refreshes the membership of a player on the next tick, once however often it is queued
 -- before then. The plugin queues a refresh whenever an item is added to, taken from or moved
--- between the inventories of a player, and whenever an item of a player is equipped or
--- unequipped, since the hooks of the Items plugin run at different moments of a move. Server
--- only.
+-- between the inventories of a player, moving it into or out of a container item such as a
+-- bag included, and whenever an item of a player is equipped or unequipped, since the hooks of
+-- the Items plugin run at different moments of a move. Server only.
 -- @param target [Player nothing happens for anything else]
 -- @see [Factions.refresh_membership]
 function Factions.queue_refresh(target)
