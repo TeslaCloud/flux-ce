@@ -1,0 +1,46 @@
+pt-br:
+  config:
+    prop_protection:
+      title: Proteção de props
+      desc: A posse das entidades e as regras de sandbox baseadas nela.
+      owned:
+        name: Proteger entidades com dono
+        desc: Define se os jogadores são impedidos de pegar, congelar, dirigir e usar ferramentas e propriedades nas entidades de outros personagens.
+      map:
+        name: Proteger entidades do mapa
+        desc: Define se os jogadores são impedidos de fazer o mesmo com as entidades que fazem parte do mapa.
+      world:
+        name: Proteger entidades sem dono
+        desc: Define se os jogadores são impedidos de fazer o mesmo com as entidades que não pertencem a ninguém, como itens, jogadores, ragdolls e props estáticos.
+      players:
+        name: Proteger jogadores da physgun
+        desc: Define se os jogadores são impedidos de pegar outros jogadores com a physgun.
+      vehicles:
+        name: Proteger veículos ocupados da physgun
+        desc: Define se os jogadores são impedidos de pegar veículos que têm motorista, inclusive os próprios.
+      ragdolls:
+        name: Proteger ragdolls de jogadores da physgun
+        desc: Define se os jogadores são impedidos de pegar os ragdolls de jogadores mortos e inconscientes.
+      removal_delay:
+        name: Tempo até remover entidades abandonadas
+        desc: Por quanto tempo as entidades de um jogador permanecem depois que ele se desconecta ou troca de personagem (em segundos). Ele mantém as entidades se voltar a tempo. Defina como 0 para nunca removê-las.
+      remove_staff:
+        name: Remover entidades abandonadas da staff
+        desc: Define se as entidades de membros da staff que ignoram a proteção de props também são removidas depois que eles saem.
+      prop_kill:
+        name: Proteção contra prop kill
+        desc: Define se os jogadores são protegidos dos impactos de props que estão sendo segurados com a physgun, que acabaram de ser soltos por ela ou que acabaram de ser spawnados.
+      prop_kill_time:
+        name: Tempo de proteção contra prop kill
+        desc: Por quanto tempo um prop continua inofensivo para os jogadores depois de ser spawnado ou solto pela physgun (em segundos).
+  error:
+    prop_protection:
+      not_yours: Isto não pertence a você!
+      protected: Esta entidade está protegida!
+  notification:
+    prop_protection:
+      returned: "Suas entidades voltaram a ser suas ({count})."
+  permission:
+    bypass_prop_protection:
+      name: Ignorar a proteção de props
+      description: "Dá acesso às entidades de outros jogadores, do mapa e de ninguém."

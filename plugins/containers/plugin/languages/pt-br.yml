@@ -1,0 +1,141 @@
+pt-br:
+  config:
+    containers:
+      title: Contêineres
+      desc: Personalize como os contêineres funcionam no seu servidor!
+      password_delay:
+        name: Espera após senha errada
+        desc: Quanto tempo um jogador precisa esperar depois de digitar uma senha de contêiner errada antes de poder tentar de novo (em segundos).
+      spill_items:
+        name: Derrubar itens ao remover
+        desc: Define se os itens de um contêiner caem no chão quando o contêiner é removido. Caso contrário, eles são destruídos junto com ele.
+  container:
+    box:
+      title: Caixa de papelão
+      desc: Uma caixa de papelão comum. Não, você não pode se esconder dentro dela.
+    cupboard:
+      title: Armário
+      desc: "Um armário de madeira velho e surrado."
+    drawer:
+      title: Gaveteiro
+      desc: "Um gaveteiro de madeira todo arranhado."
+    small_drawer:
+      title: Criado-mudo
+      desc: "Um gaveteiro pequeno que costuma ficar ao lado da cama."
+    tall_drawer:
+      title: Gaveteiro alto
+      desc: "Um gaveteiro alto que guarda objetos pequenos."
+    dresser:
+      title: Cômoda
+      desc: "Uma cômoda grande e aparentemente antiga, usada para guardar roupas."
+    fridge:
+      title: Geladeira
+      desc: "Uma geladeira pequena. Fede a anticongelante."
+    lockers:
+      title: Armário de vestiário
+      desc: "Um armário de vestiário enferrujado. Range quando você abre."
+    barrel:
+      title: Barril
+      desc: "Um barril de metal alto que fede a produtos químicos velhos."
+    desk:
+      title: Escrivaninha
+      desc: "Uma escrivaninha de madeira larga, com várias gavetas."
+    medium_box:
+      title: Caixa
+      desc: "Uma caixa de papelão frágil."
+    small_box:
+      title: Caixa pequena
+      desc: "Uma caixa de papelão pequena."
+    trash_bin:
+      title: Lixeira
+      desc: "Uma lixeira comum. O fundo está coberto por uma camada de páginas de mangá grudentas."
+    dumpster:
+      title: Caçamba de lixo
+      desc: "Uma caçamba grande, usada para guardar grandes quantidades de lixo. Fede a um coquetel de cheiros nojentos."
+    wooden_crate:
+      title: Caixote
+      desc: "Um caixote de madeira usado para guardar objetos variados."
+    big_wooden_crate:
+      title: Caixote grande
+      desc: "Um caixote de madeira grande, usado para transportar itens."
+    file_cabinet:
+      title: Arquivo de aço
+      desc: "Um arquivo de aço enferrujado, com duas gavetas grandes."
+    tall_file_cabinet:
+      title: Arquivo de aço alto
+      desc: "Um arquivo de aço grande e enferrujado, com várias gavetas."
+    storage_closet:
+      title: Armário metálico
+      desc: "Um armário de metal grande, usado para armazenamento."
+    large_fridge:
+      title: Geladeira industrial
+      desc: "Uma geladeira de porte industrial, usada para guardar alimentos de todo tipo."
+    counter:
+      title: Balcão
+      desc: "Um balcão de metal grande, muito usado para guardar dinheiro."
+    metal_box:
+      title: Caixa metálica
+      desc: "Uma caixa de metal pequena. Parece ter ferrugem nas bordas."
+    medium_wooden_crate:
+      title: Caixote de madeira
+      desc: "Um caixote de madeira razoavelmente grande. Range quando você o move."
+    small_parts_bin:
+      title: Caixa de peças
+      desc: "Uma caixa pequena usada para guardar pequenos componentes mecânicos."
+    small_dresser_table:
+      title: Penteadeira
+      desc: "Uma penteadeira, parece estar sem o espelho."
+    medium_water_barrel:
+      title: Barril de água
+      desc: "Um barril de plástico alto. Ele flutua!"
+    medium_cash_reg:
+      title: Caixa registradora
+      desc: "Uma caixa registradora de tamanho médio, parece estar sem a fechadura."
+  error:
+    container:
+      not_valid: Isto não é um contêiner!
+      wrong_password: Você digitou uma senha incorreta!
+      password_wait: "Você precisa esperar {time} antes de poder digitar uma senha de novo!"
+      no_items: Não há itens para encher este contêiner!
+      no_space: Nada pôde ser adicionado a este contêiner!
+  notification:
+    container:
+      message: "{name}: {message}"
+      name_set: "Você deu a este contêiner o nome '{name}'."
+      name_removed: Você removeu o nome deste contêiner.
+      message_set: Você definiu a mensagem deste contêiner.
+      message_removed: Você removeu a mensagem deste contêiner.
+      password_set: "Você definiu a senha deste contêiner como '{password}'."
+      password_removed: Você removeu a senha deste contêiner.
+      filled:
+        "1": "Você adicionou {count} item aleatório a este contêiner."
+        "2": "Você adicionou {count} itens aleatórios a este contêiner."
+  tool:
+    container:
+      name: Ferramenta de contêineres
+      desc: Dê nome aos contêineres, coloque neles uma mensagem ou uma senha, ou encha-os com itens aleatórios.
+      "0": "Clique esquerdo: aplicar, clique direito: remover o nome, a mensagem ou a senha."
+      mode: Modo
+      mode_name: Definir o nome
+      mode_message: Definir a mensagem
+      mode_password: Definir a senha
+      mode_fill: Encher com itens aleatórios
+      custom_name: Nome
+      message: Mensagem
+      password: Senha
+      share: "Encher até (% dos slots)"
+      category: Categoria de item
+      any_category: Qualquer categoria
+  ui:
+    container:
+      open: Abrir
+      password:
+        title: Senha
+        message: Qual é a senha deste contêiner?
+  permission:
+    manage_containers:
+      name: Gerenciar contêineres
+      description: "Dá acesso para definir os nomes, as mensagens e as senhas dos contêineres."
+    fill_containers:
+      name: Encher contêineres
+      description: Dá acesso para encher contêineres com itens aleatórios.

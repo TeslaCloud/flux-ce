@@ -1,0 +1,26 @@
+pt-br:
+  command:
+    static:
+      description: Adiciona e remove o estado estático da entidade para a qual você está olhando.
+      add:
+        description: Torna estática a entidade para a qual você está olhando.
+      remove:
+        description: Faz a entidade para a qual você está olhando deixar de ser estática.
+  error:
+    not_valid_entity: Esta não é uma entidade válida!
+    cannot_static_this: Você não pode tornar esta entidade estática!
+    already_static: Esta entidade já é estática!
+    not_static: Esta entidade não é estática!
+  notification:
+    static:
+      added: Você adicionou uma entidade estática!
+      removed: Você removeu esta entidade estática!
+  tool:
+    static:
+      name: Adicionar/remover estáticas
+      desc: Adicione e remova entidades estáticas.
+      "0": "Clique esquerdo: adicionar, clique direito: remover."
+  permission:
+    static_tool:
+      name: Estático (ferramenta)
+      description: Dá acesso para tornar entidades estáticas ou não estáticas.

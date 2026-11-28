@@ -1,0 +1,148 @@
+pt-br:
+  command:
+    charsetname:
+      description: "Define o nome de um personagem."
+      syntax: <alvo> <novo nome>
+      message: "{player} definiu o nome de {target} como {name}."
+    charsetmodel:
+      description: "Define o modelo de um personagem."
+      syntax: <alvo> <novo modelo>
+      message: "{player} definiu o modelo de {target} como {model}."
+    charsetdesc:
+      description: "Define a descrição física de um personagem."
+      syntax: <alvo> <nova descrição>
+      message: "{player} definiu a descrição de {target} como {desc}."
+    charsetgender:
+      description: "Define o gênero de um personagem: male, female ou no_gender."
+      syntax: <alvo> <novo gênero>
+      message: "{player} definiu o gênero de {target} como {gender}."
+    charban:
+      description: "Bane e desbane personagens."
+      add:
+        description: "Bane o personagem ativo de um jogador."
+        syntax: <alvo>
+        message: "{player} baniu o personagem {target}."
+      remove:
+        description: "Desbane um personagem pelo nome completo, mesmo que o jogador dele esteja offline."
+        syntax: <nome do personagem>
+        message: "{player} desbaniu o personagem {target}."
+    charphysdesc:
+      description: "Muda a descrição física do seu personagem."
+      syntax: "[nova descrição]"
+  condition:
+    character:
+      name: Personagem específico
+      text: "Personagem {operator} {character}"
+      message: Selecione o personagem
+    characters: Personagens
+  config:
+    characters:
+      title: Personagem
+      desc: Configurações do sistema de personagens.
+      min_name_len:
+        name: Tamanho mínimo do nome do personagem
+        desc: "O tamanho mínimo do nome do personagem."
+      max_name_len:
+        name: Tamanho máximo do nome do personagem
+        desc: "O tamanho máximo do nome do personagem."
+      min_desc_len:
+        name: Tamanho mínimo da descrição do personagem
+        desc: "O tamanho mínimo da descrição física do personagem."
+      max_desc_len:
+        name: Tamanho máximo da descrição do personagem
+        desc: "O tamanho máximo da descrição física do personagem."
+      limit:
+        name: Limite de personagens
+        desc: "O número máximo de personagens que um jogador pode ter."
+  error:
+    character:
+      invalid: "Você não tem esse personagem."
+      banned: "Este personagem está banido."
+      already_active: "Você já está jogando com este personagem."
+      cannot_use: "Você não pode carregar este personagem agora."
+      cannot_switch: "Você não pode trocar de personagem agora."
+      cannot_delete: "Você não pode excluir este personagem."
+      switch_dead: "Você não pode trocar de personagem enquanto seu personagem está morto."
+      switch_ragdolled: "Você não pode trocar de personagem enquanto está no chão."
+      delete_active: "Você não pode excluir o personagem com que você está jogando."
+      delete_banned: "Você não pode excluir um personagem banido."
+      name_taken: "O nome '{name}' já está em uso por outro personagem."
+      nobody_to_ban: "Nenhum destes jogadores tem um personagem que possa ser banido."
+      not_found: "Não existe nenhum personagem chamado '{name}'."
+      not_banned: "O personagem '{name}' não está banido."
+  notification:
+    name_changed: "O nome do seu personagem foi alterado para {name}."
+    model_changed: "O modelo do seu personagem foi alterado para {model}."
+    desc_changed: "A descrição do seu personagem foi alterada para {desc}."
+    gender_changed: "O gênero do seu personagem foi alterado para {gender}."
+    character_banned: "Seu personagem {name} foi banido. Escolha outro personagem."
+  permission:
+    categories:
+      character_management: Gerenciamento de personagens
+  species:
+    unknown:
+      name: Raça desconhecida
+      description: Esta raça não tem descrição.
+      phys_desc: Esta raça não tem uma descrição física padrão.
+    human:
+      name: Humano
+      description: Um ser humano comum.
+  ui:
+    gender:
+      male: Masculino
+      female: Feminino
+      no_gender: Sem gênero
+    hud:
+      loading:
+        characters: Carregando personagens, aguarde...
+    main_menu:
+      disconnect: Desconectar
+      disconnect_msg: Tem certeza de que quer se desconectar deste servidor?
+      continue: Continuar
+      developed_by: "Desenvolvido por {author}."
+    char_create:
+      species: Raça
+      no_species: Você não escolheu uma raça.
+      option_unavailable: Esta opção não está disponível para você.
+      species_limit: Você não pode ter mais personagens desta raça.
+      title: CRIAR UM PERSONAGEM
+      text: CRIAÇÃO DE PERSONAGEM
+      create: CRIAR
+      load: CARREGAR PERSONAGEM
+      select: Selecionar
+      delete: Excluir
+      general: Informações gerais do personagem
+      name: "Nome completo:"
+      random_name: Gerar nome aleatório.
+      desc: "Descrição:"
+      gender: "Gênero:"
+      skin: "Skin"
+      back: VOLTAR
+      next: AVANÇAR
+      main_menu: MENU PRINCIPAL
+      confirm: Criar personagem
+      confirm_msg: Tem certeza de que quer criar este personagem?
+      delete_confirm: Excluir personagem
+      delete_confirm_msg: "Digite o nome do seu personagem para confirmar a exclusão: {name}"
+      banned: Banido
+      limit: "Você não pode ter mais de {limit} personagens."
+      name_taken: "Outro personagem já tem este nome."
+      name_invalid: Nome inválido.
+      name_len: "O nome do seu personagem deve ter entre {min} e {max} caracteres."
+      desc_invalid: Descrição física inválida.
+      desc_len: "A descrição física do seu personagem deve ter entre {min} e {max} caracteres."
+      unknown_error: Erro desconhecido. A Luna provavelmente pisou na bola de novo.
+      no_gender: Você precisa selecionar um gênero.
+      no_model: Você precisa selecionar um modelo.
+      error:
+        fatal: "Algo provavelmente deu errado, tente se reconectar."
+        critical: "O servidor pode estar com problemas de conexão, aguarde..."
+        lag: "A solicitação está demorando um pouco, aguenta aí..."
+        record: "O ActiveRecord pisou na bola de novo, tente se reconectar ou reiniciar o servidor..."
+    char_desc:
+      title: Descrição física
+      message: "Descreva a aparência do seu personagem, em {min} a {max} caracteres."
+      confirm: Alterar
+      none: Este personagem não tem descrição física.
+    tab_menu:
+      main_menu: Menu principal

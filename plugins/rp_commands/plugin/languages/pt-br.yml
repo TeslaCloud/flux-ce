@@ -1,0 +1,127 @@
+pt-br:
+  command:
+    it:
+      description: Descreve uma ação impessoal.
+      syntax: <texto>
+    me:
+      description: Descreve a ação do seu personagem. Você pode usar "*texto*" em vez deste comando. (sussurro) e grito!! também funcionam aqui.
+      syntax: <texto>
+    whisper:
+      description: Sussurra algo. Você pode usar "(texto)" em vez deste comando. O número de parênteses afeta o volume do sussurro (máx. 3).
+      syntax: <texto>
+    yell:
+      description: Grita algo. Você pode usar "texto!!" em vez deste comando. O número de pontos de exclamação afeta o volume do grito (máx. 4).
+      syntax: <texto>
+    event:
+      description: Envia uma mensagem descritiva a todos no servidor.
+      syntax: <texto>
+    eventlocal:
+      description: Envia uma mensagem descritiva a todos que estão perto o bastante para ouvir você falar.
+      syntax: <texto>
+    gag:
+      description: Silencia os chats OOC dos jogadores e remove o silenciamento.
+      add:
+        description: Silencia os chats OOC de um jogador.
+        syntax: <jogador> <duração> [motivo]
+        message: "{admin} silenciou {target} no chat OOC por {time} ({reason})."
+      remove:
+        description: Remove o silenciamento dos chats OOC de um jogador.
+        syntax: <jogador>
+        message: "{admin} removeu o silenciamento de {target}."
+    its:
+      description: Coloca um texto fixo que descreve algum detalhe do ambiente.
+      syntax: <texto>
+    itsremove:
+      description: Remove o texto fixo para o qual você está olhando.
+    roll:
+      description: "Rola dados: um d20 sem argumento, um dado com o número de lados informado, um atributo ou uma perícia pelo nome, ou uma fórmula de dados como 2d6 + 3, 4d6kh3 ou 1d20 + stealth. Se você estiver olhando para um jogador próximo, a mesma rolagem é feita para vocês dois."
+      syntax: "[lados, atributo, perícia ou fórmula]"
+    togglemask:
+      description: Coloca ou tira a sua máscara como membro da Proteção Civil.
+      syntax: <nenhum>
+  config:
+    rp_commands:
+      title: Chat de roleplay
+      desc: Configurações do chat dentro do personagem (IC) e fora do personagem (OOC).
+      talk_radius:
+        name: Raio de fala
+        desc: Distância, em unidades, a partir da qual a fala normal dentro do personagem é ouvida. Os sussurros, os gritos, o chat OOC local e os rádios são calculados a partir dela.
+      ooc_interval:
+        name: Espera do OOC
+        desc: Quantos segundos um jogador precisa esperar entre duas mensagens no chat OOC. Defina como 0 para desativar.
+      looc_interval:
+        name: Espera do LOOC
+        desc: Quantos segundos um jogador precisa esperar entre duas mensagens no chat OOC local. Defina como 0 para desativar.
+      ooc_avatars:
+        name: Avatares no OOC
+        desc: Define se o avatar da Steam do jogador aparece antes do nome dele nas mensagens do chat OOC.
+      roll_versus:
+        name: Rolagens opostas
+        desc: Define se rolar olhando para um jogador próximo também rola para esse jogador.
+      ic_color:
+        name: Cor do chat IC
+        desc: Cor da fala dentro do personagem e do balão de digitação de um jogador que está falando.
+      whisper_color:
+        name: Cor do sussurro
+        desc: Cor do balão de digitação de um jogador que está sussurrando.
+      yell_color:
+        name: Cor do grito
+        desc: Cor do balão de digitação de um jogador que está gritando.
+      it_color:
+        name: Cor do it
+        desc: Cor das descrições feitas com o comando it.
+      me_color:
+        name: Cor das ações
+        desc: Cor das ações no chat dentro do personagem e do balão de digitação de um jogador que está realizando uma.
+      max_static_texts:
+        name: "Textos fixos por jogador"
+        desc: "Quantos textos fixos um jogador pode manter colocados ao mesmo tempo com o comando its."
+  error:
+    roll:
+      invalid: "Não é possível rolar isso: {message}"
+    its_too_close: Perto demais de outros textos fixos!
+    its_limit: "Você atingiu o limite de textos fixos ({limit})."
+    speak:
+      dead: Você não pode falar nem agir enquanto o seu personagem está morto.
+      knocked_out: Você não pode falar nem agir enquanto está inconsciente.
+  notification:
+    cooldown:
+      ooc:
+        "1": "Você precisa esperar mais {time} segundo antes de usar o chat OOC de novo."
+        "2": "Você precisa esperar mais {time} segundos antes de usar o chat OOC de novo."
+      looc:
+        "1": "Você precisa esperar mais {time} segundo antes de usar o chat LOOC de novo."
+        "2": "Você precisa esperar mais {time} segundos antes de usar o chat LOOC de novo."
+    mute:
+      "1": "Você não pode usar o chat OOC por mais {time} segundo."
+      "2": "Você não pode usar o chat OOC por mais {time} segundos."
+    muted: "Seu chat OOC foi silenciado por {time}."
+    unmuted: Seu chat OOC não está mais silenciado.
+    static_text:
+      added: Texto fixo adicionado.
+      removed: Texto fixo removido.
+      not_found: Nenhum texto fixo que possa ser removido foi encontrado nesta posição.
+  permission:
+    categories:
+      roleplay: Roleplay
+    bypass_chat_cooldown:
+      name: Ignorar as esperas do chat
+      description: Permite que o jogador use os chats OOC e LOOC sem aguardar o tempo de espera.
+  ui:
+    hud:
+      display_typing:
+        talking: FALANDO...
+        whispering: SUSSURRANDO...
+        yelling: GRITANDO...
+        performing: AGINDO...
+    chat:
+      say: "diz"
+      yell: "grita"
+      whisper: "sussurra"
+      roll: "rolou {roll}"
+      roll_named: "rolou {name}: {roll}"
+      roll_versus: "rolou {roll} contra"
+      roll_versus_named: "rolou {name}: {roll} contra"
+      roll_versus_reply: ": {roll}"
+      roll_critical_success: "{roll}, sucesso crítico!"
+      roll_critical_failure: "{roll}, falha crítica!"

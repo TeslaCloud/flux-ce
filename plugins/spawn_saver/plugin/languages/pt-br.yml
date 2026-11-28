@@ -1,0 +1,8 @@
+pt-br:
+  config:
+    spawn_saver:
+      title: Salvamento de posição
+      desc: Configurações do plugin de salvamento de posição.
+      enabled:
+        name: Reaparecer onde saiu
+        desc: "Define se os personagens são colocados de volta onde estavam quando seus jogadores saíram, desde que o mapa seja o mesmo."

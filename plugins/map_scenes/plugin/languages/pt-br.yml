@@ -1,0 +1,31 @@
+pt-br:
+  config:
+    map_scenes:
+      title: "Cenas do mapa"
+      desc: "A câmera que mostra o mapa atrás da introdução e do menu principal."
+      speed:
+        name: "Tempo por ponto"
+        desc: "Segundos que a câmera passa em um ponto antes de ir para o próximo."
+      animated:
+        name: "Deslizar entre pontos"
+        desc: "Define se a câmera desliza de um ponto a outro em vez de cortar."
+      rotate_speed:
+        name: "Velocidade de rotação"
+        desc: "A velocidade com que a câmera gira enquanto fica em um ponto, em graus por sexagésimo de segundo."
+  notification:
+    mapscene:
+      point_added: Ponto adicionado
+  tool:
+    mapscene:
+      name: Fundo do menu principal
+      desc: Defina a posição da câmera do menu principal.
+      "0": "Clique esquerdo: adicionar nó"
+  ui:
+    mapscene:
+      title: Cena do mapa
+      point: "Cena do mapa nº {index}"
+      delete: Excluir
+  permission:
+    manage_map_scenes:
+      name: "Gerenciar cenas do mapa"
+      description: "Dá acesso para gerenciar as cenas do mapa."

@@ -1,0 +1,45 @@
+pt-br:
+  config:
+    screen_effects:
+      title: Efeitos de tela
+      desc: Configuração do plugin de efeitos de tela
+      low_health:
+        name: Permitir efeito de vida baixa
+        desc: Permite que as cores desbotem e a imagem fique desfocada conforme o jogador perde vida, e que a tela fique cinza quando ele morre.
+      heartbeat:
+        name: Permitir batimentos cardíacos
+        desc: Permite que os jogadores ouçam batimentos cardíacos que aceleram conforme a vida diminui.
+      underwater:
+        name: Permitir efeito subaquático
+        desc: Permite que a imagem fique desfocada e distorcida enquanto a visão do jogador está embaixo da água.
+      headbob:
+        name: Permitir balanço da câmera
+        desc: Permite que a visão balance enquanto o jogador anda ou corre e trema quando ele aterrissa após uma queda.
+  settings:
+    categories:
+      screen_effects: Efeitos de tela
+    screen_effects:
+      low_health:
+        name: Efeito de vida baixa
+        desc: Desbota as cores e desfoca a imagem conforme sua vida diminui.
+        strength:
+          name: Intensidade do efeito de vida baixa
+          desc: A intensidade do efeito de vida baixa, em porcentagem.
+      heartbeat:
+        name: Batimentos cardíacos
+        desc: Reproduz batimentos cardíacos que aceleram conforme sua vida diminui.
+        strength:
+          name: Volume dos batimentos cardíacos
+          desc: O volume dos batimentos cardíacos, em porcentagem.
+      underwater:
+        name: Efeito subaquático
+        desc: Desfoca e distorce a imagem enquanto você está embaixo da água.
+        strength:
+          name: Intensidade do efeito subaquático
+          desc: A intensidade do efeito subaquático, em porcentagem.
+      headbob:
+        name: Balanço da câmera
+        desc: Balança a visão enquanto você anda ou corre e a sacode quando você aterrissa após uma queda.
+        strength:
+          name: Intensidade do balanço da câmera
+          desc: A intensidade do balanço e do tremor ao aterrissar, em porcentagem.

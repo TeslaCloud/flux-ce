@@ -1,0 +1,166 @@
+pt-br:
+  config:
+    flow:
+      title: Configurações gerais
+      desc: Configurações gerais relacionadas ao próprio framework Flux.
+      command_prefixes:
+        name: Prefixos de comando
+        desc: Quais prefixos do chat são considerados prefixos de comando (<prefixo>somecommand, p. ex. /somecommand).
+      walk_speed:
+        name: Velocidade de caminhada
+        desc: A velocidade com que o jogador anda.
+      run_speed:
+        name: Velocidade de corrida
+        desc: A velocidade com que o jogador corre (segurando SHIFT por padrão).
+      crouch_speed:
+        name: Velocidade agachado
+        desc: A velocidade com que o jogador anda agachado (segurando CTRL por padrão).
+      jump_power:
+        name: Força do pulo
+        desc: A altura que o jogador pula por padrão.
+      respawn_delay:
+        name: Tempo de renascimento
+        desc: Quanto tempo um jogador leva para renascer depois de morrer (em segundos).
+      data_save_interval:
+        name: Intervalo de salvamento dos dados do servidor
+        desc: Tempo entre os salvamentos dos dados do servidor.
+      empty_restart_interval:
+        name: Recarga do mapa com o servidor vazio
+        desc: De quantos em quantos segundos o mapa é recarregado enquanto não há ninguém no servidor. 0 desativa.
+  error:
+    cant_now: Você não pode fazer isso agora!
+    command:
+      console_target_self: "O console não pode ter a si mesmo como alvo!"
+      failed: A execução deste comando falhou!
+      higher_immunity: "{target} tem mais imunidade que você!"
+      invalid_choice: "'{value}' não é uma opção válida aqui, use uma destas: {choices}"
+      no_access: Você não tem acesso a este comando!
+      no_console: Este comando não pode ser executado pelo console!
+      not_a_number: "'{value}' não é um número!"
+      not_valid: "'{command}' não é um comando válido!"
+      player_ambiguous: "Vários jogadores se chamam '{player}', use o SteamID de quem você quer!"
+      player_invalid: "'{player}' não é um jogador válido! Nomes com espaços vão entre aspas duplas."
+      player_suggestion: "'{player}' não é um jogador válido, você quis dizer {suggestion}? Nomes com espaços vão entre aspas duplas."
+      syntax: "Sintaxe incorreta, use /{command} {syntax}"
+      too_long: Este comando é longo demais!
+      unknown_subcommand: "'{subcommand}' não é um subcomando de /{command}, use um destes: {subcommands}"
+      you_must_enter_command: Você precisa digitar um comando!
+    config:
+      unknown: Essa configuração não existe!
+      static: Esta configuração não pode ser alterada no jogo!
+      invalid_value: Este não é um valor válido para esta configuração!
+      not_a_number: O valor desta configuração precisa ser um número!
+      not_a_boolean: "O valor desta configuração precisa ser 'true' ou 'false'!"
+      not_a_string: O valor desta configuração precisa ser uma linha de texto!
+      not_a_table: O valor desta configuração precisa ser uma lista!
+      not_a_color: O valor desta configuração precisa ser uma cor!
+      no_default: Esta configuração não tem valor padrão!
+    plugin:
+      unknown: Esse plugin não existe!
+      required: "Este plugin não pode ser desativado, ele é exigido por: {plugins}"
+    invalid_time: "'{time}' não pôde ser interpretado como tempo!"
+    invalid_value: "Você informou um valor de argumento inválido!"
+    invalid_amount: Você informou uma quantidade inválida!
+    invalid_entity: Esta não é uma entidade válida!
+    too_far: O alvo está longe demais!
+    wait: Você não pode fazer isso agora, aguarde um pouco!
+  language:
+    name: "Português (Brasil)"
+  notification:
+    console: Console
+    player_disconnected: "{player} se desconectou do servidor."
+  operator:
+    less: Menor
+    greater: Maior
+    less_equal: Menor ou igual
+    greater_equal: Maior ou igual
+    equal: Igual
+    unequal: Diferente
+    and: "E"
+    or: "OU"
+    not: "NÃO"
+  time:
+    just_now: "agora mesmo"
+    second: "segundo"
+    seconds: "segundos"
+    minute: "minuto"
+    minutes: "minutos"
+    hour: "hora"
+    hours: "horas"
+    day: "dia"
+    days: "dias"
+    week: "semana"
+    weeks: "semanas"
+    month: "mês"
+    months: "meses"
+    year: "ano"
+    years: "anos"
+    from_now: "daqui a {time}"
+    ago: "há {time}"
+    over: "mais de"
+    about: "cerca de"
+    permanently: permanentemente
+    for: "por {time}"
+    and: "e"
+  tool:
+    measure:
+      name: Ferramenta de medição
+      desc: Use para medir a distância entre dois pontos.
+      system_header: Sistema de medidas
+  ui:
+    hud:
+      dead: "*MORTO*"
+      bar_text:
+        getup: LEVANTANDO...
+        respawn: AGUARDANDO PARA RENASCER...
+      loading:
+        local_player: Preparando a sequência de carregamento, aguarde...
+        player_object: Esperando a criação do jogador local, aguarde...
+        schema: Carregando o schema e os plugins, aguarde...
+      player_message:
+        died: VOCÊ MORREU
+        respawn:
+          "1": "RENASCENDO EM {time} SEGUNDO."
+          "2": "RENASCENDO EM {time} SEGUNDOS."
+    avatar_tooltip: Clique esquerdo - Abrir perfil, Clique direito - Copiar SteamID
+    help:
+      commands:
+        title: Comandos
+        empty: Não há comandos que você possa usar.
+        aliases: Aliases
+        uncategorized: Outros
+      plugins:
+        title: Plugins
+        schema: Schema
+      credits:
+        title: Créditos
+    scoreboard:
+      help: Clicar no cartão de um jogador pode abrir algumas opções.
+      menu:
+        profile: Abrir perfil da Steam
+        copy_steam_id: Copiar SteamID
+      online: "Jogadores online: {count} / {max}"
+      ping: Ping
+      players_online: Jogadores online
+      title: LISTA DE JOGADORES
+    tab_menu:
+      admin: Admin
+      close_menu: Voltar
+      scoreboard: Jogadores
+      help: Ajuda
+    ok: OK
+    cancel: Cancelar
+    close: Fechar
+    yes: "Sim"
+    no: "Não"
+    unit:
+      title:
+        imperial: Imperial
+        metric: Métrico
+        units: Unidades da Source Engine
+      mm: mm
+      cm: cm
+      m: m
+      km: km
+      mi: mi
+      units: unidades

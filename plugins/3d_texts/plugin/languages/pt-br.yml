@@ -1,0 +1,51 @@
+pt-br:
+  notification:
+    3d_text:
+      text_added: Você adicionou um texto 3D.
+      text_removed: Você removeu um texto 3D.
+    3d_picture:
+      placed: Imagem colocada.
+      removed: Imagem removida.
+  tool:
+    texts:
+      name: Ferramenta de texto
+      desc: Adicione textos 3D a superfícies.
+      "0": "Clique esquerdo: adicionar texto, clique direito: remover texto."
+      text: Texto
+      style: Estilo
+      color: Cor
+      extra_color: Cor secundária
+      scale: Escala do texto
+      fade: Ajuste da distância de desvanecimento
+      opt1: Texto normal
+      opt2: Texto só com sombra distante
+      opt3: Texto só com sombra preta
+      opt4: Texto com as duas sombras
+      opt5: Texto dentro de uma caixa
+      opt6: Texto dentro de uma caixa piscante
+      opt7: Texto dentro de uma caixa (estilo 2)
+      opt8: Texto dentro de uma caixa (estilo 3)
+      opt9: Texto dentro de uma caixa (estilo 4)
+      opt91: Texto dentro de uma caixa (desfocada)
+      choose_style: Escolha um estilo
+    pictures:
+      name: Posicionador de imagens
+      desc: Adicione imagens a superfícies 3D.
+      "0": "Clique esquerdo: adicionar imagem, clique direito: remover imagem."
+      url: URL
+      width: Largura
+      height: Altura
+      fade: Ajuste da distância de desvanecimento
+  error:
+    3d_text:
+      nothing_aimed: Você não está olhando para um texto 3D.
+    3d_picture:
+      nothing_aimed: Você não está olhando para uma imagem.
+      invalid_url: A imagem precisa ser um link https para uma imagem png ou jpg.
+  permission:
+    manage_texts:
+      name: Colocar / excluir textos
+      description: Dá acesso para colocar e excluir textos.
+    manage_pictures:
+      name: Colocar / excluir imagens
+      description: Dá acesso para colocar e excluir imagens.

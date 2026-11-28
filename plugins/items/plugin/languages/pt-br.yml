@@ -1,0 +1,162 @@
+pt-br:
+  condition:
+    has_item:
+      name: Personagem com certo item no inventário
+      text: "Tem o item {operator} {item}"
+      message: Informe o id do item
+    has_item_data:
+      name: Personagem com um item que contém certo valor de dados
+      text: "Tem o item {item} com o dado {key} {operator} {value}"
+      message1: Informe o id do item
+      message2: Informe a chave de dados do item
+      message3: Informe o valor de dados do item
+  config:
+    items:
+      title: Itens
+      desc: Configurações dos itens, dos itens que ficam no mundo e dos inventários dos jogadores.
+      destroy:
+        name: Permitir destruir itens
+        desc: Define se os jogadores podem destruir os itens de seus inventários pelo menu do item. Um item pode permitir ou proibir isso independentemente desta configuração.
+      entity_health:
+        name: Vida dos itens largados
+        desc: Quanto dano um item largado no mundo aguenta antes de ser destruído. Defina como 0 para tornar os itens largados indestrutíveis. Vale para os itens largados a partir de agora.
+      drop_ownership:
+        name: Separar os itens largados de cada personagem
+        desc: Define se os jogadores são impedidos de pegar e usar os itens que outro de seus próprios personagens largou.
+      ammo_requires_weapon:
+        name: Munição exige uma arma
+        desc: Define se a munição só pode ser carregada por um jogador que tenha uma arma que a use.
+      drop_weapons_on_death:
+        name: Largar armas ao morrer
+        desc: Define se as armas equipadas de um jogador caem no mundo quando ele morre.
+      inventory_width:
+        name: Largura do inventário principal
+        desc: Largura do inventário principal do jogador, em slots.
+      inventory_height:
+        name: Altura do inventário principal
+        desc: Altura do inventário principal do jogador, em slots.
+      hotbar_slots:
+        name: Slots da barra de atalhos
+        desc: "Quantos dos slots 1 a 7 da barra de atalhos os jogadores têm para seus itens. Os itens dos slots que ficam além de um valor reduzido são retirados da barra de atalhos."
+      pockets_height:
+        name: Altura dos bolsos
+        desc: Altura do inventário de bolsos do jogador, em slots.
+  error:
+    hotbar:
+      full: Não há nenhum slot livre na barra de atalhos.
+      equip_slot_taken: "Você não pode equipar isto sem antes desequipar {item}."
+      cant_place: Este item não pode ser colocado na barra de atalhos.
+      cant_unequip: Este item não pode ser desequipado agora.
+    item:
+      other_character: Você não pode mexer em um item que outro personagem seu largou.
+      no_weapon_for_ammo: Você não tem nenhuma arma que use esta munição.
+      destroy_not_empty: Esvazie este item antes de destruí-lo.
+      destroy_equipped: "Você não pode destruir este item enquanto ele não puder ser desequipado."
+      drop_equipped: "Você não pode largar este item enquanto ele não puder ser desequipado."
+      nothing_to_treat: Você não tem ferimentos que isto possa tratar.
+      already_healing: Você já está se curando.
+    invalid_item: "O item '{item}' é inválido."
+    inventory:
+      invalid_item: Item inválido.
+      no_space: Espaço insuficiente.
+      not_enough_items: Itens insuficientes.
+      slot_occupied: O slot está ocupado.
+      disabled: O inventário está desativado.
+      cant_equip: Este item não pode ser equipado.
+      too_big: O item é grande demais.
+      missing: Não há nenhum inventário onde colocar o item.
+  item:
+    action:
+      apply: Aplicar
+    category:
+      consumables: Consumíveis
+      equipment: Equipamento
+      clothing: Roupas
+      other: Outros
+      weapon: Arma
+      ammo: Munição
+      throwable: Arma de arremesso
+      medical: Itens médicos
+    slot:
+      primary: Primária
+      secondary: Secundária
+      heavy: Pesada
+      melee: Corpo a corpo
+      throwable: Arremessável
+      accessory: Acessório
+      chest: Peito
+    option:
+      use: Usar
+      take: Pegar
+      drop: Largar
+      cancel: Cancelar
+      equip: Equipar
+      unequip: Desequipar
+      unload: Descarregar
+      load: Carregar
+      destroy: Destruir
+      open: Abrir
+      pin: Fixar na barra de atalhos
+      unpin: Desafixar da barra de atalhos
+  ui:
+    hotbar:
+      title: Barra de atalhos
+      hands: Mãos
+      physgun: Physgun
+      toolgun: Tool gun
+    item:
+      destroy_title: Destruir item
+      destroy_message: "Tem certeza de que quer destruir {item}? Isso não pode ser desfeito."
+    icon_editor:
+      title: Editor de ícones
+      best: Melhor vista
+      front: Vista frontal
+      above: Vista de cima
+      right: Vista da direita
+      center: Centralizar vista
+      width: Largura do item (slots)
+      height: Altura do item (slots)
+      slot_size: Tamanho do slot (px)
+      copy: Copiar código do item
+    inventory:
+      main_inventory: Inventário
+      equipment:
+        title: Equipamento
+        helmet: Capacete
+        mask: Máscara
+        torso: Torso
+        hands: Mãos
+        legs: Pernas
+        accessories: Acessórios
+        back: "Costas"
+      pockets: Bolsos
+      title: Inventário
+      container: Contêiner
+    tab_menu:
+      inventory: Inventário
+    spawnmenu:
+      items: Itens
+      give:
+        self: Dar para mim
+        player: Dar para outro jogador
+        stack: Pilha
+        one: Um
+  command:
+    giveitem:
+      description: Dá o item especificado a um jogador.
+      syntax: "<alvo> <ID ou nome do item> [quantidade]"
+      message: "{player} deu {item} x {amount} a {target}."
+  hint:
+    inventory: Arraste um item para fora da tela do inventário para largá-lo.
+  notification:
+    item_given: "Você recebeu {item} x {amount}."
+    items_unplaced: "{amount} dos seus itens não couberam nos seus inventários. Eles ficam guardados e voltam quando houver espaço para eles ao carregar o personagem de novo."
+    items_unplaced_log: "{player} ({steam_id}) tem {amount} itens que não couberam nos inventários do personagem."
+    icon_editor: O código foi copiado para a sua área de transferência.
+  permission:
+    spawn_items:
+      name: "Spawnar itens"
+      description: "Dá acesso para spawnar itens pelo menu de spawn."
+    give_items:
+      name: "Dar itens"
+      description: "Dá acesso para dar itens aos jogadores pelo menu de spawn."

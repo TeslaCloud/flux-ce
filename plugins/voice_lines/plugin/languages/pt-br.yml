@@ -1,0 +1,44 @@
+pt-br:
+  command:
+    voicelines:
+      description: Lista as falas de voz que o seu personagem pode dizer, ou busca por comando, texto ou alias.
+      syntax: "[busca]"
+  config:
+    voice_lines:
+      title: Falas de voz
+      desc: Configurações das falas de voz que os personagens dizem no chat.
+      interval:
+        name: Intervalo das falas de voz
+        desc: Quantos segundos um jogador precisa esperar antes que o som de outra fala de voz toque. Uma fala dita antes disso aparece no chat sem o som.
+      radio_volume:
+        name: Volume das falas de voz no rádio
+        desc: Volume, de 0 a 1, do som de uma fala de voz para os jogadores que a ouvem pelo rádio.
+      default_duration:
+        name: Duração padrão das falas de voz
+        desc: Quantos segundos uma sequência de falas de voz espera por uma fala cuja duração do som o servidor não consegue determinar, antes de dizer a próxima.
+      max_chain:
+        name: Tamanho da sequência de falas de voz
+        desc: Quantas falas de voz uma sequência diz no máximo. Uma mensagem mais longa é tratada como fala comum.
+  notification:
+    voice_lines:
+      none: Seu personagem não tem falas de voz.
+      not_found: 'Nenhuma fala de voz corresponde a "{query}".'
+  ui:
+    voice_lines:
+      title: Falas de voz
+      description: Para dizer uma fala, digite no chat o comando, o texto ou um dos aliases dela em uma mensagem à parte. Coloque-a entre parênteses para sussurrá-la, ou adicione !! para gritá-la. Comandos e aliases separados por espaços dizem suas falas uma após a outra, e uma vírgula ou um ponto depois de um deles adiciona uma pausa de um ou dois segundos, como em CAN1 CAN2, CAN3. CAN4
+      search: Buscar por comando, texto ou alias...
+      all: Todas
+      empty: Nenhuma fala de voz corresponde à busca.
+      truncated: "Mostrando {shown} de {total} falas. Faça uma busca para filtrar."
+      listen: Ouvir
+      say: Dizer
+      say_tooltip: Dizer esta fala dentro do personagem.
+      aliases: Aliases
+      list_header: "Falas de voz do seu personagem (veja a página Falas de voz da aba Ajuda, ou busque com /voicelines <texto>):"
+      line_count:
+        "1": "{count} fala"
+        "2": "{count} falas"
+      results:
+        "1": "{count} fala de voz encontrada, mostrando {shown}:"
+        "2": "{count} falas de voz encontradas, mostrando {shown}:"

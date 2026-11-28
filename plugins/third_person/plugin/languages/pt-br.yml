@@ -1,0 +1,15 @@
+pt-br:
+  settings:
+    third_person:
+      shoulder:
+        name: Ombro de mira em terceira pessoa
+        desc: "O ombro sobre o qual a câmera em terceira pessoa se posiciona quando você mira. A tecla B passa a câmera para o outro ombro."
+        right: Direito
+        left: Esquerdo
+      distance:
+        name: Distância da câmera em terceira pessoa
+        desc: "A distância a que a câmera em terceira pessoa fica atrás do seu personagem enquanto você não está mirando."
+  ui:
+    third_person:
+      weapon_raised: Arma levantada
+      weapon_lowered: Arma abaixada

@@ -1,0 +1,138 @@
+pt-br:
+  config:
+    doors:
+      title: Portas
+      desc: Configurações de propriedade e trancamento de portas.
+      price:
+        name: Preço da porta
+        desc: Quanto custa uma porta que pode ter dono, a menos que a staff tenha dado a ela um preço próprio. Defina como 0 para que as portas sejam gratuitas.
+      sell_share:
+        name: Reembolso na venda
+        desc: A porcentagem do preço pago por uma porta que o dono recebe de volta ao vendê-la.
+      limit:
+        name: Limite de portas
+        desc: Quantas portas um personagem pode ter, com as portas vinculadas contando como uma só. Defina como 0 para desativar o limite.
+      lock_time:
+        name: Tempo para trancar
+        desc: Quantos segundos leva para trancar uma porta. Defina como 0 para trancar as portas na hora.
+      unlock_time:
+        name: Tempo para destrancar
+        desc: Quantos segundos leva para destrancar uma porta. Defina como 0 para destrancar as portas na hora.
+      text_length:
+        name: Tamanho do texto da porta
+        desc: O texto mais longo, em caracteres, que o dono de uma porta pode colocar nela.
+      access_entries:
+        name: Entradas de acesso da porta
+        desc: Quantos personagens podem receber acesso a uma mesma porta, com as portas vinculadas contando como uma só.
+  door:
+    categories:
+      general: Geral
+      ownership: Propriedade
+    properties:
+      name: Nome
+      title_type:
+        name: Tipo de título
+        select: Selecione...
+      locked: Trancada
+      ownable: Pode ter dono
+      price: Preço (vazio para o padrão)
+    title_type:
+      none: "Desativado"
+      center: "Centralizado"
+  error:
+    door:
+      not_a_door: Isto não é uma porta!
+      too_far: Você está longe demais da porta!
+      not_ownable: Esta porta não pode ter dono!
+      already_owned: Esta porta já tem dono!
+      not_owned: Esta porta não é de ninguém!
+      not_owner: Esta porta não é sua!
+      no_access: Você não tem permissão para gerenciar esta porta!
+      owner_only: Só o dono da porta pode fazer isso!
+      limit: "Você não pode ter mais portas, o limite é {limit}!"
+      cant_afford: "Você não tem como pagar por esta porta, ela custa {value} {currency}!"
+      cannot_buy: Você não pode comprar esta porta!
+      cannot_sell: Você não pode vender esta porta!
+      cannot_change_access: Você não pode alterar o acesso a esta porta!
+      invalid_character: Não é possível dar nem negar acesso a este personagem!
+      invalid_text: Este texto não pode ser colocado em uma porta!
+      access_full: Já há personagens demais com acesso a esta porta!
+      already_linked: Estas portas já estão vinculadas!
+      not_linked: Esta porta não está vinculada a nenhuma outra!
+      link_owned: Uma porta que tem dono não pode ser vinculada. Desvincule-a ou despeje o dono primeiro!
+      invalid_conditions: Estas condições não podem ser definidas em uma porta!
+  notification:
+    door:
+      bought: "Você comprou a porta por {value} {currency}."
+      taken: A porta agora é sua.
+      sold: "Você vendeu a porta por {value} {currency}."
+      abandoned: A porta não é mais sua.
+      evicted: Você perdeu a propriedade de uma porta.
+      evict_done: O dono da porta foi despejado.
+      text_set: O texto da porta foi alterado.
+      access:
+        use: "{name} agora pode trancar e destrancar a porta."
+        manage: "{name} agora pode gerenciar a porta."
+        none: "{name} não tem mais acesso à porta."
+      access_received:
+        use: Você recebeu permissão para trancar e destrancar uma porta.
+        manage: Você recebeu permissão para gerenciar uma porta.
+        none: Seu acesso a uma porta foi retirado.
+      link_picked: Porta principal escolhida. Clique com o botão esquerdo nas portas que quer vincular a ela.
+      linked: "A porta foi vinculada. Portas no grupo: {count}."
+      unlinked: A porta foi desvinculada.
+      link_cleared: A porta escolhida foi esquecida.
+  tool:
+    door_link:
+      name: Vínculo de portas
+      desc: Vincula portas em grupos que têm um só dono.
+      "0": "Clique esquerdo: escolher a porta principal e depois vincular portas a ela. Clique direito: desvincular. Recarregar: esquecer a porta escolhida."
+  ui:
+    door:
+      title: Portas
+      unlock: Destrancar
+      lock: Trancar
+      settings: Configurações
+      price: "{value} {currency}"
+      buy: "Comprar ({price})"
+      buy_message: "Você quer comprar esta porta por {price}?"
+      take: Tomar posse
+      take_message: Você quer tomar posse desta porta?
+      manage: Gerenciar
+      evict: "Despejar o dono ({name})"
+      evict_message: Você quer tirar esta porta do dono? Nada será reembolsado.
+      status:
+        for_sale: "À venda: {price}"
+        free: Disponível
+        owned: Com dono
+      access:
+        none: Sem acesso
+        use: Trancar e destrancar
+        manage: Trancar, destrancar e gerenciar
+        give_use: Permitir trancar e destrancar
+        give_manage: Permitir gerenciar
+        take: Retirar o acesso
+      management:
+        title: Gerenciamento da porta
+        you_own: Esta porta é sua.
+        owner: "Dono: {name}"
+        group: Esta porta está vinculada a outras. Tudo aqui vale para todas elas.
+        text: Texto da porta
+        save: Definir texto
+        character: Personagem
+        access: Acesso
+        away: "{name} (ausente)"
+        hint: Clique com o botão direito ou dê um clique duplo em um personagem para alterar o acesso dele.
+        sell: "Vender ({price})"
+        abandon: Abrir mão da porta
+        sell_title: Vender porta
+        sell_message: "Você quer vender esta porta por {price}?"
+        abandon_message: Você quer abrir mão desta porta? Você não vai receber nada por ela.
+    hud:
+      bar_text:
+        lock_door: TRANCANDO A PORTA...
+        unlock_door: DESTRANCANDO A PORTA...
+  permission:
+    manage_doors:
+      name: Acesso às configurações de portas
+      description: Dá acesso para personalizar as portas.

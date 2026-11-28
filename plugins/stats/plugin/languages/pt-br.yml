@@ -1,0 +1,628 @@
+pt-br:
+  attribute:
+    category:
+      other: Outros
+    level:
+      legendary: Lendário
+      heroic: Heroico
+      superb: Excepcional
+      great: Ótimo
+      good: Bom
+      fair: Razoável
+      mediocre: Medíocre
+      poor: Ruim
+      terrible: Terrível
+    other:
+      name: Atributo desconhecido
+      desc: Este atributo não tem descrição.
+    strength:
+      title: Força
+      short: FOR
+      description:
+        Condição física do seu personagem. Afeta a chance de sucesso em
+        ações de força bruta, como arrombar uma porta.
+      legendary:
+        Sua força é coisa de lenda. Proezas que exigiriam várias pessoas
+        são rotina para você, e pouca coisa resiste ao seu aperto.
+        No corpo a corpo, você é uma força que quase nada consegue deter.
+      heroic:
+        Sua força beira o sobre-humano. Portas cedem sob o seu ombro,
+        você carrega um homem adulto sem diminuir o passo, e um único golpe seu
+        pode encerrar uma briga.
+      superb:
+        Sua força é digna de um atleta olímpico. Você levanta
+        muito peso com o mínimo de esforço, e seus golpes corpo a corpo
+        podem ser fatais.
+      great:
+        Seus músculos estão em ótima forma. Você levanta objetos pesados
+        com algum esforço, e no corpo a corpo dá muito trabalho a qualquer inimigo.
+      good:
+        Sua força está acima da média. Você consegue levantar objetos pesados,
+        mas com um esforço que pode cansar, e se defende bem no corpo a corpo.
+      fair:
+        Sua força é mediana. Você tem dificuldade para levantar objetos
+        pesados e pode se machucar se não tomar muito cuidado.
+        No corpo a corpo, não é difícil dominarem você.
+      mediocre:
+        Sua força deixa a desejar. Até objetos de pouco peso
+        parecem desajeitados e difíceis de manejar. No corpo a corpo, seu esforço
+        é quase todo desperdiçado se você não tiver uma arma.
+      poor:
+        Você quase não tem força. Qualquer esforço físico,
+        em certos casos até caminhar, pode ser extremamente
+        difícil. No corpo a corpo, praticamente qualquer coisa domina você com facilidade.
+      terrible:
+        Força nenhuma. Fazer força em qualquer atividade pode até
+        prejudicar você. Ninguém nunca viu você brigar, e sua fragilidade
+        é tanta que uma brisa mais forte poderia derrubar você.
+    reflexes:
+      title: Reflexos
+      short: REF
+      description:
+        Destreza e tempo de reação do seu personagem. Entra em jogo ao
+        abrir fechaduras, esquivar etc.
+      legendary:
+        Seus reflexos desafiam a razão. Você apanha o que os outros nem veem cair, atravessa
+        o perigo sem um arranhão, e nenhuma fechadura ou bolso está a salvo dos seus dedos.
+      heroic:
+        Seus reflexos são quase sobrenaturais. Você se move antes que os outros tenham
+        sequer decidido agir, desvia de golpes como se os visse chegando, e suas mãos
+        nunca tremem.
+      superb:
+        Seus reflexos são afiados como os de um ninja. Grandes proezas
+        de agilidade não custam esforço algum, e suas mãos são ágeis
+        e habilidosas por natureza. Você acerta seus golpes com extrema facilidade
+        e também se esquiva dos ataques sem dificuldade.
+      great:
+        Seus reflexos são realmente ótimos. Tudo o que depende de reflexos sai
+        com relativa facilidade, e algumas acrobacias vêm naturalmente. Seus
+        golpes acertam com facilidade, e os inimigos têm dificuldade para atingir você.
+      good:
+        Sua agilidade está acima da de uma pessoa comum. Você sobe escadas
+        a passos largos sem esforço e dificilmente perde o equilíbrio no dia
+        a dia. Você pode não dominar o parkour nem lutar como ninguém,
+        mas suas habilidades chamam atenção.
+      fair:
+        Sua agilidade é a de um ser humano comum. Você se vira bem
+        em situações normais, mas começa a ter dificuldade na hora de
+        escalar grandes obstáculos ou saltar rapidamente por cima de objetos. Nada
+        na sua velocidade ou destreza chama atenção.
+      mediocre:
+        Sua agilidade é medíocre. Seus movimentos podem parecer um pouco
+        lentos ou desajeitados, e você tem dificuldade para escalar ou caminhar
+        por terreno acidentado. Seus socos chegam mais devagar do que a média.
+      poor:
+        Sua agilidade está muito abaixo da média. Você corre bem devagar
+        e passa aperto sempre que precisa apostar corrida
+        com alguém.
+      terrible:
+        Você se move bem devagar, num ritmo que quase qualquer pessoa
+        consegue acompanhar. Isso quase poderia ser considerado uma deficiência.
+    perception:
+      title: Percepção
+      short: PER
+      description:
+        Atenção geral do seu personagem. Afeta a chance de notar
+        algo a tempo, ou algo que o seu oponente não consegue ver.
+      legendary:
+        Nada escapa a você. Você lê um ambiente no instante em que entra nele, distingue o
+        som mais fraco em meio ao barulho da cidade, e uma emboscada armada para você é uma
+        emboscada que você viu chegando.
+      heroic:
+        Seus sentidos são apurados muito além do comum. Você ouve um sussurro através de uma
+        parede, reconhece um rosto na multidão num relance, e quase nada pega você
+        de surpresa.
+      superb:
+        Sua visão e sua audição são extraordinárias. Achar uma agulha num
+        palheiro é das tarefas mais fáceis para você, assim como
+        diferenciar gêmeos (ou até agentes da Proteção Civil). Quem tentar passar
+        por você às escondidas vai ter muito trabalho.
+      great:
+        Sua atenção é notável. Você repara em pequenos detalhes mesmo
+        à distância, e os objetos próximos parecem quase em câmera
+        lenta. Decifrar ruídos também fica muito mais fácil e eficaz.
+      good:
+        Sua capacidade de observar à distância e de perceber ruídos baixos está acima
+        da média. Difícil de enganar no jogo dos copinhos, você costuma avistar o inimigo
+        antes que ele aviste você e consegue se mover em silêncio enquanto presta atenção
+        em passos distantes.
+      fair:
+        Seus sentidos funcionam bem e não têm nada de especial. Mudanças bruscas
+        são fáceis de notar, e vultos distantes podem ser identificados com o tempo.
+        Ouvir passos se aproximando é uma tarefa difícil, mas possível.
+      mediocre:
+        Você tem problemas comuns de visão e audição. Consegue
+        notar objetos ao longe, mas não diferenciá-los nem identificá-los.
+        A maioria dos ruídos chega confusa e abafada, difícil de distinguir.
+      poor:
+        Seus órgãos dos sentidos, defeituosos, funcionam muito mal. Animais ou objetos
+        pequenos raramente são percebidos por você, se é que chegam a ser.
+        Prestar atenção em ruídos abafados não adianta, pois eles mais confundem
+        do que informam.
+      terrible:
+        Seus problemas de audição ou de visão têm efeitos devastadores.
+        Você quase não ouve ou enxerga muito mal. Até entender os sinais
+        mais simples das outras pessoas é muito difícil para você.
+    endurance:
+      title: Resistência
+      short: RES
+      description:
+        Preparo físico geral e robustez do seu personagem. Determina
+        quanta pancada ele aguenta.
+      legendary:
+        Sua resistência não tem igual. Dor, fome e exaustão mal afetam você,
+        e você continua de pé muito depois de qualquer outra pessoa ter desabado.
+      heroic:
+        Seu corpo é uma fortaleza. Você ignora ferimentos que derrubariam outras pessoas,
+        marcha por dias com pouca comida e pouco sono, e as doenças simplesmente passam longe.
+      superb:
+        Seu corpo é a própria definição de durabilidade e disciplina. Você pode
+        se submeter a muitas formas de dor e a todo tipo de desafio
+        e, muito provavelmente, vai sair sem um arranhão.
+      great:
+        Sua resistência é fora do comum. Você quase nunca adoece e encara
+        uma trilha na montanha sem dificuldade.
+      good:
+        Embora forte, seu corpo está só no começo da jornada. Você aguenta
+        uma surra e dura mais do que a maioria em atividades físicas nas quais os outros fraquejam.
+      fair:
+        Como o de quase todo mundo, seu físico é perfeitamente comum.
+        Você tolera a dor e consegue enfrentar dificuldades com constância por algum tempo.
+      mediocre:
+        Você não tem muito preparo nem muita tolerância, mas ainda dá conta do recado.
+        Seu corpo sofre, como quando você sobe escadas e se cansa,
+        mas normalmente não passa disso.
+      poor:
+        Seu corpo é frágil, mais do que o da maioria. Você atrai doenças como
+        a luz atrai mariposas, e caminhar qualquer distância já cobra o seu preço.
+      terrible:
+        Você vive em exaustão e sempre quer dormir. Nem se
+        lembra da última vez em que esteve realmente saudável.
+    intelligence:
+      title: Inteligência
+      short: INT
+      description:
+        Força da mente. Determina o quão inteligente é o seu personagem. Pode
+        ser útil ao atacar mentalmente outros personagens.
+      legendary:
+        Uma mente como a sua surge uma vez a cada geração. Quase não há assunto que você
+        não consiga dominar, e sua perspicácia transforma situações impossíveis em problemas com solução.
+      heroic:
+        Seu intelecto é excepcional. Você domina novas áreas em dias, resolve
+        problemas que deixam especialistas sem resposta e planeja vários passos à frente de todos ao seu redor.
+      superb:
+        Você é um gênio. Seu QI está muito acima da média, e seu conhecimento abrange
+        áreas muito diferentes. Poucos se igualam a você em
+        um duelo de inteligência.
+      great:
+        Você é extremamente inteligente. Ciências complexas vêm com bastante facilidade.
+        Seu raciocínio é rápido, e você encontra saídas muito antes da maioria.
+      good:
+        Seu QI está acima da média. Você tem muita cultura e resolve a maior parte
+        das tarefas. Tomar decisões quase perfeitas não é problema para você.
+      fair:
+        Você tem um nível normal de inteligência. Recebeu uma educação
+        decente e sabe se virar na maioria dos problemas e situações que aparecem.
+      mediocre:
+        Você não é lá muito inteligente. As ciências exatas são difíceis para você.
+        Dá para resolver um problema se você pensar bastante.
+      poor:
+        Suas capacidades mentais são limitadas. É difícil para você expressar
+        seus pensamentos. Sair de situações que exigem pensamento
+        estratégico pode ser bem complicado.
+      terrible:
+        Sua mente é fraca. Você tem dificuldade até para pronunciar as palavras.
+        Situações difíceis são quase impossíveis para você.
+    determination:
+      title: Determinação
+      short: DET
+      description:
+        Força de vontade e firmeza do seu personagem. Determina o quanto ele
+        se aguenta diante da dor, do medo e da pressão.
+      legendary:
+        Sua vontade é uma força da natureza. Nenhuma ameaça, nenhum tormento e nenhum desespero
+        fazem você ceder, e sua firmeza dá segurança a todos ao seu redor.
+      heroic:
+        Sua determinação é de ferro. O medo não tem poder sobre você, e você continua lutando
+        apesar de ferimentos e de um desespero que quebrariam quase qualquer pessoa.
+      superb:
+        Sua vontade é inquebrável. Dor, medo e exaustão são coisas que você percebe
+        e depois deixa de lado. Você segue em frente muito depois de qualquer outra pessoa ter desistido.
+      great:
+        Sua força de vontade é notável. É preciso muito para abalar você, e ferimentos
+        que parariam a maioria das pessoas apenas diminuem o seu ritmo.
+      good:
+        Sua determinação está acima da média. Você mantém a cabeça no lugar em situações
+        difíceis e consegue superar a dor quando é preciso.
+      fair:
+        Sua força de vontade é a de uma pessoa comum. Você consegue cerrar os dentes
+        por um tempo, mas a dor e o medo afetam você como a qualquer um.
+      mediocre:
+        Sua vontade é um tanto fraca. A pressão desgasta você depressa, e um ferimento
+        grave tira quase toda a sua vontade de lutar.
+      poor:
+        Você tem pouca determinação. Cede facilmente à dor e à intimidação e
+        costuma recuar quando as coisas ficam feias.
+      terrible:
+        Você não tem vontade própria. A menor dor ou ameaça basta para
+        quebrar você por completo.
+    charisma:
+      title: Carisma
+      short: CAR
+      description:
+        Presença e força de personalidade do seu personagem. Afeta pechinchar,
+        persuadir, intimidar e mentir para outros personagens.
+      legendary:
+        Sua presença é magnética além das palavras. As pessoas se prendem a cada palavra sua,
+        seguem você sem questionar, e até seus inimigos se pegam desejando
+        a sua aprovação.
+      heroic:
+        Você cativa qualquer um. Poucas palavras suas acalmam uma multidão ou transformam um
+        estranho em aliado, e você raramente sai de uma negociação sem aquilo que
+        foi buscar.
+      superb:
+        Seu charme é notável. As pessoas simpatizam com você na hora, confiam em você com facilidade
+        e têm dificuldade de dizer não a você.
+      great:
+        Você é uma pessoa muito agradável e persuasiva. Entende bem os outros e sabe exatamente
+        o que dizer para trazê-los para o seu lado.
+      good:
+        Suas habilidades sociais estão acima da média. Você causa boa impressão, sai de
+        pequenas encrencas na conversa e consegue preços justos com os comerciantes.
+      fair:
+        Você se dá com as pessoas como qualquer um. Consegue manter uma conversa
+        e defender seu ponto de vista, mas ninguém diria que você tem lábia.
+      mediocre:
+        Você fica um pouco sem jeito perto dos outros. Suas palavras muitas vezes saem erradas,
+        e as pessoas tendem a ignorar você ou a não levar você tão a sério.
+      poor:
+        Você afasta as pessoas. Estranhos desconfiam de você, comerciantes cobram mais caro, e
+        suas tentativas de persuadir alguém quase sempre dão em nada.
+      terrible:
+        Quase todo mundo acha você desagradável. As conversas com você dão errado desde
+        a primeira palavra, e as pessoas evitam você sempre que podem.
+  skill:
+    rank:
+      untrained: Destreinado
+      trained: Treinado
+      expert: Especialista
+      master: Mestre
+      legendary: Lendário
+    other:
+      name: Perícia desconhecida
+      desc: Esta perícia não tem descrição.
+    athletics:
+      title: Atletismo
+      short: ATL
+      description: Correr, escalar, saltar, nadar e outras proezas de puro esforço físico.
+      untrained: Você não tem treino em atletismo e conta apenas com o preparo físico que tiver.
+      trained: Você sabe dosar o ritmo de uma corrida, pular uma cerca e nadar sem desperdiçar forças.
+      expert: Você escala muros, dispara pelos telhados e se livra de apuros com a facilidade de quem tem prática.
+      master: Seu corpo é uma máquina bem regulada, capaz de vencer quase qualquer obstáculo físico.
+      legendary: Suas proezas atléticas parecem impossíveis para quem assiste, como se os obstáculos simplesmente não valessem para você.
+    close_combat:
+      title: Corpo a corpo
+      short: CAC
+      description: Lutar de perto com punhos, armas contundentes, lâminas e cassetetes.
+      untrained: Quando a briga chega perto, você golpeia a esmo e torce pelo melhor.
+      trained: Você sabe dar um soco, segurar uma arma direito e manter a guarda alta.
+      expert: Você luta com técnica e disciplina, lendo o oponente e batendo onde dói.
+      master: Poucos resistem a você de perto, pois você transforma cada brecha em um golpe decisivo.
+      legendary: Sua técnica é temível, e uma luta de perto é uma luta que você já venceu.
+    acrobatics:
+      title: Acrobacia
+      short: ACR
+      description: Equilíbrio, cambalhotas, esquivas e passar por espaços apertados.
+      untrained: Você se mantém de pé em terreno plano, e pouco mais que isso.
+      trained: Você consegue se equilibrar em um beiral estreito e rolar para amortecer uma queda.
+      expert: Você salta, rola e se contorce para escapar do perigo com graça e precisão.
+      master: Você atravessa terreno entulhado e destroços caindo como se fosse uma rua livre.
+      legendary: Sua agilidade beira o irreal, e a gravidade parece se curvar à sua vontade.
+    stealth:
+      title: Furtividade
+      short: FUR
+      description: Mover-se sem ser visto nem ouvido, esconder-se e seguir outras pessoas.
+      untrained: Você faz tanto barulho quanto qualquer pessoa andando por um corredor.
+      trained: Você sabe onde pisar e como se manter nas sombras.
+      expert: Você passa por patrulhas e câmeras com pouca chance de alguém notar.
+      master: Você se move como um fantasma, e as pessoas só descobrem que você esteve ali muito depois da sua partida.
+      legendary: Você consegue desaparecer à vista de todos, mesmo sob a vigilância mais cerrada.
+    larceny:
+      title: Ladinagem
+      short: LAD
+      description: Abrir fechaduras, bater carteiras, truques de mão e burlar a segurança.
+      untrained: Você não saberia por onde começar com uma fechadura ou com o bolso de um estranho.
+      trained: Você abre fechaduras simples e leva uma carteira dando sopa quando ninguém está olhando.
+      expert: A maioria das fechaduras e dos bolsos cede às suas mãos rápidas e cuidadosas.
+      master: Você vence fechaduras complexas e tira objetos de valor de alvos desconfiados sem deixar rastro.
+      legendary: Não há fechadura que você não abra nem bolso que você não esvazie sem ninguém perceber.
+    marksmanship:
+      title: Pontaria
+      short: PON
+      description: Precisão com armas de fogo, bestas e armas de arremesso.
+      untrained: Você sabe para que lado apontar uma arma, e pouco mais que isso.
+      trained: Você acerta um alvo a uma distância razoável e maneja uma arma de fogo com segurança.
+      expert: Seus tiros são firmes e precisos mesmo sob pressão.
+      master: Você coloca seus tiros exatamente onde quer, a quase qualquer distância.
+      legendary: Sua mira é assombrosa, e um único tiro seu costuma bastar.
+    survival:
+      title: Sobrevivência
+      short: SOB
+      description: Encontrar comida, água e abrigo, não perder o rumo e suportar condições duras ao ar livre.
+      untrained: Longe das ruas que você conhece, bastaria um dia para a fome apertar e o rumo se perder.
+      trained: Você consegue encontrar água limpa, montar um abrigo simples e manter o rumo.
+      expert: Você vive da terra com conforto e passa longe dos perigos dos ermos.
+      master: Você prospera onde outros perecem, lendo o terreno e o clima como um livro aberto.
+      legendary: Nenhum ermo, ruína ou terra devastada consegue matar você, por mais que tente.
+    fortitude:
+      title: Fortitude
+      short: FRT
+      description: Resistir a venenos, doenças, fome, frio e ao desgaste dos ferimentos.
+      untrained: Seu corpo é tão vulnerável a doenças e privações quanto o de qualquer pessoa.
+      trained: Você aprendeu a seguir em frente apesar da fome, do frio e de doenças leves.
+      expert: Você se livra de toxinas e infecções que derrubariam outras pessoas.
+      master: Seu corpo suporta castigos que matariam a maioria das pessoas.
+      legendary: Sua constituição é quase indomável, e muito pouca coisa consegue derrubar você.
+    observation:
+      title: Observação
+      short: OBS
+      description: Perceber detalhes, notar coisas escondidas e ler uma cena.
+      untrained: Você nota o que está bem na sua frente, e pouco mais que isso.
+      trained: Você repara em detalhes pelos quais os outros passam direto.
+      expert: Com um olhar atento, você encontra coisas escondidas, sinais reveladores e armadilhas.
+      master: Muito pouco escapa à sua atenção, por mais bem escondido que esteja.
+      legendary: Você vê o que os outros não conseguem, e o menor detalhe conta uma história inteira para você.
+    scavenging:
+      title: Garimpo
+      short: GAR
+      description: Vasculhar ruínas e entulho em busca de suprimentos e materiais aproveitáveis.
+      untrained: Você revira sucata e quase sempre sai só com sucata.
+      trained: Você sabe onde procurar as miudezas úteis que os outros deixam passar.
+      expert: Você volta de cada ruína com algo que vale a pena.
+      master: Você encontra suprimentos onde todo mundo jura que não sobrou nada.
+      legendary: Até ruínas já reviradas de ponta a ponta parecem entregar seus últimos tesouros a você.
+    medicine:
+      title: Medicina
+      short: MED
+      description: Tratar ferimentos e doenças, primeiros socorros e conhecimento de medicamentos.
+      untrained: Você consegue colocar um curativo, mas não faz ideia do que está fazendo de verdade.
+      trained: Você sabe limpar e enfaixar ferimentos e tratar males comuns.
+      expert: Você coloca ossos no lugar, sutura ferimentos e trata doenças graves com segurança.
+      master: Você realiza procedimentos complexos com ferramentas improvisadas e traz pessoas de volta da beira da morte.
+      legendary: Sua habilidade médica beira o milagre e salva quem todos os outros já tinham dado por perdido.
+    crafting:
+      title: Ofício
+      short: OFI
+      description: Construir, consertar e improvisar ferramentas, armas e equipamentos.
+      untrained: Você sabe bater um prego, mas qualquer coisa mais complicada está além do seu alcance.
+      trained: Você conserta equipamentos simples e monta ferramentas básicas.
+      expert: Você constrói equipamentos confiáveis com sucata e conserta quase tudo o que quebra.
+      master: Você fabrica equipamentos de qualidade com os materiais que tiver à mão.
+      legendary: Seu trabalho é uma maravilha, e você faz quase qualquer coisa a partir de quase nada.
+    technology:
+      title: Tecnologia
+      short: TEC
+      description: Eletrônica, computadores e maquinário.
+      untrained: Máquinas e terminais são um mistério para você.
+      trained: Você opera e conserta eletrônicos comuns e máquinas simples.
+      expert: Você invade terminais, refaz a fiação de dispositivos e mantém o maquinário funcionando.
+      master: Você compreende e manipula até a tecnologia mais avançada.
+      legendary: Não há sistema que você não consiga entender, burlar ou reconstruir.
+    lore:
+      title: Saber
+      short: SAB
+      description: Conhecimento de história, ciência, cultura e do mundo em geral.
+      untrained: Você sabe pouco além do que viu com os próprios olhos.
+      trained: Você tem uma boa formação geral e conhece o básico da maioria dos assuntos.
+      expert: Você tem conhecimento profundo em várias áreas e se lembra de fatos obscuros.
+      master: Estudiosos invejariam a amplitude e a profundidade do que você sabe.
+      legendary: Seu conhecimento é enciclopédico, e você tem resposta para quase qualquer pergunta.
+    persuasion:
+      title: Persuasão
+      short: PRS
+      description: Convencer os outros com razão, charme e argumentos honestos.
+      untrained: Você expõe seu ponto de vista e torce para que os outros concordem.
+      trained: Você apresenta um argumento com clareza e convence pessoas razoáveis.
+      expert: Você sabe encontrar pontos em comum e trazer até os céticos para o seu lado.
+      master: Suas palavras mudam opiniões que pareciam gravadas em pedra.
+      legendary: Você convence quase qualquer pessoa de quase qualquer coisa, e ela ainda sai agradecida.
+    deception:
+      title: Enganação
+      short: ENG
+      description: Mentiras, blefes, disfarces e despistes.
+      untrained: Suas mentiras são transparentes, e seu rosto entrega você.
+      trained: Você conta uma mentira convincente a quem não tem motivo para duvidar de você.
+      expert: Você blefa sem piscar e mantém suas histórias coerentes.
+      master: Você tece mentiras tão convincentes que até gente desconfiada acredita.
+      legendary: Seus embustes são impecáveis, e a verdade é o que você disser que é.
+    intimidation:
+      title: Intimidação
+      short: ITM
+      description: Coagir os outros com ameaças, presença e medo.
+      untrained: Suas ameaças costumam ser recebidas com um dar de ombros.
+      trained: Você deixa as pessoas inquietas o bastante para pensarem duas vezes.
+      expert: Um olhar duro e poucas palavras suas fazem a maioria das pessoas recuar.
+      master: As pessoas desmoronam diante das suas ameaças e fazem o que você manda.
+      legendary: Sua mera presença basta para os mais valentes perderem a coragem.
+    streetwise:
+      title: Manha
+      short: MAN
+      description: Conhecer as ruas, o mercado negro, os boatos e as pessoas que importam.
+      untrained: Você sabe pouco sobre como as coisas realmente funcionam nas ruas.
+      trained: Você sabe onde encontrar um receptador, um boato ou um negócio de beco.
+      expert: Você tem contatos pela cidade toda e fica sabendo das coisas antes dos outros.
+      master: Nada acontece nas ruas sem que você fique sabendo logo depois.
+      legendary: O submundo é a sua casa, e todas as portas dele se abrem para você.
+    composure:
+      title: Compostura
+      short: CMP
+      description: Manter a calma sob pressão e resistir ao medo, a interrogatórios e à manipulação.
+      untrained: A pressão afeta você rapidamente, e dá para notar.
+      trained: Você consegue manter a cabeça fria quando as coisas dão errado.
+      expert: Você mantém a calma sob fogo e não entrega nada em um interrogatório.
+      master: Ameaças, interrogatórios e pânico escorrem por você como chuva.
+      legendary: Sua calma é inabalável, venha o que vier.
+    focus:
+      title: Foco
+      short: FOC
+      description: Concentrar-se em uma tarefa apesar da dor, das distrações e do cansaço.
+      untrained: Sua mente se dispersa assim que outra coisa chama a sua atenção.
+      trained: Você consegue se concentrar em uma tarefa apesar do barulho e de pequenos incômodos.
+      expert: Você mantém a atenção fixa no trabalho em meio à dor e ao caos.
+      master: Quando você decide fazer algo, nada quebra a sua concentração.
+      legendary: Seu foco é absoluto e bloqueia tudo o que não seja a tarefa diante de você.
+  command:
+    attribute:
+      description: "Define, reforça e lista os atributos dos personagens."
+      set:
+        description: "Define um atributo de um personagem. Atributos: {attributes}"
+        syntax: <alvo> <atributo> <valor>
+        message: "{player} definiu o atributo {attribute} de {target} como {value}."
+      boost:
+        description: "Reforça um atributo de um personagem. Uma duração 'perma' dá um reforço que dura até ser removido. Atributos: {attributes}"
+        syntax: <alvo> <atributo> <valor> <duração>
+        message: "{player} reforçou o atributo {attribute} de {target} em {value} por {time}."
+        message_permanent: "{player} reforçou o atributo {attribute} de {target} em {value} permanentemente."
+      clearboosts:
+        description: "Remove os reforços de um atributo de um personagem, ou de todos os atributos se nenhum for informado. Atributos: {attributes}"
+        syntax: "<alvo> [atributo]"
+        message: "{player} removeu os reforços do atributo {attribute} de {target}."
+        message_all: "{player} removeu todos os reforços de atributos de {target}."
+      list:
+        description: "Mostra os atributos e as perícias de um personagem."
+        syntax: <alvo>
+        header: "Atributos de {target}:"
+        line: "{attribute} ({id}): nível {level}, reforço {boost}"
+        skills_header: "Perícias de {target}:"
+        skill_line: "{skill} ({id}): graduação {rank}"
+    charsetskill:
+      description: "Define a graduação de uma perícia de um personagem. Perícias: {skills}"
+      syntax: <alvo> <perícia> <graduação>
+      message: "{player} definiu a perícia {skill} de {target} na graduação {value}."
+  condition:
+    attribute:
+      name: Valor de atributo correspondente
+      text: "Atributo {attribute} {operator} {value}"
+      message1: Nome do atributo
+      message2: Valor do atributo
+    attributes: Atributos
+    skill:
+      name: Graduação de perícia correspondente
+      text: "Perícia {skill} {operator} {value}"
+      message1: Nome da perícia
+      message2: Graduação da perícia
+    skills: Perícias
+  config:
+    stats:
+      title: Atributos
+      desc: Os atributos dos personagens e o que eles mudam no jogo.
+      creation_points:
+        name: Pontos de atributo na criação
+        desc: Quantos pontos um personagem novo tem para distribuir entre seus atributos. Os níveis escolhidos precisam somar esse número, e nenhum atributo pode passar de 3 na criação.
+      faction_bonuses:
+        name: Bônus de atributo da facção
+        desc: Dá aos personagens os bônus de atributo da facção deles, como reforços que duram enquanto fizerem parte dela.
+      perception_hearing:
+        name: Alcance de audição por nível de percepção
+        desc: Metros somados ao alcance em que um personagem ouve as falas dentro do personagem a cada nível de percepção, e subtraídos a cada nível abaixo de zero. 0 desativa o efeito.
+      endurance_stamina:
+        name: "Estamina por nível de resistência, %"
+        desc: Porcentagem em que a estamina se esgota mais devagar e se regenera mais rápido a cada nível de resistência, e o contrário abaixo de zero. 0 desativa o efeito.
+      endurance_recovery:
+        name: "Recuperação por nível de resistência, %"
+        desc: Porcentagem em que a regeneração de vida e a recuperação dos membros feridos aceleram a cada nível de resistência, e desaceleram abaixo de zero. Requer os plugins Damage e Limb Damage. 0 desativa o efeito.
+      strength_lifting:
+        name: "Carga por nível de força, %"
+        desc: Porcentagem em que o objeto mais pesado que um personagem consegue pegar e a força do seu arremesso aumentam a cada nível de força, e diminuem abaixo de zero. 0 desativa o efeito.
+      reflexes_fall:
+        name: "Dano de queda por nível de reflexos, %"
+        desc: Porcentagem do dano de queda de que um personagem é poupado a cada nível de reflexos, e que ele sofre a mais a cada nível abaixo de zero. Requer o plugin Damage. 0 desativa o efeito.
+      charisma_prices:
+        name: "Preços dos vendedores por nível de carisma, %"
+        desc: Porcentagem em que os vendedores vendem mais barato a um personagem a cada nível de carisma, e mais caro abaixo de zero. Um preço nunca fica abaixo do que o vendedor paga pelo item. Requer o plugin Vendors. 0 desativa o efeito.
+      rank_bonus:
+        name: Proficiência por graduação de perícia
+        desc: Bônus que cada graduação de uma perícia treinada soma às rolagens da perícia. Uma perícia treinada também soma o nível do personagem, e uma destreinada não soma nada.
+      determination_pain:
+        name: "Penalidades por ferimento por nível de determinação, %"
+        desc: Porcentagem em que a lentidão e o desvio da mira causados por membros feridos enfraquecem a cada nível de determinação, e aumentam abaixo de zero. Requer o plugin Limb Damage. 0 desativa o efeito.
+  error:
+    attribute_not_valid: "'{attribute}' não é um atributo válido!"
+    skill_not_valid: "'{skill}' não é uma perícia válida!"
+    attribute_no_character: "{target} não tem um personagem ativo!"
+    stats:
+      roll: "Não é possível rolar {name}: {message}"
+      unknown_rollable: "'{name}' não é um atributo nem uma perícia."
+      not_stat: "'{name}' não é um atributo."
+      not_skill: "'{name}' não é uma perícia."
+      unchanged: "Nada mudou para {target}."
+    attribute:
+      sum: "Distribua exatamente {points} pontos entre seus atributos, mantendo cada um dentro dos níveis permitidos na criação."
+  notification:
+    attribute:
+      boost: "Seu atributo '{attribute}' foi reforçado em {value} por {time}."
+      boost_permanent: "Seu atributo '{attribute}' foi reforçado em {value} permanentemente."
+      boosts_cleared: "Os reforços do seu atributo '{attribute}' foram removidos."
+      boosts_cleared_all: Todos os reforços dos seus atributos foram removidos.
+      set: "Seu atributo '{attribute}' foi definido como {value}."
+    skill:
+      set: "Sua perícia '{skill}' foi definida na graduação {value}."
+    stats:
+      roll: "{name}: {roll}"
+  ui:
+    attributes:
+      title: Atributos
+      viewer_title: "Atributos de {name}"
+      empty: Não há atributos para mostrar.
+      hidden: "(oculto)"
+      level: "{level} / {max}"
+      level_named: "{name} ({level})"
+      boosts: "Reforços: {list}"
+      timed: "{value} ({time})"
+      attributes: Atributos
+      skills: Perícias
+    effect:
+      hearing_radius: Raio de audição
+      stamina_drain: Gasto de estamina
+      stamina_regen: Regeneração de estamina
+      health_regen: Regeneração de vida
+      limb_recovery: Recuperação de membros
+      carry_mass: Peso de carga
+      throw_force: Força de arremesso
+      fall_damage: Dano de queda
+      vendor_prices: Preços dos vendedores
+      limb_penalties: Penalidades por ferimento
+    char_create:
+      invalid_points: Quantidade de pontos inválida
+      excess_points: Você precisa distribuir todos os pontos
+      stats_points: "Pontos restantes: "
+      stats_random: Aleatório
+      stats: Atributos
+      cur_level: Nível atual
+      faction_bonus: "Bônus de facção: {bonus}"
+      effects: Efeitos
+    character_sheet:
+      title: Ficha de personagem
+      level: "Nível {level} de {max}"
+      experience: "{experience} / {total} XP"
+      level_capped: "Limite de nível, sobe em {time}"
+      max_level: Nível máximo alcançado
+      health: Vida
+      skill_points: "Pontos de perícia não gastos: {points}"
+      attribute_points: "Pontos de atributo não gastos: {points}"
+      attributes: Atributos
+      skills: Perícias
+      other_skills: Outras
+      roll: Rolar
+      roll_result: "{name}: {roll}"
+      roll_critical_success: "{roll}, sucesso crítico!"
+      roll_critical_failure: "{roll}, falha crítica!"
+      spend_attribute: "Gastar um ponto de atributo em {name}"
+      spend_skill: "Gastar um ponto de perícia em {name}"
+      skill_trained: "{rank} · {attribute} {modifier} + proficiência {proficiency}"
+      skill_untrained: "{rank} · {attribute} {modifier}, sem proficiência"
+      no_character: Você não tem um personagem ativo.
+      no_attributes: Não há atributos para mostrar.
+      no_skills: Não há perícias para mostrar.
+    tab_menu:
+      character_sheet: Personagem

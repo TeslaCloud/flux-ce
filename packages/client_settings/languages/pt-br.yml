@@ -1,0 +1,22 @@
+pt-br:
+  settings:
+    categories:
+      general: Geral
+      interface: Interface
+      gameplay: Jogabilidade
+      chat: Chat
+      sound: Som
+      admin: Administração
+    language:
+      name: Idioma
+      desc: O idioma da interface do Flux. Não altera o idioma do jogo em si.
+      auto: O mesmo do jogo
+  ui:
+    tab_menu:
+      settings: Configurações
+    settings:
+      title: Configurações
+      empty: Ainda não há configurações para alterar.
+      reset: Redefinir para o padrão
+      reset_all: Redefinir tudo
+      reset_all_message: Tem certeza de que quer redefinir todas estas configurações para os valores padrão?

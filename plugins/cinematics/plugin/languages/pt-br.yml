@@ -1,0 +1,12 @@
+pt-br:
+  config:
+    cinematics:
+      title: Cinemáticas
+      desc: Configuração do plugin de cinemáticas
+      intro:
+        name: Introdução do personagem
+        desc: Mostra o nome e a descrição do schema entre barras cinematográficas quando um jogador carrega um personagem pela primeira vez depois de entrar.
+  ui:
+    hud:
+      cinematics:
+        intro_credits: "Um jogo de roleplay de {author}."

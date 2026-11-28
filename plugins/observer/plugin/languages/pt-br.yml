@@ -1,0 +1,30 @@
+pt-br:
+  config:
+    observer:
+      title: Observador
+      desc: Configurações do plugin de observador.
+      reset:
+        name: Restaurar ao sair do observador
+        desc: "A posição do jogador deve ser restaurada quando ele sai do modo observador?"
+  command:
+    vanish:
+      description: Esconde completamente um jogador de todos os outros no servidor, ou volta a mostrá-lo.
+      "on":
+        description: Esconde um jogador de todos, menos da staff.
+        syntax: <alvo>
+        message: "{player} deixou {target} invisível."
+      "off":
+        description: Volta a mostrar a todos um jogador escondido.
+        syntax: <alvo>
+        message: "{player} deixou {target} visível de novo."
+  notification:
+    vanish:
+      enabled: Agora você está invisível.
+      disabled: Agora você está visível.
+  ui:
+    hud:
+      vanish: "Você está invisível"
+  permission:
+    admin_esp:
+      name: ESP de administrador
+      description: Dá acesso para ver os outros jogadores através das paredes durante o noclip.

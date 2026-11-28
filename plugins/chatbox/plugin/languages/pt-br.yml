@@ -1,0 +1,54 @@
+pt-br:
+  command:
+    message:
+      description: 'Envia uma mensagem privada a outro jogador.'
+      syntax: <alvo> <mensagem>
+  config:
+    chatbox:
+      title: Chat
+      desc: Personalize como o chat funciona no seu servidor!
+      message_margin:
+        name: Margem das mensagens
+        desc: Quanto espaço vertical deixar entre duas mensagens.
+      message_fade_delay:
+        name: Tempo até a mensagem sumir
+        desc: Quanto tempo as mensagens ficam na tela antes de desaparecer.
+      max_messages:
+        name: Máximo de mensagens
+        desc: Quantas mensagens o histórico do chat guarda.
+      default_font_size:
+        name: Tamanho de fonte padrão
+        desc: Tamanho de fonte padrão do chat.
+      small_font_size:
+        name: Tamanho de fonte pequeno
+        desc: Tamanho de fonte do texto menor do chat.
+      big_font_size:
+        name: Tamanho de fonte grande
+        desc: Tamanho de fonte do texto maior do chat.
+      max_message_length:
+        name: Comprimento máximo da mensagem
+        desc: Quão longa uma mensagem de chat pode ser.
+      interval:
+        name: Intervalo entre mensagens
+        desc: O menor tempo, em milissegundos, entre duas mensagens de chat do mesmo jogador. 0 desativa o limite.
+      avatars:
+        name: Avatares no chat
+        desc: Define se o avatar da Steam de quem fala aparece antes do nome nas mensagens normais do chat.
+      timestamps:
+        name: Horário das mensagens
+        desc: Define se o horário em que a mensagem foi enviada aparece antes de cada mensagem do chat.
+  error:
+    chat:
+      too_fast: Você está enviando mensagens rápido demais!
+    message:
+      self: Você não pode enviar uma mensagem privada para si.
+  ui:
+    chat:
+      aliases: Aliases
+      alias_of: "(alias de {command})"
+      no_commands_found: Nenhum comando encontrado!
+      more_above: "mais {count} acima"
+      more_below: "mais {count} abaixo"
+      message_to: "Para {name}"
+      message_from: "De {name}"
+      everyone: todos

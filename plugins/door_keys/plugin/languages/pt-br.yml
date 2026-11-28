@@ -1,0 +1,43 @@
+pt-br:
+  door:
+    properties:
+      keys_list:
+        name: Configurações de chaves
+        select: Selecione uma opção...
+        show: Lista de chaves
+        create: Criar chave
+        add: Vincular chave existente
+  item:
+    category:
+      keys: Chaves
+    option:
+      create_key_copy: Criar cópia da chave
+    key:
+      print_name: Chave
+      description: Uma chave de metal comum.
+    key_blank:
+      print_name: Chave virgem
+      description: Uma peça de metal moldada que pode ser usada com um kit de moldagem para criar uma cópia de qualquer chave não tubular.
+    key_molding_kit:
+      print_name: Kit de moldagem de chaves
+      description: Uma caixinha de plástico com ferramentas para fazer cópias de chaves. Dentro há várias ferramentas de fundição e um pouco de massa de moldagem.
+  notification:
+    key:
+      create: Nova chave criada
+      remove: A chave foi desvinculada
+      add: A chave foi vinculada
+  ui:
+    key:
+      title: Chaves
+      loaded_only: Só aparecem na lista as chaves dos personagens que estão no servidor.
+      delete:
+        title: Desvincular chave
+        message: Tem certeza de que quer desvincular esta chave da porta?
+      add:
+        title: Vincular nova chave
+        message: Selecione uma chave para vincular.
+        select: Selecione uma chave...
+      copy:
+        title: Copiar chave
+        message: Selecione a chave a copiar.
+        select: Selecione uma chave...

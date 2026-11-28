@@ -1,0 +1,428 @@
+pt-br:
+  command:
+    announce:
+      description: Mostra um aviso para todos no servidor.
+      syntax: <texto>
+    ban:
+      description: Bane jogadores e remove banimentos.
+      add:
+        description: Bana esse infeliz! Com um Steam ID dá para banir alguém que não está no servidor.
+        syntax: <alvo ou Steam ID> <duração> [motivo]
+        message: "{player} baniu {target} por {time}. ({reason})."
+        message_permanent: "{player} baniu {target} permanentemente. ({reason})."
+      remove:
+        description: Remove o banimento de um Steam ID.
+        syntax: <Steam ID>
+        message: "{player} desbaniu {target}."
+    bots:
+      description: Adiciona, expulsa, congela e descongela bots.
+      add:
+        description: Adiciona ao servidor a quantidade de bots especificada.
+        syntax: "[quantidade]"
+        message:
+          "1": "{player} adicionou {amount} bot ao servidor."
+          "2": "{player} adicionou {amount} bots ao servidor."
+      kick:
+        description: Expulsa todos os bots.
+        message: "{player} expulsou todos os bots."
+      freeze:
+        description: Congela todos os bots.
+        message: "{player} congelou todos os bots."
+      unfreeze:
+        description: Descongela todos os bots.
+        message: "{player} descongelou todos os bots."
+    changelevel:
+      description: Muda o servidor para o mapa especificado.
+      syntax: <mapa> [atraso]
+      message: "{player} vai mudar o mapa para {map} em {delay} segundo(s)!"
+    charpermission:
+      description: Gerencia as permissões definidas para os personagens que os jogadores têm carregados.
+      grant:
+        description: Concede uma permissão ao personagem que um jogador tem carregado, permanentemente ou pelo tempo informado, não importa o que o cargo permita, a menos que ela esteja negada ao jogador.
+        syntax: <alvo> <permissão> [duração]
+        message: "{player} concedeu ao personagem {character} a permissão {permission}."
+        message_temporary: "{player} concedeu ao personagem {character} a permissão {permission} por {time}."
+      revoke:
+        description: Nega uma permissão ao personagem que um jogador tem carregado, permanentemente ou pelo tempo informado, não importa o que o jogador e o cargo dele tenham.
+        syntax: <alvo> <permissão> [duração]
+        message: "{player} negou ao personagem {character} a permissão {permission}."
+        message_temporary: "{player} negou ao personagem {character} a permissão {permission} por {time}."
+      reset:
+        description: Remove o que foi definido para uma permissão do personagem que um jogador tem carregado, para que as permissões do próprio jogador e o cargo dele voltem a decidir.
+        syntax: <alvo> <permissão>
+        message: "{player} redefiniu a permissão {permission} do personagem {character}."
+        message_temporary: "{player} removeu o valor temporário da permissão {permission} do personagem {character}."
+      list:
+        description: Lista as permissões definidas para o personagem que um jogador tem carregado.
+        syntax: <alvo>
+        allowed: "Permitido para o personagem {character}: {permissions}."
+        denied: "Negado para o personagem {character}: {permissions}."
+        temporary_allowed: "Permitido temporariamente para o personagem {character}: {permission} (tempo restante: {time})."
+        temporary_denied: "Negado temporariamente para o personagem {character}: {permission} (tempo restante: {time})."
+        none: "O personagem {character} não tem permissões próprias."
+    freeze:
+      description: Congela jogadores no lugar ou os descongela.
+      "on":
+        description: Congela um jogador.
+        syntax: <alvo>
+        message: "{player} congelou {target}."
+      "off":
+        description: Descongela um jogador.
+        syntax: <alvo>
+        message: "{player} descongelou {target}."
+    fullbright:
+      description: Ativa ou desativa para um jogador o modo de brilho total, que ignora a iluminação do mapa.
+      "on":
+        description: Ativa o modo de brilho total para um jogador.
+        syntax: <alvo>
+        message: "{player} ativou o modo de brilho total para {target}."
+      "off":
+        description: Desativa o modo de brilho total para um jogador.
+        syntax: <alvo>
+        message: "{player} desativou o modo de brilho total para {target}."
+    godmode:
+      description: Ativa ou desativa o modo deus para um jogador.
+      "on":
+        description: Ativa o modo deus para um jogador.
+        syntax: <alvo>
+        message: "{player} ativou o modo deus para {target}."
+      "off":
+        description: Desativa o modo deus para um jogador.
+        syntax: <alvo>
+        message: "{player} desativou o modo deus para {target}."
+    kick:
+      description: Expulsa um jogador do servidor.
+      syntax: <alvo> [motivo]
+      message: "{player} expulsou {target} ({reason})."
+    permission:
+      description: Gerencia as permissões definidas individualmente para os jogadores.
+      grant:
+        description: Concede uma permissão a um jogador, permanentemente ou pelo tempo informado.
+        syntax: <alvo> <permissão> [duração]
+        message: "{player} concedeu a {target} a permissão {permission}."
+        message_temporary: "{player} concedeu a {target} a permissão {permission} por {time}."
+      revoke:
+        description: Nega uma permissão a um jogador, permanentemente ou pelo tempo informado.
+        syntax: <alvo> <permissão> [duração]
+        message: "{player} negou a {target} a permissão {permission}."
+        message_temporary: "{player} negou a {target} a permissão {permission} por {time}."
+      reset:
+        description: Remove o que foi definido para uma permissão de um jogador, para que o cargo dele volte a decidir.
+        syntax: <alvo> <permissão>
+        message: "{player} redefiniu a permissão {permission} de {target}."
+      list:
+        description: Lista as permissões definidas individualmente para um jogador.
+        syntax: <alvo>
+        role: "{target} tem o cargo {role}."
+        allowed: "Permitido para {target}: {permissions}."
+        denied: "Negado para {target}: {permissions}."
+        temporary_allowed: "Permitido temporariamente para {target}: {permission} (tempo restante: {time})."
+        temporary_denied: "Negado temporariamente para {target}: {permission} (tempo restante: {time})."
+        none: "{target} não tem permissões próprias."
+        character_allowed: "Permitido pelo personagem carregado {character}: {permissions}."
+        character_denied: "Negado pelo personagem carregado {character}: {permissions}."
+    respawn:
+      description: "Faz um jogador renascer onde está, ou onde você está olhando."
+      syntax: "<alvo> [stay / tp]"
+      message: "{player} fez {target} renascer."
+    restart:
+      description: Reinicia o mapa atual.
+      syntax: "[atraso]"
+      message: "{player} vai reiniciar o mapa em {delay} segundo(s)!"
+    return:
+      description: Devolve um jogador à posição em que estava antes do teleporte.
+      syntax: <alvo>
+      message: "{player} devolveu {target} à posição anterior."
+    role:
+      description: Define e remove os cargos dos jogadores.
+      set:
+        description: "Define o cargo de um jogador. Cargos: {groups}"
+        syntax: <alvo> <cargo>
+        message: "{player} definiu o cargo de {target} como {group}."
+      remove:
+        description: Devolve um jogador ao cargo de usuário. Com um Steam ID dá para rebaixar alguém que não está no servidor.
+        syntax: <alvo ou Steam ID>
+        message: "{player} rebaixou {target} a usuário."
+    send:
+      description: Teleporta um jogador até outro jogador.
+      syntax: <alvo> <jogador de destino>
+      message: "{player} teleportou {target} até {destination}."
+    slay:
+      description: Mata um jogador.
+      syntax: <alvo>
+      message: "{player} matou {target}."
+    report:
+      description: Avisa os membros da staff sobre aqueles problemas chatos.
+      syntax: <mensagem>
+    setarmor:
+      description: Define a armadura de um personagem com um valor personalizado.
+      syntax: <alvo> <valor>
+      message: "{player} definiu a armadura de {target} como {armor}."
+    sethealth:
+      description: Define a vida de um personagem com um valor personalizado.
+      syntax: <alvo> <valor>
+      message: "{player} definiu a vida de {target} como {health}."
+    staff:
+      description: Fala com os outros membros da staff.
+      syntax: <mensagem>
+    tp:
+      description: Teleporta o jogador para a posição que você está olhando.
+      syntax: <alvo>
+      message: "{player} teleportou {target}."
+    tpto:
+      description: Teleporta você para a posição do alvo.
+      syntax: <alvo>
+      message: "{player} se teleportou até {target}."
+    warn:
+      description: Dá uma advertência a um jogador.
+      syntax: <alvo> [motivo]
+      message: "{player} advertiu {target} por {reason}."
+  condition:
+    role:
+      name: Jogador com um cargo específico
+      text: "Cargo {operator} {role}"
+      message: Selecione um cargo
+    roles: Cargos
+  config:
+    bolt:
+      title: Administração
+      desc: Configurações do mod de administração.
+      ban_message_language:
+        name: Idioma da mensagem de banimento
+        desc: Código do idioma (como en ou ru) da mensagem que os jogadores banidos leem ao tentar entrar.
+      root_steamid:
+        name: SteamID com acesso root
+        desc: Dá acesso root ao jogador com este SteamID.
+      external_admin:
+        name: Mod de administração externo
+        desc: Deixa os grupos de usuários e os privilégios por conta de outro mod de administração compatível com CAMI, ao qual o Bolt pergunta se um jogador tem uma permissão. Com a opção desativada, o Bolt é o mod de administração do servidor e compartilha seus cargos com os outros addons por meio do CAMI.
+  error:
+    already_user: "{target} já tem o cargo de usuário."
+    banned:
+      temporary: "Você recebeu um banimento neste servidor. Motivo: {reason}. O banimento termina em {time}."
+      permanent: "Você recebeu um banimento permanente neste servidor. Motivo: {reason}."
+    ban_not_yours: "Você não pode remover o banimento de {target}, porque ele foi aplicado por alguém sobre quem você não pode agir."
+    character_permission:
+      no_character: Nenhum desses jogadores tem um personagem carregado.
+      not_set: "Nada está definido para a permissão {permission} dos personagens desses jogadores."
+    group_not_valid: "'{group}' não é um grupo de usuários válido!"
+    map_not_valid: "O servidor não tem nenhum mapa chamado '{map}'!"
+    not_banned: "O Steam ID '{steam_id}' não está banido!"
+    no_permission: Você não tem permissão para fazer isso.
+    permission_not_set: "Nada está definido para a permissão {permission} desses jogadores."
+    permission_not_valid: "'{permission}' não é uma permissão válida!"
+    permission_not_yours: "Você não pode alterar a permissão {permission} de ninguém, porque você não a tem."
+    permission_own: "Você não pode alterar suas próprias permissões."
+    role_too_high: "Você não pode dar o cargo {group}, porque ele está acima do seu."
+    send_same: Um jogador não pode ser enviado até si mesmo.
+    slay: Nenhum desses jogadores está vivo.
+    user_not_found: "Ninguém com o Steam ID '{steam_id}' jamais entrou neste servidor."
+  notification:
+    admin_hint: "Ninguém pode administrar este servidor ainda. Para assumir a administração, entre nele e execute flc role set <seu nome> admin neste console, com o nome entre aspas duplas se tiver espaços, ou coloque seu SteamID (STEAM_0:X:Y) em bolt_root_steamid no arquivo config/settings.yml do seu schema e reinicie o servidor."
+    announcement: "[Anúncio] {text}"
+    character_permission:
+      granted: "Seu personagem recebeu a permissão {permission}."
+      revoked: "A permissão {permission} foi negada ao seu personagem."
+      reset: "A permissão {permission} do seu personagem foi redefinida para o que você e o seu cargo têm."
+    demote: "Seu cargo foi rebaixado de {group} para usuário."
+    fullbright:
+      enabled: Modo de brilho total ativado.
+      disabled: Modo de brilho total desativado.
+    permission:
+      granted: "Você recebeu a permissão {permission}."
+      revoked: "A permissão {permission} foi negada a você."
+      reset: "Sua permissão {permission} foi redefinida para o que o seu cargo permite."
+    player_connected: "{name} se conectou ao servidor."
+    plugin_disabled: "{player} desativou o plugin {plugin}. Ele continua carregado até o servidor reiniciar."
+    plugin_enabled: "{player} ativou o plugin {plugin}. Ele será carregado depois que o servidor reiniciar."
+    return: Você voltou à sua posição anterior.
+    setgroup: "Seu grupo de usuário foi definido como {group}."
+    slay: "{player} matou você."
+    setarmor: "Sua armadura foi definida como {armor}."
+    sethealth: "Sua vida foi definida como {health}."
+    tp: Teleportaram você.
+    freeze: "{player} congelou você."
+    unfreeze: "{player} descongelou você."
+    warn: "Você recebeu uma advertência por {reason}."
+    godmode:
+      enabled: "Modo deus ativado."
+      disabled: "Modo deus desativado."
+    respawn: "{player} fez você renascer."
+    config_changed: "{player} alterou a configuração {config} para {value}."
+    config_changed_restart: "{player} alterou a configuração {config} para {value}. A alteração entra em vigor depois que o servidor reiniciar."
+  permission:
+    categories:
+      administration: Administração
+      tools: Ferramentas
+      spawn: Spawn
+      general: Geral
+      misc: Diversos
+      level_design: Design de níveis
+      server_management: Gerenciamento do servidor
+      player_management: Gerenciamento de jogadores
+      configuration: Configuração
+      compatibility: Compatibilidade
+      cami: Outros addons
+    manage_plugins:
+      name: Gerenciador de plugins
+      description: Dá acesso para desativar e ativar plugins.
+    no_description: Sem descrição.
+    physgun:
+      name: Physgun
+      description: Dá acesso à physgun.
+    toolgun:
+      name: Tool gun
+      description: Dá acesso à tool gun.
+    physgun_freeze:
+      name: Congelar entidades protegidas
+      description: Dá acesso para congelar entidades protegidas.
+    physgun_pickup:
+      name: Physgun ilimitada
+      description: Dá acesso para pegar qualquer entidade com a physgun.
+    spawn_props:
+      name: Spawnar props
+      description: Dá acesso para spawnar props.
+    spawn_chairs:
+      name: Spawnar cadeiras
+      description: Dá acesso para spawnar cadeiras.
+    spawn_entities:
+      name: Spawnar todas as entidades
+      description: Dá acesso para spawnar qualquer entidade.
+    spawn_vehicles:
+      name: Spawnar veículos
+      description: Dá acesso para spawnar veículos.
+    spawn_npcs:
+      name: Spawnar NPCs
+      description: Dá acesso para spawnar NPCs.
+    spawn_ragdolls:
+      name: Spawnar ragdolls
+      description: Dá acesso para spawnar ragdolls.
+    spawn_sweps:
+      name: Spawnar SWEPs
+      description: Dá acesso para spawnar armas com script.
+    voice:
+      name: Acesso ao chat de voz
+      description: Dá acesso ao chat de voz.
+    context_menu:
+      name: Menu de contexto
+      description: "Dá acesso ao menu de contexto, às propriedades das entidades e a dirigi-las."
+    noclip:
+      name: Noclip
+      description: Permite que o jogador use o modo observador / noclip.
+    manage_permissions:
+      name: Editor de permissões
+      description: Dá acesso ao editor de permissões.
+    manage_configuration:
+      name: Configuração
+      description: Dá acesso à configuração.
+    staff:
+      name: Acesso de assistente
+      description: Marca o jogador como membro da staff.
+    moderate:
+      name: Acesso de administrador
+      description: Acesso geral da staff. Outros addons identificam o jogador como administrador.
+    administrate:
+      name: Acesso de superadministrador
+      description: Acesso avançado da staff. Outros addons identificam o jogador como superadministrador.
+  role:
+    user: O cargo básico, dado automaticamente ao jogador.
+    assistant: Um cargo da staff com as ferramentas básicas de moderação, como expulsar, banir, ficar invisível e noclip.
+    gamemaster: Um cargo de confiança da staff que conduz o mundo do jogo, com as ferramentas de spawn, itens, dinheiro e design de níveis.
+    admin: O cargo mais alto da staff, com acesso a tudo, incluindo a configuração, as permissões e os plugins.
+  ui:
+    admin:
+      player_management: Gerenciamento de jogadores
+      players: Jogadores
+      role: Cargo
+      allow_all: Permitir todas
+      no_all: "'Não' para todas"
+      never_all: Proibir todas
+      expires: Expira em
+      loading: Carregando...
+      layer:
+        user: Jogador
+        user_tooltip: As permissões do jogador, além do que o cargo dele permite. Valem para todos os personagens do jogador.
+        character: "Personagem: {name}"
+        character_tooltip: As permissões do personagem que o jogador tem carregado. Só valem enquanto este personagem está carregado. Uma negação aqui ou no jogador sempre prevalece; uma permissão concedida aqui ou no jogador vem antes do cargo.
+        no_character: Nenhum personagem carregado
+      decided:
+        allowed: Permitido
+        denied: Negado
+        tooltip: O que o jogador pode fazer agora e o que decide isso. Uma negação definida no personagem ou no jogador prevalece, depois uma permissão concedida em qualquer um dos dois, depois o cargo; um valor temporário vem antes de um permanente.
+        root: acesso root
+        character: personagem
+        character_temporary: personagem, temporário
+        user: jogador
+        user_temporary: jogador, temporário
+        role: cargo
+        cami: mod de administração
+      temp_permission:
+        title: Dar permissão temporária
+        message: Informe a duração da permissão. Se a permissão já estiver concedida, esse tempo será somado a ela. Deixe em branco para retirar a permissão temporária.
+      selector:
+        title: Alterar o cargo do jogador
+        message: Selecione um novo cargo.
+        roles: Cargos
+      config_editor: Editor de configurações
+      new_config: Adicionar valor à tabela
+      new_config_text: Digite um novo valor.
+      delete_config: Excluir valor da tabela
+      delete_config_text: Tem certeza de que quer excluir este valor?
+      config:
+        reset: Redefinir para o valor padrão
+        static: Esta configuração é definida nos arquivos do servidor e não pode ser alterada no jogo.
+        reveal: Mostrar ou ocultar o valor
+        needs_restart: As alterações desta configuração entram em vigor depois que o servidor reiniciar.
+        pending: "Até lá, o valor é: {value}"
+        select: Selecione um valor
+      bans:
+        title: Banimentos
+        search: Buscar por nome, Steam ID ou motivo
+        page:
+          "1": "Página {page} de {pages} ({count} banimento)"
+          "2": "Página {page} de {pages} ({count} banimentos)"
+        empty: Não há banimentos para mostrar.
+        permanent: Permanente
+        expired: Expirado
+        banned_by: "banido por {admin}"
+        unban: Desbanir
+        unban_message: "Tem certeza de que quer desbanir {name}?"
+      staff:
+        title: Staff
+        empty: Ninguém tem um cargo além de usuário.
+        online: Online
+        offline: Offline
+        demote: Rebaixar
+        demote_message: "Tem certeza de que quer rebaixar {name} de {role} para usuário?"
+      plugins:
+        title: Plugins
+        notice: Desativar ou ativar um plugin só tem efeito depois que o servidor reinicia ou troca de mapa. Até lá, um plugin desativado continua carregado, e um ativado continua de fora.
+        enabled: Ativado. Clique para desativar.
+        disabled: Desativado. Clique para ativar.
+        author: "Autor: {author}"
+        depends: "Depende de: {plugins}"
+        required_by: "Exigido por: {plugins}"
+        state:
+          loaded: Carregado
+          disabled: "Não carregado: desativado"
+          dependency: "Não carregado: um plugin do qual ele depende não está disponível"
+          environment: "Não carregado: não é feito para este ambiente"
+          unknown: Não carregado
+        restart:
+          disabled: "desativado após o reinício"
+          enabled: "ativado após o reinício"
+        force:
+          title: Desativar um plugin exigido
+          message: "{plugin} é exigido por: {plugins}. Tudo o que depende dele também não será carregado, e o schema pode quebrar sem ele. Desativar mesmo assim?"
+          confirm: Desativar mesmo assim
+    cmd_desc:
+      usage: "Sintaxe:"
+      aliases: "Aliases:"
+    permission:
+      not_set: Não (herdar)
+      allow: Permitir
+      never: Revogar
+      error: Permissão inválida
+    tab_menu:
+      admin: Admin
+    no_reason: Motivo não especificado

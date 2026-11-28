@@ -1,0 +1,26 @@
+pt-br:
+  config:
+    display_typing:
+      title: Indicador de digitação
+      desc: Configuração do plugin Indicador de digitação
+      exact_message:
+        name: Exibir a mensagem exata
+        desc: Permite que os jogadores vejam o texto que um jogador próximo está digitando enquanto ele digita. Quando desativado, só o balão de digitação é exibido e o texto não é enviado aos outros jogadores.
+      range:
+        name: Alcance do balão de digitação
+        desc: Distância, em unidades, a partir da qual os jogadores veem que alguém está digitando. Tipos de fala, como sussurrar e gritar, alteram essa distância.
+      through_walls:
+        name: Balões de digitação através de paredes
+        desc: Mostra os balões de digitação dos jogadores que estão ao alcance, mas atrás de uma parede.
+  settings:
+    display_typing:
+      bubbles:
+        name: Balões de digitação
+        desc: Mostra um balão nos jogadores próximos que estão digitando.
+      live_text:
+        name: Texto digitado ao vivo
+        desc: Mostra o que os jogadores próximos estão digitando enquanto digitam, se o servidor permitir.
+  ui:
+    hud:
+      display_typing:
+        typing: DIGITANDO...

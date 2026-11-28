@@ -1,0 +1,72 @@
+pt-br:
+  command:
+    whitelist:
+      description: "Gerencia as whitelists de facções dos jogadores, que permitem criar personagens que começam em uma facção."
+      add:
+        description: "Permite que um jogador crie personagens que começam em uma facção."
+        syntax: "<alvo> <facção>"
+        message: "{player} adicionou {target} à whitelist de {faction}."
+        none: "Nenhum destes jogadores pôde ser adicionado à whitelist de {faction}: eles já estão nela ou seus dados ainda não foram carregados."
+      remove:
+        description: "Impede que um jogador crie personagens que começam em uma facção. Os personagens dele mantêm o que têm."
+        syntax: "<alvo> <facção>"
+        message: "{player} removeu {target} da whitelist de {faction}."
+        none: "Nenhum destes jogadores está na whitelist de {faction}."
+    setfaction:
+      description: "Dá a um personagem o kit inicial de uma facção, o que faz dele um membro. Facções: {factions}"
+      syntax: "<alvo> <facção>"
+      message: "{player} deu a {target} o kit inicial da facção {faction}."
+    rank:
+      description: "Altera as patentes dos personagens em suas facções."
+      set:
+        description: "Define a patente de um personagem em sua facção, pelo número, ID ou nome."
+        syntax: "<alvo> <patente>"
+        message: "{player} definiu a patente de {target} em sua facção como {rank}."
+      promote:
+        description: "Promove um personagem em sua facção."
+        syntax: "<alvo>"
+        message: "{player} promoveu {target} em sua facção."
+      demote:
+        description: "Rebaixa um personagem em sua facção."
+        syntax: "<alvo>"
+        message: "{player} rebaixou {target} em sua facção."
+  condition:
+    faction:
+      name: Jogador em uma facção específica
+      text: "Facção {operator} {faction}"
+      message: Selecione a facção
+    rank:
+      name: Jogador com certa patente em uma facção específica
+      text: "Patente {faction} {operator} {rank}"
+      message: Selecione a patente
+    factions: Facções
+    ranks: Patentes
+  error:
+    faction:
+      invalid: "'{faction}' não é uma facção válida!"
+      creation_refused: Esta facção não aceita este personagem.
+      transfer_refused: "{target} não pode receber o kit inicial da facção {faction}."
+      wrong_species: "{target} não é da raça da facção {faction}."
+      no_kit: "A facção {faction} não tem kit inicial para dar."
+      kit_incomplete: "Estes itens do kit inicial não puderam ser dados a {target}: {items}"
+      no_character: "{target} não tem personagem."
+    rank:
+      cannot_promote: Você não pode promover nenhum destes jogadores.
+      cannot_demote: Você não pode rebaixar nenhum destes jogadores.
+      not_found: "Nenhuma das facções destes personagens tem a patente '{rank}'."
+  notification:
+    demote_rank: "Rebaixaram você para a patente {rank}."
+    promote_rank: "Promoveram você para a patente {rank}."
+    faction_kit_given: "Você recebeu o kit inicial da facção {faction}."
+    faction_kit_incomplete: "Estes itens do seu kit inicial não puderam ser dados a você: {items}"
+    rank_changed: "Sua patente na facção foi definida como {rank}."
+    whitelist_taken: "Você não pode mais criar personagens que começam na facção {faction}."
+    whitelist_given: "Agora você pode criar personagens que começam na facção {faction}."
+  faction:
+    unknown:
+      title: "Facção desconhecida"
+      description: "Esta facção não tem descrição."
+  permission:
+    manage_ranks:
+      name: Gerenciar patentes de facção
+      description: "Dá acesso para promover e rebaixar qualquer personagem, independentemente das patentes."

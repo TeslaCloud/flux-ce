@@ -1,0 +1,50 @@
+pt-br:
+  command:
+    givemoney:
+      description: "Dá dinheiro ao jogador para quem você está olhando. Moedas: {currencies}"
+      syntax: <quantidade> [moeda]
+    dropmoney:
+      description: "Larga dinheiro no ponto para onde você está mirando. Moedas: {currencies}"
+      syntax: <quantidade> [moeda]
+    setmoney:
+      description: "Define o dinheiro de um jogador. Moedas: {currencies}"
+      syntax: <alvo> <quantidade> [moeda]
+      message: "{player} definiu o saldo de {currency} de {target} como {value}."
+  config:
+    currencies:
+      title: Moedas
+      desc: Configurações de dinheiro e moedas.
+      default:
+        name: Moeda padrão
+        desc: ID da moeda usada sempre que nenhuma é indicada, por exemplo nos comandos de dinheiro. Deixe vazio para usar a única moeda registrada.
+      starting_money:
+        name: Dinheiro inicial
+        desc: Quanto da moeda padrão os personagens novos têm ao começar. Deixe em 0 para usar a quantidade com que a própria moeda foi registrada.
+      save_dropped_money:
+        name: Salvar dinheiro largado
+        desc: Define se o dinheiro que está no chão deve ser salvo e recolocado quando o mapa for carregado de novo.
+  error:
+    not_enough_money: Fundos insuficientes.
+    invalid_currency: Esta não é uma moeda válida.
+    money_refused: O dinheiro não foi aceito.
+  notification:
+    currency:
+      pickup: "Você pegou {value} {currency}."
+      receive: "Você recebeu {value} {currency} de {target}."
+      give: "Você deu {value} {currency} a {target}."
+      drop: "Você largou {value} {currency}."
+      set: "Seu saldo de {currency} foi definido como {value}."
+  ui:
+    currency:
+      menu:
+        give: "Dar {currency}"
+      title: Dinheiro
+      give:
+        title: Dar dinheiro
+        message: "Digite a quantidade de {currency} que você quer dar."
+      drop:
+        title: Largar dinheiro
+        message: "Digite a quantidade de {currency} que você quer largar."
+      take:
+        title: Pegar dinheiro
+        message: "Digite a quantidade de {currency} que você quer pegar."

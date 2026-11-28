@@ -1,0 +1,37 @@
+pt-br:
+  config:
+    radios:
+      title: Rádios
+      desc: Configurações da comunicação por rádio.
+      chat_color:
+        name: Cor do chat de rádio
+        desc: Cor das mensagens faladas pelo rádio.
+  error:
+    frequency: Frequência inválida. Ela deve estar no formato XXX.X.
+    radio:
+      unavailable: Você não pode mais usar esse rádio.
+  notification:
+    no_active_radio: Você não tem um rádio ativo. Equipe um rádio ligado colocando-o na sua barra de atalhos.
+    radio:
+      frequency_set: "O rádio agora está sintonizado em {frequency}."
+  item:
+    category:
+      communication: Comunicações
+    slot:
+      communication: Comunicação
+    option:
+      enable: Ligar
+      disable: Desligar
+      frequency: Definir frequência...
+    radio:
+      name: Rádio
+      description: Rádio civil comum, que permite transmitir mensagens a curta distância.
+  ui:
+    chat:
+      radio: "fala pelo rádio"
+    hud:
+      display_typing:
+        radioing: FALANDO PELO RÁDIO...
+    radio:
+      frequency: Definir frequência do rádio
+      frequency_message: Digite a frequência em que o rádio pode receber ou enviar mensagens. Ela deve estar no formato XXX.X.

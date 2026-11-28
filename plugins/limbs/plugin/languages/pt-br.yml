@@ -1,0 +1,36 @@
+pt-br:
+  command:
+    heallimbs:
+      description: "Cura todos os membros do personagem de um jogador."
+      syntax: <alvo>
+      message: "{player} curou os membros de {target}."
+      notification: Seus membros foram curados.
+  config:
+    limbs:
+      title: Dano nos membros
+      desc: Configurações do dano nos membros.
+      enabled:
+        name: Dano nos membros
+        desc: Acompanha o dano por parte do corpo. Quando desativado, nenhum membro sofre dano, os membros feridos não têm efeito e o diagrama do corpo fica oculto.
+      damage_scale:
+        name: Escala de dano nos membros
+        desc: "Quanto dano um membro sofre para cada ponto percentual da vida máxima que o jogador perde com um acerto nele. Em 1, um acerto que tira um quarto da vida máxima causa 25 de dano ao membro. Um membro fica incapacitado em 100."
+      legs_slow:
+        name: Pernas feridas deixam mais lento
+        desc: Pernas feridas deixam a corrida mais lenta e os pulos mais baixos, até a metade com uma perna incapacitada.
+      fall_damage:
+        name: Dano de queda fere as pernas
+        desc: Divide o dano de queda entre as duas pernas.
+      arms_sway:
+        name: Braços feridos balançam a mira
+        desc: Braços feridos fazem a mira da arma empunhada oscilar.
+      recovery:
+        name: Recuperação dos membros
+        desc: Quanto dano cada membro ferido recupera por minuto por conta própria. Defina como 0 para que os membros só se curem com tratamento ou com a morte.
+  settings:
+    limbs_hud:
+      name: Diagrama do corpo
+      desc: Quando mostrar o diagrama dos seus membros no HUD.
+      hurt: Com ferimentos
+      always: Sempre
+      never: Nunca

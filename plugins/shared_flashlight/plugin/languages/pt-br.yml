@@ -1,0 +1,23 @@
+pt-br:
+  config:
+    shared_flashlight:
+      title: Lanterna compartilhada
+      desc: Configurações da lanterna que todos os jogadores podem ver.
+      enabled:
+        name: Lanterna compartilhada
+        desc: Define se a lanterna é uma luz que todos os jogadores veem. Quando desativada, é usada a lanterna do motor do jogo, que só quem a segura vê.
+      fov:
+        name: Largura do feixe
+        desc: O ângulo do feixe da lanterna, em graus.
+      distance:
+        name: Alcance do feixe
+        desc: A distância que a lanterna ilumina, em unidades.
+      brightness:
+        name: Brilho
+        desc: A intensidade do brilho da lanterna. 1 é o brilho da lanterna do motor do jogo.
+      shadows:
+        name: Sombras
+        desc: Define se a lanterna projeta sombras. Sombras custam desempenho em servidores movimentados.
+      item:
+        name: "Item da lanterna"
+        desc: "O ID de um item que o jogador precisa ter equipado para ligar a lanterna. Deixe vazio para que todos os jogadores possam usar a lanterna."

@@ -1,0 +1,29 @@
+pt-br:
+  config:
+    area_display:
+      title: Exibição de áreas
+      desc: Configuração do plugin de exibição de áreas
+      cooldown:
+        name: Tempo de espera do aviso de área
+        desc: Quantos segundos precisam passar antes que o aviso da mesma área seja mostrado de novo a um jogador. 0 mostra o aviso toda vez que o jogador entra na área.
+  notification:
+    area_display:
+      updated: "Você atualizou a exibição da área '{text}'."
+  settings:
+    area_display:
+      name: Mostrar avisos de área
+      desc: Mostra o nome de uma área na tela quando você entra nela.
+  tool:
+    area_display:
+      title: Área de texto
+      desc: "Crie uma área que anuncia seu texto aos jogadores que entram nela. Clique direito sem uma área em criação: aplica o estilo e a opção de exibição única à área de texto para a qual você está olhando."
+      text: Texto
+      height: Altura
+      style: Estilo de exibição
+      once: Mostrar a cada jogador apenas uma vez
+  ui:
+    area_display:
+      styles:
+        fade: Título com desvanecimento
+        typewriter: Máquina de escrever
+        cinematic: Cinemático

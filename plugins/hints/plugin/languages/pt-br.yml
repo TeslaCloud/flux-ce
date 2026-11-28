@@ -1,0 +1,17 @@
+pt-br:
+  config:
+    hints:
+      title: "Dicas"
+      desc: "Configurações das dicas de jogo mostradas aos jogadores."
+      interval:
+        name: "Intervalo das dicas"
+        desc: "Quantos segundos se passam entre duas dicas, arredondados para cima em minutos inteiros. Defina como 0 para não mostrar dicas automaticamente."
+  hint:
+    forums: Você pode visitar os fóruns da TeslaCloud para obter suporte, baixar schemas e conversar com outros usuários do Flux!
+    hints: Estas dicas podem ser desativadas na aba Configurações do menu.
+    tab: "Pressione a tecla 'Mostrar placar' (padrão: TAB) para abrir o menu do Flux."
+    commands: Comece a digitar um comando no chat para ver uma lista de todos os comandos disponíveis e a ajuda de sintaxe de cada um.
+    bugs: "Encontrou um bug? Tem uma ideia que a gente precisa muito adicionar ao Flux? Visite nossos fóruns em https://teslacloud.net e conte para nós!"
+    setting:
+      name: Mostrar dicas
+      desc: Mostra de vez em quando uma dica de jogo aleatória na tela.

@@ -1,0 +1,16 @@
+pt-br:
+  error:
+    must_not_look: O alvo não pode estar olhando na sua direção!
+    search:
+      already: O alvo já está sendo revistado!
+      too_often: Você está pedindo revistas com muita frequência! O tempo de espera foi aumentado!
+      request: O alvo já recebeu um pedido de revista!
+  notification:
+    search:
+      resist: "{player} resiste à revista."
+  ui:
+    search:
+      title: Revista
+      message: "{player} está tentando revistar você. Você vai permitir?"
+      allow: Permitir
+      resist: Resistir

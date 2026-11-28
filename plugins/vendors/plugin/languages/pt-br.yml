@@ -1,0 +1,105 @@
+pt-br:
+  config:
+    vendors:
+      title: Vendedores
+      desc: Configurações dos vendedores NPC.
+      buy_rate:
+        name: Taxa de recompra padrão
+        desc: "Que porcentagem do custo de um item um vendedor recém-colocado paga por ele."
+  error:
+    vendor:
+      equipped: Desequipe este item antes de vendê-lo.
+      not_empty: Esvazie este item antes de vendê-lo.
+      cannot_sell: Você não pode vender este item.
+      cannot_buy: Você não pode comprar este item.
+      not_vendor: Isto não é um vendedor!
+      invalid_model: Este modelo não existe, então o vendedor continua com o que tinha.
+  notification:
+    vendor:
+      bought: "Você comprou {item} por {price} {currency}."
+      sold: "Você vendeu {item} por {price} {currency}."
+      created: Você colocou um vendedor.
+      saved: Você salvou o vendedor.
+      removed: Você removeu o vendedor.
+      picked: Agora pressione Recarregar onde o vendedor deve ficar.
+      moved: Você moveu o vendedor.
+  tool:
+    vendor:
+      name: Ferramenta de vendedores
+      desc: Coloque, edite, mova e remova vendedores NPC.
+      "0": "Clique esquerdo: colocar ou editar um vendedor, clique direito: remover um vendedor, recarregar: mover um vendedor."
+      model: Modelo dos novos vendedores
+  ui:
+    vendor:
+      title: Vendedor
+      sells: À venda
+      sells_nothing: Este vendedor não tem nada à venda.
+      buys: Seus itens
+      buys_nothing: Você não tem nada que este vendedor compraria.
+      buy: Comprar
+      sell: Vender
+      stock: "Em estoque: {count}"
+      sold_out: Esgotado
+      owned: "Você tem: {count}"
+      your_money: Seu dinheiro
+      vendor_money: "Dinheiro do vendedor"
+      editor:
+        title: Editor de vendedor
+        save: Salvar
+        remove: Remover vendedor
+        remove_message: Tem certeza de que quer remover este vendedor?
+        general: Geral
+        name: Nome
+        description: Descrição
+        model: Modelo
+        animation: Animação
+        animation_auto: Automática
+        animation_help: "A lista tem as animações do modelo atual. Salve o vendedor e abra o editor de novo depois de mudar o modelo."
+        currency: Moeda
+        money: Dinheiro em caixa
+        money_help: "Quanto dinheiro o vendedor tem: aumenta quando o vendedor vende e diminui quando ele compra. Deixe vazio para um vendedor que nunca fica sem dinheiro."
+        buy_rate: "Taxa de recompra, %"
+        buy_rate_help: "Que porcentagem do custo de um item o vendedor paga por ele, a menos que o item tenha um preço de compra definido."
+        items: Itens
+        search: Buscar por nome ou ID...
+        items_help: "Clique em um item para escolher se o vendedor o vende ou o compra, a que preço e com quanto estoque. Sem um preço próprio, um item é vendido pelo seu custo e comprado pelo seu custo na taxa de recompra."
+        item: Item
+        sell_price: Vende por
+        stock: Estoque
+        buy_price: Compra por
+        unlimited: Ilimitado
+        by_default: "(padrão)"
+        start_selling: Vender este item
+        stop_selling: Parar de vender
+        set_sell_price: Definir o preço de venda...
+        set_stock: Definir o estoque...
+        start_buying: Comprar este item
+        stop_buying: Parar de comprar
+        set_buy_price: Definir o preço de compra...
+        price_message: Digite o preço. Deixe vazio para usar o preço padrão.
+        stock_message: Digite quantas unidades o vendedor tem. Deixe vazio para estoque ilimitado.
+        access: Acesso
+        access_help: "Deixe tudo desmarcado para que todos possam negociar. Caso contrário, o cliente precisa de uma das facções marcadas."
+        phrases:
+          title: Frases
+          help: O que o vendedor diz ao cliente. Deixe uma frase vazia para usar a padrão.
+          greeting: Quando a negociação começa
+          refuse: Quando o cliente não pode negociar
+          no_money: Quando o cliente não tem dinheiro para um item
+          no_stock: Quando um item está esgotado
+          broke: Quando o vendedor não tem dinheiro para um item
+          thanks: Quando um cliente que negociou vai embora
+  vendor:
+    default_name: Vendedor
+    says: '{name} diz: "{text}"'
+    phrase:
+      greeting: Em que posso ajudar?
+      refuse: Não posso negociar com você.
+      no_money: Você não tem dinheiro suficiente para isso.
+      no_stock: Não tenho mais disso.
+      broke: Não tenho dinheiro para isso.
+      thanks: Agradeço, volte sempre.
+  permission:
+    manage_vendors:
+      name: Gerenciar vendedores
+      description: "Dá acesso para colocar, editar e remover vendedores."

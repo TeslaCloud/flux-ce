@@ -1,0 +1,31 @@
+pt-br:
+  config:
+    combat:
+      title: "Combate por turnos"
+      desc: "Como as lutas entre jogadores e NPCs viram combate por turnos."
+      auto_start:
+        name: "Iniciar o combate automaticamente"
+        desc: "Define se um ataque entre um jogador e um NPC, ou entre dois jogadores, inicia um combate por turnos quando nenhum deles está em um. Quando desativado, o combate só começa por código, e os ataques em um combate em andamento continuam sendo rolados."
+  error:
+    combat:
+      switch: "Você não pode trocar de personagem durante um combate."
+  notification:
+    combat:
+      finish: "O combate acabou"
+      turn: "Turno de {entity}"
+      initiator: "Iniciador"
+      your_turn: "Seu turno"
+      turn_order: "O combate começa. Ordem dos turnos:"
+      enter: "{player} entra no combate."
+      leave: "{player} sai do combate."
+      down: "{player} está no chão e perde o turno."
+      skip: "Você está pulando o seu turno."
+      leave_try: "Você está tentando sair do combate."
+      leave_interrupt: "Sua saída do combate foi interrompida!"
+      success: "{attacker} ataca {target} ({limb}) com sucesso. ({roll} contra CA {armor_class})"
+      fail: "{attacker} ataca {target} ({limb}), mas erra. ({roll} contra CA {armor_class})"
+      critical_success: "{attacker} acerta um golpe crítico em {target} ({limb})! ({roll} contra CA {armor_class})"
+      critical_failure: "{attacker} ataca {target} ({limb}), mas se atrapalha e erra feio. ({roll} contra CA {armor_class})"
+  ui:
+    combat:
+      skip: Pressione F1 para pular ou encerrar o seu turno.

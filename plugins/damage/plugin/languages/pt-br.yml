@@ -1,0 +1,79 @@
+pt-br:
+  config:
+    damage:
+      title: Dano
+      desc: Multiplicadores de dano, regeneração de vida, afogamento e registros de dano.
+      scale_head:
+        name: Multiplicador de dano na cabeça
+        desc: "Por quanto o dano de um acerto na cabeça é multiplicado. O modo de jogo base já o dobra por conta própria, então o dano acaba multiplicado pelo dobro deste valor: por 2 com o padrão de 1, por 4 com 2. O schema e outros plugins também podem alterar a escala dos acertos."
+      scale_chest:
+        name: Multiplicador de dano no peito
+        desc: "Por quanto o dano de um acerto no peito é multiplicado. O modo de jogo base não mexe nesses acertos, então este é o multiplicador inteiro: 1, o padrão, não muda nada. O schema e outros plugins também podem alterar a escala dos acertos."
+      scale_stomach:
+        name: Multiplicador de dano no estômago
+        desc: "Por quanto o dano de um acerto no estômago é multiplicado. O modo de jogo base não mexe nesses acertos, então este é o multiplicador inteiro: 1, o padrão, não muda nada. O schema e outros plugins também podem alterar a escala dos acertos."
+      scale_arms:
+        name: Multiplicador de dano nos braços
+        desc: "Por quanto o dano de um acerto em um braço é multiplicado. O modo de jogo base já o reduz a um quarto por conta própria, então o dano acaba multiplicado por um quarto deste valor: por 0,25 com o padrão de 1, por 0,5 com 2. O schema e outros plugins também podem alterar a escala dos acertos."
+      scale_legs:
+        name: Multiplicador de dano nas pernas
+        desc: "Por quanto o dano de um acerto em uma perna é multiplicado. O modo de jogo base já o reduz a um quarto por conta própria, então o dano acaba multiplicado por um quarto deste valor: por 0,25 com o padrão de 1, por 0,5 com 2. O schema e outros plugins também podem alterar a escala dos acertos."
+      scale_fall:
+        name: Multiplicador de dano de queda
+        desc: Por quanto o dano de queda é multiplicado. 1 não muda nada, 0 desativa o dano de queda.
+      scale_npcs:
+        name: Multiplicadores por local em NPCs
+        desc: Define se os multiplicadores de dano da cabeça, do peito, do estômago, dos braços e das pernas também valem para os acertos em NPCs.
+      health_regen:
+        name: Regeneração de vida
+        desc: Define se os jogadores feridos recuperam vida aos poucos com o tempo.
+      health_regen_amount:
+        name: Quantidade de regeneração de vida
+        desc: Quanta vida um jogador recupera de uma vez.
+      health_regen_interval:
+        name: Intervalo de regeneração de vida
+        desc: Quantos segundos se passam entre duas recuperações de vida. A espera recomeça quando o jogador sofre dano.
+      health_regen_fast_interval:
+        name: Intervalo de regeneração rápida de vida
+        desc: Quantos segundos se passam entre duas recuperações de vida enquanto a vida do jogador está no limiar de regeneração rápida ou acima dele.
+      health_regen_fast_share:
+        name: Limiar de regeneração rápida de vida
+        desc: A porcentagem da vida máxima a partir da qual o intervalo rápido é usado.
+      drowning:
+        name: Afogamento
+        desc: Define se os jogadores que ficam tempo demais debaixo da água sofrem dano até voltarem à superfície.
+      drowning_time:
+        name: Tempo de fôlego
+        desc: Quantos segundos um jogador pode ficar totalmente debaixo da água antes de começar a se afogar.
+      drowning_damage:
+        name: Dano de afogamento
+        desc: "A fórmula de dados do dano que um jogador se afogando sofre de uma vez, como 1d4 ou um número simples. Uma fórmula que não pode ser rolada causa 1 de dano."
+      drowning_interval:
+        name: Intervalo do dano de afogamento
+        desc: Quantos segundos se passam entre dois danos de afogamento.
+      view_punch:
+        name: Tranco na câmera por dano
+        desc: Define se a visão de um jogador leva um tranco quando ele sofre dano.
+      view_punch_scale:
+        name: Escala do tranco na câmera por dano
+        desc: Quantos graus, no máximo, a visão é sacudida por ponto de dano. Um único acerto nunca a sacode em mais de 30 graus.
+      log:
+        name: Registrar dano
+        desc: Define se o dano que os jogadores sofrem é gravado no registro.
+      log_kills:
+        name: Registrar mortes
+        desc: Define se as mortes dos jogadores são gravadas no registro.
+  ui:
+    limbs:
+      body: Corpo
+      head: Cabeça
+      chest: Peito
+      stomach: Estômago
+      left_arm: Braço esquerdo
+      right_arm: Braço direito
+      left_leg: Perna esquerda
+      right_leg: Perna direita
+  permission:
+    view_damage_logs:
+      name: Ver registros de dano
+      description: Exibe as entradas do registro de dano e de mortes no console do jogador.

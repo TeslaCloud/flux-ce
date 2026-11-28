@@ -1,0 +1,61 @@
+pt-br:
+  command:
+    settime:
+      description: "Define a data e a hora do jogo. Informe uma data, um horário ou os dois, por exemplo 2020-01-01 08:00."
+      syntax: "[AAAA-MM-DD] [HH:MM]"
+      message: "{player} definiu a hora do jogo para {time}."
+  config:
+    game_time:
+      title: Hora do jogo
+      desc: Configurações do relógio e do calendário do jogo.
+      minute_length:
+        name: Duração do minuto
+        desc: "Quantos segundos reais dura um minuto do jogo. Em 60, o relógio do jogo anda tão rápido quanto um de verdade."
+      start:
+        name: Data inicial
+        desc: "A data e a hora em que o relógio do jogo começa enquanto nenhuma hora do jogo foi salva ainda, escritas como AAAA-MM-DD HH:MM."
+      real_time:
+        name: Seguir a hora real
+        desc: "Faz o relógio do jogo mostrar a data e a hora reais do servidor em vez de andar por conta própria."
+  error:
+    game_time:
+      invalid: Esta data está fora do calendário do jogo.
+      invalid_format: "Isto não é uma data nem uma hora válida. Escreva como AAAA-MM-DD HH:MM, ou informe só a data ou só a hora."
+      not_ready: O relógio do jogo ainda não foi iniciado.
+      real_time: O relógio do jogo segue a hora real do servidor e não pode ser ajustado.
+  game_time:
+    am: AM
+    pm: PM
+    format:
+      date: "{weekday}, {day} de {month} de {year}"
+      date_short: "{day}/{month}/{year}"
+      date_time: "{date}, {time}"
+    months:
+      january: janeiro
+      february: fevereiro
+      march: março
+      april: abril
+      may: maio
+      june: junho
+      july: julho
+      august: agosto
+      september: setembro
+      october: outubro
+      november: novembro
+      december: dezembro
+    weekdays:
+      monday: Segunda-feira
+      tuesday: Terça-feira
+      wednesday: Quarta-feira
+      thursday: Quinta-feira
+      friday: Sexta-feira
+      saturday: Sábado
+      sunday: Domingo
+  settings:
+    game_time:
+      clock:
+        name: Mostrar o relógio do jogo
+        desc: "Mostra a data e a hora do jogo no canto superior direito do menu que a tecla TAB abre."
+      twelve_hour:
+        name: "Relógio do jogo de 12 horas"
+        desc: "Mostra a hora do jogo no formato de 12 horas (5:05 PM) em vez do de 24 horas (17:05)."

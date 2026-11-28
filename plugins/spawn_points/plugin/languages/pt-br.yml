@@ -1,0 +1,27 @@
+pt-br:
+  error:
+    spawn_points:
+      invalid_group: Esta facção ou raça não existe. Escolha outro grupo nas configurações da ferramenta.
+      no_room: Não há espaço para um ponto de spawn aqui. Fique onde os jogadores devem aparecer.
+      none_aimed: Você não está mirando em um ponto de spawn.
+  notification:
+    spawn_points:
+      added: "Ponto de spawn adicionado ({group})."
+      removed: "Ponto de spawn removido ({group})."
+  tool:
+    spawnpoint:
+      name: Ferramenta de pontos de spawn
+      desc: "Clique esquerdo: adiciona um ponto de spawn onde você está. Clique direito: remove o ponto de spawn em que você está mirando."
+      "0": "Clique esquerdo: adicionar ponto de spawn, clique direito: remover ponto de spawn."
+      group: Ponto de spawn para
+  ui:
+    spawn_points:
+      label: "Ponto de spawn nº {id}: {group}"
+      group:
+        default: Todos
+        faction: "Facção: {name}"
+        species: "Raça: {name}"
+  permission:
+    manage_spawn_points:
+      name: Gerenciar pontos de spawn
+      description: Dá acesso para colocar e remover pontos de spawn.

@@ -1,0 +1,19 @@
+pt-br:
+  tool:
+    area:
+      name: Ferramenta de áreas
+      desc: Crie áreas poligonais do jeito fácil.
+      "0": "Clique esquerdo: adicionar ponto da área, clique direito: criar área."
+      text: ID da área
+      height: Altura
+      type: Tipo
+      mode: Modo da ferramenta
+      text_area: Área de texto
+      unknown_mode: Modo desconhecido
+  error:
+    area:
+      too_few_points: Uma área precisa de pelo menos três pontos.
+  permission:
+    manage_areas:
+      name: Gerenciar áreas
+      description: Dá acesso para gerenciar áreas.

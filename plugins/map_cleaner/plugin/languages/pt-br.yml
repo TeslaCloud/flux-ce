@@ -1,0 +1,14 @@
+pt-br:
+  config:
+    map_cleaner:
+      title: Limpador de mapa
+      desc: Configurações das entidades que são removidas do mapa.
+      classes:
+        name: Classes de entidade removidas
+        desc: "Classes das entidades que são removidas do mapa quando ele carrega e após uma limpeza do mapa. Um asterisco representa qualquer quantidade de caracteres, como em weapon_*. Apenas entidades criadas pelo próprio mapa são removidas."
+      physics:
+        name: Remover props de física do mapa
+        desc: Define se os props de física do mapa são removidos quando ele carrega e após uma limpeza do mapa.
+      vehicles:
+        name: Remover veículos do mapa
+        desc: Define se os veículos do mapa são removidos quando ele carrega e após uma limpeza do mapa. Isso inclui os assentos embutidos no mapa.

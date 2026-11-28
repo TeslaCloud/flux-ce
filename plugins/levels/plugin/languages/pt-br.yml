@@ -1,0 +1,103 @@
+pt-br:
+  command:
+    level:
+      description: "Mostra e define os níveis dos personagens."
+      get:
+        description: "Mostra o nível e a experiência de um personagem."
+        syntax: <alvo>
+        message: "{target} está no nível {level} de {max_level} com {experience} / {needed} de experiência, faltando {remaining} para o próximo nível."
+        message_max: "{target} está no nível {level}, o nível mais alto."
+        message_capped: "{target} está no nível {level} de {max_level} com {experience} de experiência guardada e não passa do limite de nível {cap} até que o nível do servidor suba."
+      set:
+        description: "Define o nível de um personagem, de {floor} a {max_level}. A experiência dele é zerada e seus pontos de perícia e de atributo não gastos são recalculados para o novo nível. O limite de nível não se aplica, mas o nível mínimo sim."
+        syntax: <alvo> <nível>
+        message: "{player} definiu o nível de {target} como {level}."
+    experience:
+      description: "Dá experiência aos personagens."
+      add:
+        description: "Dá experiência a um personagem. Uma quantidade negativa tira experiência e pode baixar o nível dele. O limite de nível não se aplica, mas um personagem nunca fica abaixo do nível mínimo."
+        syntax: <alvo> <quantidade>
+        message: "{player} deu {amount} de experiência a {target}."
+        message_taken: "{player} tirou {amount} de experiência de {target}."
+    serverlevel:
+      description: "Mostra e define o nível do servidor."
+      get:
+        description: "Mostra o nível do servidor, o tempo até o próximo e o nível mínimo e o limite de nível dos personagens."
+        message: "O servidor está no nível {level} de {max_level}: já se passaram {elapsed} neste nível, e o nível {next_level} chega em {time}."
+        message_max: "O servidor está no nível {level}, o nível mais alto."
+        limits: "Os personagens são elevados no mínimo ao nível {floor} e sobem por experiência no máximo até o nível {cap}."
+        progression_off: A progressão de nível do servidor está desativada, portanto não há nível mínimo nem limite de nível.
+      set:
+        description: "Define o nível do servidor, de -1 a {max_level}. O servidor é colocado bem no início desse nível, e os personagens são ajustados ao novo nível mínimo e ao novo limite de nível."
+        syntax: <nível>
+        message: "{player} definiu o nível do servidor como {level}."
+  config:
+    levels:
+      title: Níveis
+      desc: Níveis de personagem, experiência, pontos ao subir de nível e vida máxima.
+      max_level:
+        name: Nível máximo
+        desc: O nível mais alto que um personagem pode alcançar. Só pode ser alterado nos arquivos de configuração.
+      experience_per_level:
+        name: Experiência por nível
+        desc: Quanta experiência um personagem precisa para subir um nível. Todos os níveis exigem a mesma quantidade.
+      skill_points_per_level:
+        name: Pontos de perícia por nível
+        desc: Quantos pontos de perícia um personagem recebe a cada nível depois do primeiro. Um ponto de perícia aumenta uma perícia em uma graduação.
+      boost_every:
+        name: Pontos de atributo a cada
+        desc: A cada quantos níveis um personagem recebe pontos de atributo. 0 não dá nenhum.
+      boost_points:
+        name: Pontos de atributo
+        desc: Quantos pontos de atributo um personagem recebe toda vez que alcança um nível que os concede. Um ponto de atributo aumenta um atributo em um nível.
+      health_base:
+        name: Vida base
+        desc: A vida máxima de um personagem de nível 1 antes de somar a resistência. A resistência soma o seu nível multiplicado pelo nível do personagem.
+      health_per_level:
+        name: Vida por nível
+        desc: Quanta vida máxima um personagem ganha a cada nível depois do primeiro.
+      combat_experience:
+        name: Experiência de combate
+        desc: Define se os jogadores ganham experiência pelo dano que causam a NPCs e a outros jogadores e pelos NPCs que matam.
+      experience_per_damage:
+        name: Experiência por dano
+        desc: Quanta experiência um jogador ganha por ponto de dano que causa a um NPC ou a outro jogador, enquanto a experiência de combate estiver ativada.
+      experience_per_kill:
+        name: Experiência por abate
+        desc: Quanta experiência um jogador ganha por matar um NPC, enquanto a experiência de combate estiver ativada. É multiplicada por um décimo da vida máxima do NPC, mas nunca por menos de 1.
+      server_progression:
+        name: Progressão de nível do servidor
+        desc: Define se o nível do servidor limita os níveis dos personagens. O nível do servidor começa em -1 quando o plugin é executado pela primeira vez e sobe com o tempo real. Os personagens não conseguem passar, por experiência, do nível do servidor mais a margem do limite de nível, guardando a experiência até o limite subir, e são elevados ao nível do servidor menos a margem do nível mínimo.
+      server_days_per_level:
+        name: Dias por nível do servidor
+        desc: Quantos dias de tempo real o servidor leva para subir um nível, para cada nível abaixo do nível de dias extras.
+      server_ramp_level:
+        name: Nível de dias extras
+        desc: O primeiro nível do servidor que demora mais do que o anterior, em tantos dias quantos forem os dias extras por nível do servidor. Cada nível depois dele demora esse mesmo tanto a mais.
+      server_ramp_days:
+        name: Dias extras por nível do servidor
+        desc: Quantos dias de tempo real cada nível do servidor, a partir do nível de dias extras, leva a mais do que o anterior. 0 faz todos os níveis levarem o mesmo tempo.
+      server_cap_offset:
+        name: Margem do limite de nível
+        desc: Quantos níveis acima do nível do servidor os personagens podem alcançar por experiência. Os comandos da staff não são limitados por ela.
+      server_floor_offset:
+        name: Margem do nível mínimo
+        desc: Quantos níveis abaixo do nível do servidor fica o nível ao qual os personagens são elevados.
+  error:
+    levels:
+      no_character: "{target} não tem um personagem ativo!"
+      unchanged: "Nada mudou para {target}."
+      no_active_character: Você não tem um personagem ativo!
+      invalid_skill: Essa não é uma perícia na qual você possa gastar pontos de perícia!
+      invalid_stat: Esse não é um atributo no qual você possa gastar pontos de atributo!
+      no_skill_points: Você não tem mais pontos de perícia para gastar!
+      no_attribute_points: Você não tem mais pontos de atributo para gastar!
+      skill_maxed: Esta perícia já está na graduação mais alta!
+      stat_maxed: Este atributo já está no nível mais alto!
+      cannot_raise: Este atributo não pode ser aumentado agora!
+  notification:
+    levels:
+      level_up: "Você alcançou o nível {level}!"
+      level_set: "Seu nível foi definido como {level}."
+      experience_given: "Você recebeu {amount} de experiência."
+      experience_taken: "Tiraram {amount} de experiência de você."

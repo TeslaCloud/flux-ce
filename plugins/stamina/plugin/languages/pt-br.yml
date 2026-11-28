@@ -1,0 +1,32 @@
+pt-br:
+  config:
+    stamina:
+      title: Estamina
+      desc: Configurações do plugin de estamina.
+      drain_scale:
+        name: Escala de consumo
+        desc: Quão rápido a estamina é consumida.
+      regen_scale:
+        name: Escala de regeneração
+        desc: Quão rápido a estamina se regenera.
+      jump_penalty:
+        name: Penalidade de pulo
+        desc: Quantos pontos de estamina são tirados quando o jogador pula.
+      max:
+        name: Estamina máxima
+        desc: Valor máximo da estamina do jogador.
+      regen_delay:
+        name: Atraso da regeneração
+        desc: Quantos segundos esperar antes de começar a regenerar a estamina.
+      health_drain_scale:
+        name: Escala de consumo por vida
+        desc: Quão mais rápido a estamina de um jogador ferido é consumida. Em 1, um jogador quase morto se cansa duas vezes mais rápido; 0 desativa.
+      crouch_regen_scale:
+        name: Escala de regeneração agachado
+        desc: Quantas vezes mais rápido a estamina se regenera enquanto o jogador está agachado. 1 desativa.
+      slowdown_threshold:
+        name: Limiar de desaceleração
+        desc: Porcentagem da estamina máxima abaixo da qual um jogador que está correndo desacelera aos poucos até a velocidade de caminhada e precisa parar de correr para se recuperar. Em 0, o jogador corre a toda velocidade até a estamina acabar.
+      persistent:
+        name: Salvar estamina
+        desc: Define se a estamina é salva com o personagem e restaurada quando ele é carregado. Caso contrário, um personagem carregado sempre começa com a estamina cheia.

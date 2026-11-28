@@ -1,0 +1,14 @@
+pt-br:
+  config:
+    pickup_objects:
+      title: Pegar objetos
+      desc: Carregar, arremessar e arrastar objetos com as mãos.
+      max_mass:
+        name: Massa máxima carregada
+        desc: O objeto mais pesado, em quilogramas, que um jogador consegue pegar e carregar com as mãos. Plugins podem alterar o limite por jogador.
+      throw_force:
+        name: Força de arremesso
+        desc: A força com que um objeto carregado é arremessado. Defina como 0 para desativar o arremesso.
+      drag_ragdolls:
+        name: Arrastar ragdolls
+        desc: Define se um ragdoll é arrastado pelo chão pelo membro agarrado em vez de ser carregado, seja qual for o peso dele.

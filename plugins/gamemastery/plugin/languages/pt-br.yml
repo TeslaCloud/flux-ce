@@ -1,0 +1,50 @@
+pt-br:
+  command:
+    gmrelease:
+      description: "Para de jogar com o personagem de gamemaster que você assumiu e volta ao modo gamemaster."
+    gmpossess:
+      description: "Assume um personagem de gamemaster pelo nome, no lugar onde você está."
+      syntax: <nome do personagem>
+  error:
+    gamemastery:
+      wait: "Aguarde um momento antes de fazer isso de novo."
+      no_permission: "Você não é gamemaster."
+      invalid_character: "Esse personagem de gamemaster não existe."
+      not_found: "Não há nenhum personagem de gamemaster chamado {name}."
+      ambiguous: "Há mais de um personagem de gamemaster chamado {name}."
+      possessed: "{name} já está jogando com este personagem."
+      banned: "Este personagem está banido."
+      not_possessing: "Você não está jogando com um personagem de gamemaster."
+      no_spot: "Não há espaço para o personagem ali."
+      delete_possessed: "Você não pode excluir um personagem enquanto alguém está jogando com ele."
+      own_character: "Gamemasters não podem jogar com personagens próprios."
+  notification:
+    gamemastery:
+      possessed: "Agora você está jogando com {name}."
+      released: "Você liberou {name}."
+      placed: "{name} foi colocado no mundo."
+      deleted: "{player} excluiu o personagem de gamemaster {name}."
+  ui:
+    gamemastery:
+      tab_menu: Gamemaster
+      title: Personagens de gamemaster
+      hint: "Arraste um personagem até o mundo para colocá-lo lá. Pressione a sua tecla de usar em um personagem colocado para assumi-lo."
+      drag_hint: "Solte para colocar aqui, clique direito para cancelar"
+      empty: "Ainda não há personagens de gamemaster. Crie-os pelo menu principal."
+      possess: Assumir
+      release: Liberar
+      taken: "Em uso por {name}"
+      banned: Banido
+      in_world: No mundo
+      delete: Excluir
+      delete_title: Excluir personagem
+      delete_message: "Digite {name} para excluir este personagem de vez."
+      hud: Modo gamemaster
+      use_hint: "Pressione a sua tecla de usar para assumir"
+      main_menu:
+        return: Modo gamemaster
+        create: Criar personagem de gamemaster
+  permission:
+    gamemastery:
+      name: "Gamemastery"
+      description: "Permite que o jogador fique no mundo sem personagem e jogue com os personagens compartilhados de gamemaster."

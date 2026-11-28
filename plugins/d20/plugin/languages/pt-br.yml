@@ -1,0 +1,29 @@
+pt-br:
+  config:
+    d20:
+      title: D20
+      desc: Dano com dados, vida de NPCs, classe de armadura e rolagens de ataque.
+      enabled:
+        name: Dano com dados
+        desc: "Rola dados para o dano de cada golpe em um jogador ou NPC em vez de usar o dano do motor do jogo, rola o dano de queda e escala a vida dos NPCs."
+      default_dice:
+        name: Dados de dano padrão
+        desc: "A fórmula de dados rolada no lugar de uma fórmula de dano que não pode ser rolada."
+      fall_dice:
+        name: Dados de dano de queda
+        desc: "A fórmula de dados do dano de queda. A variável steps vale 1 na queda mais lenta que causa dano e aumenta em 1 a cada 150 unidades por segundo de velocidade de queda. O multiplicador de dano de queda do plugin Damage continua valendo."
+      weapon_dice:
+        name: Dados de dano de armas
+        desc: "Entradas como 'weapon_pistol = 1d8' que definem a fórmula de dados de uma classe de arma ou projétil, no lugar da fórmula dada pelo código."
+      npc_dice:
+        name: Dados de dano de NPCs
+        desc: "Entradas como 'npc_zombie = 1d8' que definem a fórmula de dados dos ataques de uma classe de NPC, no lugar da fórmula dada pelo código. Um NPC que empunha uma arma rola os dados da arma."
+      npc_health_scale:
+        name: Escala de vida de NPCs
+        desc: "Por quanto a vida máxima de um NPC é multiplicada no spawn, para que ele aguente mais ou menos tantos golpes rolados quantos golpes do motor do jogo aguentaria."
+      npc_armor_class:
+        name: Classe de armadura de NPCs
+        desc: "A classe de armadura de um NPC: o valor que uma rolagem de ataque contra ele precisa alcançar para acertar."
+      npc_attack_bonus:
+        name: Bônus de ataque de NPCs
+        desc: "O que um NPC soma ao d20 de suas rolagens de ataque."
