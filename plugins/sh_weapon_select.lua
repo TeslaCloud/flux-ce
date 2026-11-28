@@ -2,12 +2,15 @@
 -- player's weapons.
 -- The invprev, invnext and slot binds move the highlight, and attack selects the highlighted
 -- weapon through the `selectweapon` console command. The selector closes after five seconds
--- without input. Plugins can keep it from reacting with the `ShouldOpenWeaponSelect` hook and
--- follow it through `WeaponIndexChanged` and `WeaponSelected`.
+-- without input. Plugins can keep it from reacting with the `ShouldOpenWeaponSelect` hook,
+-- follow it through `WeaponIndexChanged` and `WeaponSelected`, and ask whether it is open with
+-- `WeaponSelect:is_open` on the client, guarded by `if WeaponSelect then`.
+-- @module [WeaponSelect]
 
 local abs = math.abs
 local clamp = math.Clamp
 
+PLUGIN:set_global('WeaponSelect')
 PLUGIN:set_name('Weapon Selector')
 PLUGIN:set_author('TeslaCloud Studios')
 PLUGIN:set_description('Adds a custom weapon selector for use with Flux.')
@@ -27,7 +30,7 @@ if SERVER then
 end
 
 PLUGIN.weapon_index = PLUGIN.weapon_index or 1
-PLUGIN.is_open = PLUGIN.is_open or false
+PLUGIN.opened = PLUGIN.opened or false
 PLUGIN.open_time = PLUGIN.open_time or 0
 PLUGIN.cur_alpha = PLUGIN.cur_alpha or 255
 PLUGIN.display = PLUGIN.display or {}
@@ -51,6 +54,14 @@ local backdrop_color = Color(0, 0, 0)
 local border_color = Color(0, 0, 0)
 local entry_color = Color(255, 255, 255)
 
+--- Checks whether the weapon selector is open: from the bind that has opened it until a weapon
+-- has been selected or the selector has faded out.
+-- @return [Boolean]
+-- @realm [client]
+function WeaponSelect:is_open()
+  return self.opened == true
+end
+
 --- Returns the name a weapon is listed under in the selector.
 -- @param weapon [Weapon/Nil]
 -- @return [String]
@@ -72,7 +83,7 @@ end
 function PLUGIN:HUDPaint()
   if !IsValid(PLAYER) then return end
 
-  if self.is_open then
+  if self.opened then
     local index_offset = self.index_offset
 
     if index_offset and index_offset != 0 then
@@ -178,12 +189,12 @@ end
 --- Fades the weapon selector in while it is in use, and fades it out over about two seconds and
 -- closes it after five seconds without input, at the same pace at any frame rate.
 function PLUGIN:Think()
-  if self.is_open then
+  if self.opened then
     if CurTime() - self.open_time > 5 then
       self.cur_alpha = clamp(self.cur_alpha - FrameTime() * 120, 0, 255)
 
       if self.cur_alpha == 0 then
-        self.is_open = false
+        self.opened = false
       end
     else
       self.cur_alpha = Lerp(FrameTime() * 16, self.cur_alpha, 255)
@@ -263,7 +274,7 @@ do
             Plugin.call('WeaponIndexChanged', old_index, index)
 
             return true
-          elseif bind:find('attack') and self.is_open and pressed then
+          elseif bind:find('attack') and self.opened and pressed then
             RunConsoleCommand('selectweapon', self.weapon_index)
 
             --- Called on the client when the player confirms the highlighted weapon with
@@ -284,7 +295,7 @@ end
 -- @param old_index [Number previously highlighted index in the player's weapon list]
 -- @param index [Number newly highlighted index]
 function PLUGIN:WeaponIndexChanged(old_index, index)
-  self.is_open = true
+  self.opened = true
   self.open_time = CurTime()
 
   if #self.display == 0 then
@@ -303,7 +314,7 @@ end
 --- Closes the weapon selector and clears its entries once a weapon has been selected.
 -- @param _index [Number index of the selected weapon in the player's weapon list]
 function PLUGIN:WeaponSelected(_index)
-  self.is_open = false
+  self.opened = false
   self.cur_alpha = 0
   self.display = {}
 end
