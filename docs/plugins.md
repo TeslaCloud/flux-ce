@@ -213,7 +213,7 @@ en:
       count: "Notes of your character: {count}."
 ```
 
-`t'notification.notes.saved'` translates a phrase, `t('error.notes.too_long', { max = 500 })` fills in its placeholders, and `actor:notify` and the command fields take phrase keys as they are. A command has `command.<id>.description` and `syntax`; a config `config.<category>.<key without the prefix>.name` and `desc`. `es.yml`, `fr.yml` and `ru.yml` next to it translate the same keys; a phrase missing there is shown in English. See [`plugins/hints/plugin/languages/en.yml`](../plugins/hints/plugin/languages/en.yml).
+`t'notification.notes.saved'` translates a phrase, `t('error.notes.too_long', { max = 500 })` fills in its placeholders, and `actor:notify` and the command fields take phrase keys as they are. A command has `command.<id>.description` and `syntax`; a config `config.<category>.<key without the prefix>.name` and `desc`. `es.yml`, `fr.yml`, `pt-br.yml` and `ru.yml` next to it translate the same keys; a phrase missing there is shown in English. See [`plugins/hints/plugin/languages/en.yml`](../plugins/hints/plugin/languages/en.yml).
 
 ## Migrations and models
 

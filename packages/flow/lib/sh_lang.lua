@@ -19,12 +19,14 @@
 --       "5": часов
 -- ```
 -- Which form a number takes is decided by the plural rule of the language. Flux has the rules
--- of English (also used for languages without a rule of their own), French and Russian;
--- `Flux.Lang:set_plural_rule` adds others.
+-- of English (also used for languages without a rule of their own), French, Brazilian
+-- Portuguese and Russian; `Flux.Lang:set_plural_rule` adds others.
 --
 -- On the client the current language follows the `gmod_language` setting of the game, unless
 -- the player has picked another one: `Flux.Lang:set_language` overrides it and remembers the
--- choice in the `fl_language` console variable. `Flux.Lang:get_languages` and
+-- choice in the `fl_language` console variable. The language of the game is matched to a
+-- language code in lower case, so 'pt-BR' is 'pt-br', and a regional one that has no phrases
+-- of its own, such as 'es-ES', falls back to its language, 'es'. `Flux.Lang:get_languages` and
 -- `Flux.Lang:get_language_name` list the languages to pick from. Either way the language is
 -- reported to the server, where `Flux.Lang:get_player_lang` returns it for a player. On the
 -- server `t` translates to English unless it is given a language, so text that depends on the
@@ -42,6 +44,8 @@ local tostring          = tostring
 local pairs             = pairs
 local string_find       = string.find
 local string_gsub       = string.gsub
+local string_lower      = string.lower
+local string_sub        = string.sub
 
 local current_language  = Flux.Lang.current or 'en'
 local stored            = Flux.Lang.stored or {}
@@ -61,6 +65,12 @@ plural_rules['en'] = count -> count == 1 ? '1' : '2'
 -- @param count [Number amount of things]
 -- @return [String '1' or '2']
 plural_rules['fr'] = count -> math.abs(count) < 2 ? '1' : '2'
+
+--- Plural rule of Brazilian Portuguese: amounts below 2 take the '1' form, so 0, 1 and 1.5
+-- are singular, and any other amount the '2' form.
+-- @param count [Number amount of things]
+-- @return [String '1' or '2']
+plural_rules['pt-br'] = count -> math.abs(count) < 2 ? '1' : '2'
 
 --- Plural rule of Russian: '1' for amounts that end in 1 but not in 11 (1, 21, 101), '2' for
 -- those that end in 2 to 4 but not in 12 to 14 (2, 23, 104) and for fractions, and '5' for
@@ -469,6 +479,26 @@ if CLIENT then
     'Language of the Flux interface. Leave empty to use the language of the game.')
   local game_language = GetConVar('gmod_language')
 
+  --- Returns the language code that the `gmod_language` setting of the game stands for: the
+  -- setting in lower case if there are phrases for it, else the part before its first '-' if
+  -- there are phrases for that ('es-ES' is 'es'), else the setting in lower case.
+  -- @return [String language code]
+  local function get_game_language()
+    local lang = string_lower(game_language:GetString())
+
+    if stored[lang] then return lang end
+
+    local dash = string_find(lang, '-', 1, true)
+
+    if dash then
+      local base = string_sub(lang, 1, dash - 1)
+
+      if stored[base] then return base end
+    end
+
+    return lang
+  end
+
   --- Returns the language the local player has picked instead of the language of the game.
   -- Clientside only.
   -- @return [String language code, nil if the player follows the language of the game]
@@ -481,7 +511,8 @@ if CLIENT then
   end
 
   --- Returns the language the client should use: the one the player has picked, if it has
-  -- phrases, and the `gmod_language` setting of the game otherwise. Clientside only.
+  -- phrases, and the one the `gmod_language` setting of the game is matched to otherwise.
+  -- Clientside only.
   -- @return [String language code]
   function Flux.Lang:get_preferred_language()
     local lang = override:GetString()
@@ -490,7 +521,7 @@ if CLIENT then
       return lang
     end
 
-    return game_language:GetString()
+    return get_game_language()
   end
 
   --- Switches the current language of the client. Tells the server the new language of the
@@ -536,7 +567,7 @@ if CLIENT then
 
     override:SetString(lang)
 
-    apply_language(lang != '' and lang or game_language:GetString())
+    apply_language(lang != '' and lang or get_game_language())
 
     return true
   end
