@@ -9,11 +9,11 @@ fr:
   command:
     vanish:
       description: "Rend un joueur complètement invisible pour tous les autres joueurs du serveur, ou le rend de nouveau visible."
-      on:
+      "on":
         description: "Rend un joueur invisible pour tous, sauf pour l'équipe."
         syntax: "<cible>"
         message: "{target} a été rendu invisible par {player}."
-      off:
+      "off":
         description: "Rend un joueur invisible de nouveau visible pour tous."
         syntax: "<cible>"
         message: "{target} a été rendu visible par {player}."

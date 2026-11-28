@@ -62,31 +62,31 @@ fr:
         none: "Le personnage {character} n'a aucune permission propre."
     freeze:
       description: "Gèle des joueurs sur place ou les dégèle."
-      on:
+      "on":
         description: "Gèle un joueur."
         syntax: "<cible>"
         message: "{player} a gelé {target}."
-      off:
+      "off":
         description: "Dégèle un joueur."
         syntax: "<cible>"
         message: "{player} a dégelé {target}."
     fullbright:
       description: "Active ou désactive pour un joueur le mode pleine lumière, qui ignore l'éclairage de la carte."
-      on:
+      "on":
         description: "Active le mode pleine lumière pour un joueur."
         syntax: "<cible>"
         message: "{player} a activé le mode pleine lumière pour {target}."
-      off:
+      "off":
         description: "Désactive le mode pleine lumière pour un joueur."
         syntax: "<cible>"
         message: "{player} a désactivé le mode pleine lumière pour {target}."
     godmode:
       description: "Active ou désactive le mode dieu pour un joueur."
-      on:
+      "on":
         description: "Active le mode dieu pour un joueur."
         syntax: "<cible>"
         message: "{player} a activé le mode dieu pour {target}."
-      off:
+      "off":
         description: "Désactive le mode dieu pour un joueur."
         syntax: "<cible>"
         message: "{player} a désactivé le mode dieu pour {target}."
