@@ -12,9 +12,9 @@
 -- card of its bar, or onto the bare background of the inventory tab, has its item dropped, and
 -- one dragged onto any other panel stays (see `lib/cl_hotbar_input.lua`). Each of these is a
 -- request to the server. A left click selects the slot. A press or a drag of the slot whose
--- drag state is cleared under it, as `fl_inventory:rebuild` does, ends with its release and
--- does nothing. While the cursor is over an entry, the number keys move it and the drop key
--- drops its item.
+-- drag state is cleared under it, as `fl_inventory:rebuild` does, ends with its release or with
+-- a press of the other button, and neither that press nor the releases that follow do anything.
+-- While the cursor is over an entry, the number keys move it and the drop key drops its item.
 
 local IsValid = IsValid
 local math_scale = math.scale
@@ -261,22 +261,28 @@ end
 --- Remembers the button, takes the mouse capture, so that the release of the button comes back
 -- to the slot, starts watching for the slot being dragged and shows the slot as not dragged. A
 -- press during a drag is not remembered and takes no capture; on a slot with an entry it
--- cancels the drag, which keeps the dragged entry on the hotbar.
+-- cancels the drag, which keeps the dragged entry on the hotbar. A press while the drag state
+-- has been cleared under an earlier press or drag of the slot (see `PANEL:is_drag_cut`) ends
+-- that one through `PANEL:end_drag` and is neither remembered nor watched for a drag, so that
+-- neither its release nor the release of the earlier button selects, clears or drops anything.
 -- @param mouse_code [Number MOUSE_ enumerator]
 function PANEL:OnMousePressed(mouse_code)
+  if self:is_drag_cut() then
+    self:end_drag()
+
+    return
+  end
+
   local is_dragging = dragndrop.IsDragging()
 
   self.pressed_code = !is_dragging ? mouse_code : nil
 
   if !is_dragging then
     self.Dragging = false
+    self:MouseCapture(true)
   end
 
   dpanel.OnMousePressed(self, mouse_code)
-
-  if !is_dragging then
-    self:MouseCapture(true)
-  end
 end
 
 --- Checks whether the slot has been pressed with an entry, which starts the wait for a drag of

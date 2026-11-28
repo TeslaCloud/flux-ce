@@ -843,7 +843,10 @@ function THEME:PaintTabInventoryBackground(panel, _w, _h)
   end
 end
 
---- Draws the title of an inventory above its panel, if it has one.
+--- Draws the title of an inventory, if it has one, as a tag on the top left corner of the card
+-- that `THEME:PaintInventoryBackground` draws around the panel: the tag starts at the left edge
+-- of the card and its bottom rests on the top edge, both the `inventory_card_margin` option
+-- past the bounds of the panel.
 -- @param panel [Panel the inventory panel]
 -- @param _w [Number panel width]
 -- @param _h [Number panel height]
@@ -852,10 +855,10 @@ function THEME:PaintOverInventoryBackground(panel, _w, _h)
     local font            = self:get_font('section_title')
     local text            = t(panel.title)
     local _text_w, text_h = text_size(text, font)
-    local padding = math.scale(6)
+    local margin          = self:get_option('inventory_card_margin', 0)
 
     DisableClipping(true)
-      self:PaintTitleTag(text, -padding, -padding - text_h - math.scale(8), font)
+      self:PaintTitleTag(text, -margin, -margin - text_h - math.scale(8), font)
     DisableClipping(false)
   end
 end
